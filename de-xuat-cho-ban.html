@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh Sách Phim Random - Final Tooltip Match</title>
+    <style>
+        /* --- RESET & GLOBAL --- */
+        * {
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #111319;
+            color: #fff;
+            font-family: 'SF Pro', 'Roboto', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- LAYOUT CONTAINER --- */
+        .wrapper {
+            padding: 40px 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* --- GRID SYSTEM: 8 CỘT CỐ ĐỊNH --- */
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 222.6px);
+            gap: 16px;
+            justify-content: center;
+        }
+
+        /* --- MOVIE CARD --- */
+        .movie-card {
+            position: relative;
+            width: 222.6px;
+            cursor: pointer;
+            transition: transform 0.2s ease, z-index 0s;
+            z-index: 1;
+        }
+
+        .movie-card:hover {
+            transform: scale(1.05);
+            z-index: 100;
+        }
+
+        /* POSTER */
+        .poster-wrapper {
+            position: relative;
+            width: 222.6px;
+            height: 296.79px;
+            border-radius: 0;
+            overflow: hidden;
+            background-color: #252525;
+            margin-bottom: 8px;
+        }
+
+        .poster-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* OVERLAY GRADIENT */
+        .poster-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 40%);
+            pointer-events: none;
+        }
+
+        /* EPISODE TAG */
+        .episode-tag {
+            position: absolute;
+            bottom: 6px;
+            left: 6px;
+            font-size: 14px;
+            font-weight: 400;
+            color: #fff;
+            background: transparent;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+            z-index: 5;
+        }
+
+        /* --- NÚT PLAY --- */
+        .play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            width: 42px;
+            height: 42px;
+            z-index: 10;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .play-btn svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+        }
+
+        .movie-card:hover .play-btn {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        /* --- NÚT SƯU TẬP --- */
+        .collection-btn {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            width: 42px;
+            height: 42px;
+            background-color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .collection-btn svg {
+            width: 30px;
+            height: 30px;
+            fill: #111319;
+        }
+
+        .movie-card:hover .collection-btn {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .collection-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* --- TOOLTIP STYLE (COPY TỪ DIEN-VIEN.HTML) --- */
+        .tooltip-text {
+            position: absolute;
+            right: 55px;
+            /* Khoảng cách khớp với nút 42px */
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(30, 30, 30, 0.9);
+            color: #fff;
+            padding: 6px 10px;
+            /* Padding rộng hơn */
+            border-radius: 4px;
+            font-size: 12px;
+            /* Font size lớn hơn chút */
+            font-weight: 400;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: none;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            /* Thêm viền mờ */
+        }
+
+        /* Mũi tên nhỏ bên phải tooltip */
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            right: -4px;
+            margin-top: -4px;
+            border-width: 4px 0 4px 4px;
+            border-style: solid;
+            border-color: transparent transparent transparent rgba(30, 30, 30, 0.9);
+        }
+
+        .collection-btn:hover .tooltip-text {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* --- THÔNG TIN TEXT --- */
+        .movie-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #e0e0e0;
+            margin-top: 8px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            transition: color 0.2s;
+        }
+
+        .movie-card:hover .movie-title {
+            color: #1cc749;
+        }
+
+        /* Loading */
+        #loading {
+            text-align: center;
+            width: 100%;
+            padding: 50px;
+            color: #888;
+            grid-column: 1 / -1;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1900px) {
+            .wrapper {
+                transform-origin: top center;
+                transform: scale(0.9);
+            }
+        }
+
+        @media (max-width: 1600px) {
+            .wrapper {
+                transform: scale(0.75);
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .wrapper {
+                transform: scale(0.55);
+                height: 100vh;
+            }
+
+            .movie-grid {
+                grid-template-columns: repeat(4, 222.6px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <div class="movie-grid" id="movieGrid">
+            <div id="loading">Đang tải và trộn phim...</div>
+        </div>
+    </div>
+
+    <script>
+        // SVG ICONS
+        const playSvg = `
+            <svg viewBox="0 0 60 60">
+                <circle cx="30" cy="30" r="30" fill="#1CC749"></circle>
+                <path d="M35.75,22.5 L45.14,36.6 C46.06,38 45.69,39.8 44.3,40.7 C43.8,41.1 43.2,41.25 42.6,41.25 L23.85,41.25 C22.2,41.25 20.85,39.9 20.85,38.25 C20.85,37.65 21,37.1 21.35,36.6 L30.75,22.5 C31.67,21.1 33.5,20.7 34.9,21.6 C35.2,21.9 35.5,22.2 35.75,22.5 Z" fill="#000000" transform="translate(33.25, 30.00) rotate(-270.00) translate(-33.25, -30.00) "></path>
+            </svg>`;
+
+        const collectionSvg = `
+            <svg viewBox="0 0 60 60">
+                 <path d="M29.3,17.25 C29.7,17.25 30,17.56 30,17.94 L30,19.4 C30,19.8 29.7,20.1 29.3,20.1 L22.9,20.1 L22.9,39.7 L28.6,34.9 C29.4,34.3 30.4,34.3 31.2,34.8 L31.4,34.9 L37.1,39.7 L37.1,33.5 C37.1,33.1 37.4,32.8 37.8,32.8 L39.2,32.8 C39.6,32.8 39.9,33.1 39.9,33.5 L39.9,41.2 C39.9,42.4 39,43.4 37.8,43.4 C37.4,43.4 37,43.2 36.6,43 L36.4,42.9 L30,37.5 L23.6,42.9 C22.7,43.6 21.5,43.5 20.7,42.8 L20.6,42.6 C20.3,42.3 20.1,41.9 20.1,41.4 L20.1,41.2 L20.1,20.1 C20.1,18.6 21.2,17.4 22.7,17.3 L22.9,17.25 L29.3,17.25 Z M39.2,17.25 C39.6,17.25 39.9,17.56 39.9,17.94 L39.9,21.5 L43.5,21.5 C43.9,21.5 44.2,21.8 44.2,22.2 L44.2,23.6 C44.2,24 43.9,24.3 43.5,24.3 L39.9,24.3 L39.9,27.9 C39.9,28.3 39.6,28.6 39.2,28.6 L37.8,28.6 C37.4,28.6 37.1,28.3 37.1,27.9 L37.1,24.3 L33.5,24.3 C33.1,24.3 32.8,24 32.8,23.6 L32.8,22.2 C32.8,21.8 33.1,21.5 33.5,21.5 L37.1,21.5 L37.1,17.9 C37.1,17.6 37.4,17.25 37.8,17.25 L39.2,17.25 Z" fill="#111319" fill-rule="nonzero"/>
+            </svg>`;
+
+        // HÀM TRỘN MẢNG
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // HÀM XỬ LÝ CHỮ TẬP PHIM
+        function formatEpisodeText(epStr) {
+            if (!epStr) return "";
+            const lowerEp = epStr.toLowerCase().trim();
+
+            if (lowerEp === 'full') return "Trọn bộ";
+
+            if (lowerEp.includes('hoàn tất')) {
+                const match = epStr.match(/\((\d+)/);
+                if (match && match[1]) {
+                    return `Trọn bộ ${match[1]} tập`;
+                }
+                return "Trọn bộ";
+            }
+
+            if (lowerEp.startsWith('tập')) {
+                return `Cập nhật tới ${lowerEp}`;
+            }
+
+            return epStr;
+        }
+
+        // FETCH DATA
+        async function fetchAndRender() {
+            const grid = document.getElementById('movieGrid');
+            const totalItemsNeeded = 32;
+
+            try {
+                // Fetch 4 trang
+                const pageRequests = [1, 2, 3, 4].map(page =>
+                    fetch(`https://phimapi.com/danh-sach/phim-moi-cap-nhat-v2?page=${page}`).then(res => res.json())
+                );
+
+                const results = await Promise.all(pageRequests);
+                let allMovies = [];
+
+                results.forEach(data => {
+                    if (data.status && data.items) {
+                        allMovies = allMovies.concat(data.items);
+                    }
+                });
+
+                allMovies = shuffleArray(allMovies);
+                const finalMovies = allMovies.slice(0, totalItemsNeeded);
+
+                grid.innerHTML = '';
+                finalMovies.forEach(movie => {
+                    const episodeDisplay = formatEpisodeText(movie.episode_current);
+                    const card = document.createElement('div');
+                    card.className = 'movie-card';
+                    card.onclick = () => { window.location.href = `?url=${movie.slug}`; };
+
+                    card.innerHTML = `
+                        <div class="poster-wrapper">
+                            <img class="poster-img" src="${movie.poster_url}" alt="${movie.name}">
+                            <div class="poster-overlay"></div>
+                            <div class="episode-tag">${episodeDisplay}</div>
+                            <div class="play-btn">${playSvg}</div>
+                            <div class="collection-btn">
+                                ${collectionSvg}
+                                <div class="tooltip-text">Sưu tập</div>
+                            </div>
+                        </div>
+                        <div class="movie-title">${movie.name}</div>
+                    `;
+                    grid.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error(error);
+                grid.innerHTML = '<div style="color:red; grid-column:1/-1; text-align:center;">Lỗi tải dữ liệu.</div>';
+            }
+        }
+
+        fetchAndRender();
+    </script>
+</body>
+
+</html>

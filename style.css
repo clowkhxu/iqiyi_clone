@@ -1,0 +1,445 @@
+
+    body { margin: 0; padding: 0; background-color: #111319; font-family: 'SF Pro', 'Roboto', 'Noto Sans', sans-serif; overflow-x: hidden; color: #fff; }
+    
+    /* --- SLIDER CONTAINER --- */
+    .slider-container { position: relative; width: 100%; height: 56vw; max-height: 800px; min-height: 500px; overflow: hidden; cursor: default; touch-action: pan-y; transform: translate3d(0, 0, 0); }
+    .slider-wrapper { position: relative; width: 100%; height: 100%; }
+    .slide-item { position: absolute; width: 100%; height: 100%; top: 0; left: 0; overflow: hidden; }
+    .slide-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-position: center; background-size: cover; background-repeat: no-repeat; opacity: 0; transition: opacity 1.0s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1; will-change: opacity; }
+    .slide-bg.active { opacity: 1; }
+    .slide-character-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0; transform: translate3d(50px, 0, 0); transition: opacity 1.0s ease-out, transform 1.0s cubic-bezier(0.2, 0.8, 0.2, 1); pointer-events: none; will-change: transform, opacity; }
+    .slide-character-container.active { opacity: 1; transform: translate3d(0, 0, 0); }
+    .slide-character { width: 50%; height: 100%; position: absolute; top: 0; right: 0; background-repeat: no-repeat; background-size: contain; background-position: bottom center; }
+    .gradient-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; }
+    .gradient-left { position: absolute; left: 0; top: 0; width: 40%; height: 100%; background: linear-gradient(90deg, #111319 0%, rgba(17, 19, 25, 0) 100%); }
+    .gradient-bottom { position: absolute; bottom: 0; left: 0; width: 100%; height: 30%; background: linear-gradient(0deg, #111319 0%, rgba(17, 19, 25, 0) 100%); }
+    .slide-info { position: absolute; left: 64px; z-index: 10; color: #fff; max-width: 600px; pointer-events: none; top: 50%; transform: translate3d(0, -60%, 0); opacity: 0; }
+    .info-content-wrapper { transform: translate3d(0, 30px, 0); transition: opacity 0.8s ease-out, transform 0.8s ease-out; will-change: transform, opacity; }
+    .slide-info.active { opacity: 1; }
+    .slide-info.active .info-content-wrapper { transform: translate3d(0, 0, 0); }
+    .action-buttons-container { position: absolute; left: 64px; bottom: 40px; z-index: 20; display: flex; align-items: center; gap: 15px; pointer-events: auto; }
+    .btn-add-wrapper, .btn-play-wrapper { position: relative; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: filter 0.2s ease, transform 0.2s ease; }
+    .btn-add-wrapper:hover, .btn-play-wrapper:hover { filter: brightness(1.3); transform: none; }
+    .btn-svg { display: block; pointer-events: none; }
+    .tooltip-text { position: absolute; left: 100%; top: 50%; transform: translateY(-50%); margin-left: 15px; background-color: rgba(30, 30, 30, 0.9); color: #fff; padding: 8px 16px; border-radius: 4px; font-size: 14px; font-weight: 500; white-space: nowrap; opacity: 0; visibility: hidden; transition: all 0.3s ease; pointer-events: none; border: 1px solid rgba(255, 255, 255, 0.15); }
+    .tooltip-text::before { content: ""; position: absolute; top: 50%; left: -6px; margin-top: -6px; border-width: 6px 6px 6px 0; border-style: solid; border-color: transparent rgba(30, 30, 30, 0.9) transparent transparent; }
+    .btn-add-wrapper:hover .tooltip-text { opacity: 1; visibility: visible; }
+    .title-img { width: 20.5vw; min-width: 180px; max-width: 360px; height: 13.67vw; max-height: 240px; min-height: 120px; background-position: left bottom; background-repeat: no-repeat; background-size: contain; margin-bottom: 12px; }
+    .slide-info h1 { font-size: 48px; margin: 0 0 10px 0; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); line-height: 1.2; }
+    .badges-container { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
+    .badge { padding: 2px 6px; border-radius: 3px; font-size: 12px; font-weight: 600; line-height: 16px; text-transform: capitalize; white-space: nowrap; background-color: rgba(255, 255, 255, 0.2); color: #fff; backdrop-filter: blur(4px); border: 1px solid rgba(255, 255, 255, 0.1); }
+    .badge:first-child { background-color: #00CC33; color: #000; font-weight: 700; border: none; }
+    .meta-tags { display: flex; align-items: center; font-size: 14px; color: #ececec; font-weight: 500; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); margin-bottom: 12px; }
+    .score { color: #1cc749; font-size: 16px; margin-right: 6px; font-weight: bold; }
+    .score-icon { width: 16px; height: 16px; margin-right: 4px; vertical-align: middle; }
+    .divider { margin: 0 8px; opacity: 0.6; font-size: 12px; }
+    .description { width: 525px; max-height: 72px; line-height: 1.5em; margin-top: 16px; font-size: 16px; color: #ffffff; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8); }
+    .arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 60px; height: 60px; z-index: 50; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: opacity 0.3s ease; opacity: 0.6; background: none; }
+    .arrow:hover { opacity: 1; }
+    .arrow-left { left: 20px; }
+    .arrow-right { right: 20px; }
+    .arrow svg { width: 100%; height: 100%; fill: white; filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.8)); }
+    .slider-pagination { position: absolute; bottom: 40px; right: 40px; z-index: 20; display: flex; gap: 6px; }
+    .pagination-dot { width: 6px; height: 6px; background-color: #fff; border-radius: 50%; opacity: 0.4; transition: opacity 0.3s ease, transform 0.3s ease; cursor: pointer; }
+    .pagination-dot.active { opacity: 1; transform: scale(1.3); }
+    
+    /* =========================================
+       MOVIE SECTIONS (GENERAL)
+       ========================================= */
+    .movie-section { padding: 30px 64px; position: relative; z-index: 10; }
+    
+    /* QUAN TRỌNG: Thêm z-index và position để Header nổi lên trên Grid */
+    .section-header { 
+        font-size: 24px; 
+        font-weight: 700; 
+        color: #fff; 
+        margin-bottom: 20px; 
+        display: flex; 
+        align-items: center; 
+        position: relative; /* Cần thiết để z-index hoạt động */
+        z-index: 100;       /* Cao hơn grid để nhận sự kiện hover */
+    }
+    
+    .movie-carousel-wrapper { position: relative; width: 100%; }
+    
+    /* --- HEADER INTERACTIVE (HIỆU ỨNG HOVER) --- */
+    .section-header.interactive {
+        cursor: pointer;
+        display: flex;
+        align-items: center; /* Căn giữa chiều dọc cho tất cả phần tử con */
+        width: fit-content;  /* Chỉ chiếm chiều rộng vừa đủ nội dung */
+    }
+    
+    .header-title {
+        transition: color 0.3s ease;
+        line-height: 1; /* Giúp căn chỉnh với mũi tên tốt hơn */
+    }
+    
+    .header-more {
+        font-size: 14px;
+        color: #1cc749;
+        font-weight: 600;
+        max-width: 0;       /* Mặc định ẩn (width = 0) */
+        opacity: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        transition: all 0.3s ease;
+        margin-left: 0;
+        /* Loại bỏ margin-top để thẳng hàng */
+        padding-top: 2px;   /* Tinh chỉnh nhỏ để đều mắt */
+    }
+    
+    .header-arrow {
+        fill: #fff;
+        margin-left: 8px;   /* Khoảng cách mặc định */
+        transition: all 0.3s ease;
+        display: flex;      /* Đảm bảo SVG không bị lệch dòng */
+    }
+    
+    /* --- TRẠNG THÁI HOVER --- */
+    .section-header.interactive:hover .header-title {
+        color: #1cc749;     /* Tiêu đề đổi màu xanh */
+    }
+    
+    .section-header.interactive:hover .header-more {
+        max-width: 100px;   /* Mở rộng chiều ngang để hiện chữ */
+        opacity: 1;         /* Hiện rõ */
+        margin-left: 12px;  /* Đẩy cách xa tiêu đề */
+        margin-right: 4px;  /* Đẩy mũi tên ra xa một chút */
+    }
+    
+    .section-header.interactive:hover .header-arrow {
+        fill: #1cc749;      /* Mũi tên đổi màu xanh */
+        transform: translateX(4px); /* Hiệu ứng mũi tên trượt nhẹ sang phải */
+    }
+    
+    
+    /* --- NAV ARROW (PC: TOP 40%) --- */
+    .nav-arrow { 
+        position: absolute; 
+        top: 40%; 
+        transform: translateY(-50%); 
+        width: 45px; 
+        height: 45px; 
+        z-index: 5000; 
+        cursor: pointer; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        transition: opacity 0.3s ease; 
+        opacity: 0.6; 
+        background: none; 
+    }
+    .nav-arrow:hover { opacity: 1; }
+    .nav-arrow svg { width: 100%; height: 100%; fill: white; filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.8)); }
+    .nav-prev { left: -50px; }
+    .nav-next { right: -50px; }
+    .nav-arrow.hidden { opacity: 0; pointer-events: none; visibility: hidden; }
+    
+    /* Grid Styles */
+    .movie-grid {
+        display: flex;
+        gap: 16px;
+        overflow-x: hidden;
+        overflow-y: hidden;
+        scroll-behavior: smooth;
+        padding-top: 60px;
+        padding-bottom: 60px;
+        margin-top: -60px; /* Đây là lý do cần z-index cho header */
+        margin-bottom: -20px;
+        position: relative;
+    }
+    
+    .movie-card {
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+        text-decoration: none;
+        color: #fff;
+        min-width: calc((100% - (16px * 7)) / 8); 
+        max-width: calc((100% - (16px * 7)) / 8);
+        flex-shrink: 0;
+        position: relative;
+        z-index: 1;
+        overflow: visible !important; 
+        transition: z-index 0s;
+        border-radius: 6px;
+    }
+    
+    .movie-card:hover { z-index: 2000; }
+    
+    /* =========================================
+       TOP TRENDING CARD STYLES
+       ========================================= */
+    .movie-card--trending .poster-wrapper {
+        position: relative;
+        width: 100%;
+        padding-top: 140%; 
+        overflow: hidden;
+        background-color: #252525;
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        margin-bottom: 0;
+        z-index: 1;
+    }
+    
+    .trending-info-box {
+        position: relative;
+        width: 100%;
+        height: 90px; 
+        background: linear-gradient(to bottom, var(--overlay-color), rgba(0,0,0,0.4));
+        border-bottom-left-radius: 6px;
+        border-bottom-right-radius: 6px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end; 
+        padding: 10px;
+        box-sizing: border-box;
+        z-index: 2;
+        margin-top: -1px; 
+    }
+    
+    .movie-card--trending .rank-text {
+        position: absolute;
+        top: -18px; 
+        left: 10px;
+        font-family: 'Impact', 'Arial Black', sans-serif;
+        font-size: 26px;
+        font-weight: 900;
+        font-style: italic;
+        color: #fff;
+        letter-spacing: 1px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+        z-index: 3;
+    }
+    
+    .movie-card--trending .rank-text::after {
+        content: "";
+        display: block;
+        width: 20px;
+        height: 3px;
+        background-color: #000;
+        margin-top: 2px;
+    }
+    
+    .rank-1 { color: #1cc749; } 
+    
+    .movie-card--trending .poster-title {
+        font-size: 16px; 
+        font-weight: 500; 
+        line-height: 1.3;
+        margin-bottom: 2px; 
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        color: #fff;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    }
+    
+    .movie-card--trending .episode-status {
+        font-size: 13px; 
+        color: rgba(255, 255, 255, 0.85);
+        font-weight: 500;
+    }
+    
+    /* =========================================
+       STANDARD CARD STYLES
+       ========================================= */
+    .movie-card:not(.movie-card--trending) .poster-wrapper {
+        position: relative;
+        width: 100%;
+        padding-top: 140%;
+        border-radius: 6px;
+        overflow: hidden;
+        background-color: #252525;
+        margin-bottom: 10px;
+    }
+    
+    .movie-card:not(.movie-card--trending) .poster-title {
+        font-size: 15px;
+        font-weight: 500;
+        line-height: 1.4;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        transition: color 0.2s;
+    }
+    
+    .movie-card:not(.movie-card--trending) .episode-tag {
+        position: absolute;
+        bottom: 8px;
+        left: 8px;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 500;
+        z-index: 2;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+    }
+    
+    .movie-card:not(.movie-card--trending) .poster-wrapper::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 40%;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0) 100%);
+        pointer-events: none;
+        z-index: 1;
+    }
+    
+    .poster-img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    /* =========================================
+       HOVER DETAILS CARD
+       ========================================= */
+    .hover-details-card {
+        position: absolute;
+        top: -20px;
+        left: 50%;
+        transform: translateX(-50%) scale(0.8);
+        transform-origin: center center;
+        width: 300px;
+        background-color: rgb(26, 28, 34);
+        border-radius: 2.5px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.9);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        z-index: 4000; 
+        overflow: hidden;
+    }
+    
+    .hover-details-card.align-left {
+        left: 0;
+        right: auto;
+        transform: translateX(0) scale(0.8);
+        transform-origin: left center;
+    }
+    
+    .hover-details-card.align-right {
+        left: auto;
+        right: 0;
+        transform: translateX(0) scale(0.8);
+        transform-origin: right center;
+    }
+    
+    .movie-card:hover .hover-details-card.active {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateX(-50%) scale(1);
+    }
+    
+    .movie-card:hover .hover-details-card.active.align-left {
+        transform: translateX(0) scale(1);
+    }
+    
+    .movie-card:hover .hover-details-card.active.align-right {
+        transform: translateX(0) scale(1);
+    }
+    
+    .hover-thumb-container { position: relative; width: 100%; height: 168px; background-color: #000; }
+    .hover-thumb-img { width: 100%; height: 100%; object-fit: cover; }
+    .hover-thumb-container::after { display: none; }
+    .hover-actions { position: absolute; bottom: 12px; right: 12px; display: flex; gap: 10px; z-index: 10; align-items: center; }
+    .hover-btn-icon { width: 40px; height: 40px; cursor: pointer; transition: filter 0.2s; display: block; }
+    .hover-btn-icon:hover { transform: none; filter: brightness(1.2); }
+    .hover-info { padding: 12px 16px 16px; color: #fff; text-align: left; }
+    .hover-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: rgb(255, 255, 255); }
+    .hover-meta-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 14px; color: rgb(255, 255, 255); }
+    .meta-score { color: #1cc749; font-weight: 700; }
+    .meta-quality { border: 1px solid rgba(255,255,255,0.4); font-size: 11px; padding: 1px 4px; border-radius: 3px; color: #fff; background: rgba(0,0,0,0.3); }
+    .meta-age { background-color: #1cc749; color: #000; font-weight: bold; font-size: 11px; padding: 1px 4px; border-radius: 2px; }
+    
+    .hover-tags { display: flex; flex-wrap: wrap; margin-bottom: 10px; }
+    .hover-tag { padding: 2px 4px; margin-right: 8px; margin-bottom: 6px; font-size: 13px; color: rgb(236, 236, 236); font-weight: 500; background: rgba(255, 255, 255, 0.08); border-radius: 2px; }
+    .hover-desc { width: 100%; margin-bottom: 8px; font-size: 14px; color: rgb(255, 255, 255); line-height: 20px; font-weight: 400; white-space: normal; display: -webkit-box; -webkit-line-clamp: 7; -webkit-box-orient: vertical; overflow: hidden; }
+    .hover-more-btn { font-size: 13px; color: #1cc749; font-weight: 500; cursor: pointer; text-align: right; display: flex; align-items: center; justify-content: flex-end; text-decoration: none; }
+    .hover-more-btn:hover { text-decoration: none; filter: brightness(1.2); }
+    
+    .loading-text { width: 100%; text-align: center; padding: 40px; color: #888; }
+    
+    /* =========================================
+       MOBILE RESPONSIVE
+       ========================================= */
+    @media screen and (max-width: 768px) {
+        .slider-container { height: 70vw; min-height: auto; }
+        .gradient-bottom { height: 70%; background: linear-gradient(0deg, #111319 15%, rgba(17, 19, 25, 0.6) 50%, rgba(17, 19, 25, 0) 100%); }
+        .gradient-left { display: none; }
+        .slide-character { width: 65%; height: 90%; right: -10px; top: 5%; background-position: bottom right; opacity: 1; }
+        .slide-info { left: 16px; top: auto; bottom: 20px; transform: none !important; max-width: 90%; margin-top: 0; display: flex; flex-direction: column; justify-content: flex-end; }
+        .info-content-wrapper { transform: none !important; transition: opacity 0.5s ease; }
+        .title-img { width: 75vw; height: auto; min-height: 50px; margin-bottom: 12px; }
+        .meta-tags { font-size: 12px; color: #ddd; margin-bottom: 0; }
+        .description, .action-buttons-container, .arrow { display: none !important; }
+        .slider-pagination { bottom: 15px; right: 15px; }
+        .pagination-dot { width: 4px; height: 4px; }
+    
+        /* RESET PADDING */
+        .movie-section { padding: 20px 0; }
+        .section-header { padding: 0 16px; }
+    
+        /* --- CẤU HÌNH CONTAINER CHÍNH CHO MOBILE --- */
+        .movie-carousel-wrapper {
+            padding: 0 20px; /* Chỉ 20px đen 2 bên */
+            box-sizing: border-box;
+            position: relative;
+        }
+    
+        /* --- GRID SNAP SCROLL --- */
+        .movie-grid { 
+            gap: 6px; 
+            padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0; 
+            scroll-snap-type: x mandatory; 
+            -webkit-overflow-scrolling: touch;
+        }
+    
+        /* --- TÍNH TOÁN KÍCH THƯỚC: 3 PHIM --- */
+        .movie-card {
+            min-width: calc((100% - 12px) / 3);
+            max-width: calc((100% - 12px) / 3);
+            flex-shrink: 0; 
+            scroll-snap-align: start; 
+        }
+    
+        .poster-title { font-size: 13px; }
+        .episode-tag { font-size: 11px; bottom: 4px; left: 4px; }
+    
+        /* --- MŨI TÊN MOBILE: TOP 38% ĐỂ CĂN GIỮA POSTER --- */
+        .nav-arrow { 
+            display: flex !important; 
+            width: 20px; 
+            height: 60px; 
+            top: 38%; 
+            transform: translateY(-50%);
+            background: rgba(17, 19, 25, 0.8); 
+            border-radius: 0; 
+            z-index: 5000; 
+        }
+        
+        .nav-prev { left: 0; }
+        .nav-next { right: 0; }
+    
+        .hover-details-card { display: none !important; }
+        
+        .movie-card--trending .poster-wrapper { padding-top: 150%; }
+        .movie-card--trending .trending-info-box { height: 70px; padding: 6px; }
+        .movie-card--trending .rank-text { font-size: 20px; top: -14px; left: 6px; }
+        .movie-card--trending .poster-title { font-size: 12px; line-height: 1.2; }
+        .movie-card--trending .episode-status { font-size: 10px; }
+        
+        /* Ẩn hiệu ứng xem thêm trên mobile vì chật */
+        .section-header.interactive:hover .header-more { display: none; }

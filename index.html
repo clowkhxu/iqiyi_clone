@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iQIYI Clone - Final Layout</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="slider-container">
+        <div class="arrow arrow-left" onclick="prevSlide()">
+            <svg viewBox="0 0 24 24">
+                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+            </svg>
+        </div>
+        <div class="arrow arrow-right" onclick="nextSlide()">
+            <svg viewBox="0 0 24 24">
+                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+            </svg>
+        </div>
+
+        <div class="slider-wrapper" id="sliderWrapper"></div>
+
+        <div class="action-buttons-container">
+            <div class="btn-play-wrapper">
+                <svg width="60px" height="60px" viewBox="0 0 60 60" class="btn-svg">
+                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <circle fill="#1CC749" cx="30" cy="30" r="30"></circle>
+                        <path
+                            d="M35.746,22.494 L45.14,36.586 C46.06,37.964 45.687,39.827 44.308,40.746 C43.815,41.075 43.236,41.25 42.644,41.25 L23.855,41.25 C22.198,41.25 20.855,39.907 20.855,38.25 C20.855,37.658 21.03,37.079 21.36,36.586 L30.754,22.494 C31.673,21.116 33.535,20.743 34.914,21.662 C35.243,21.882 35.526,22.165 35.746,22.494 Z"
+                            fill="#000000"
+                            transform="translate(33.25, 30.00) rotate(-270.00) translate(-33.25, -30.00) "></path>
+                    </g>
+                </svg>
+            </div>
+            <div class="btn-add-wrapper">
+                <svg width="60px" height="60px" viewBox="0 0 60 60" class="btn-svg">
+                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <circle fill="#FFFFFF" cx="30" cy="30" r="30"></circle>
+                        <path
+                            d="M29.3,17.25 C29.69,17.25 30,17.56 30,17.94 L30,19.39 C30,19.77 29.69,20.08 29.3,20.08 L22.91,20.08 L22.91,39.72 L28.64,34.95 C29.37,34.34 30.41,34.3 31.18,34.82 L31.36,34.95 L37.08,39.72 L37.08,33.52 C37.08,33.14 37.39,32.83 37.77,32.83 L39.22,32.83 C39.6,32.83 39.91,33.14 39.91,33.52 L39.91,41.23 C39.91,42.41 38.96,43.36 37.79,43.36 C37.36,43.36 36.95,43.23 36.6,43 L36.43,42.87 L30,37.51 L23.57,42.87 C22.72,43.57 21.49,43.51 20.72,42.75 L20.57,42.6 C20.3,42.27 20.13,41.87 20.09,41.45 L20.08,41.23 L20.08,20.08 C20.08,18.59 21.24,17.36 22.7,17.25 L22.91,17.25 L29.3,17.25 Z M39.22,17.25 C39.6,17.25 39.91,17.56 39.91,17.94 L39.91,21.5 L43.47,21.5 C43.85,21.5 44.16,21.81 44.16,22.19 L44.16,23.64 C44.16,24.02 43.85,24.33 43.47,24.33 L39.91,24.33 L39.91,27.89 C39.91,28.27 39.6,28.58 39.22,28.58 L37.77,28.58 C37.39,28.58 37.08,28.27 37.08,27.89 L37.08,24.33 L33.52,24.33 C33.14,24.33 32.83,24.02 32.83,23.64 L32.83,22.19 C32.83,21.81 33.14,21.5 33.52,21.5 L37.08,21.5 L37.08,17.94 C37.08,17.56 37.39,17.25 37.77,17.25 L39.22,17.25 Z"
+                            fill="#111319" fill-rule="nonzero"></path>
+                    </g>
+                </svg>
+                <div class="tooltip-text">Sưu tập</div>
+            </div>
+        </div>
+
+        <div class="gradient-overlay">
+            <div class="gradient-left"></div>
+            <div class="gradient-bottom"></div>
+        </div>
+        <div class="slider-pagination" id="sliderPagination"></div>
+    </div>
+
+    <div class="movie-section" id="topTrendingSection">
+        <div class="section-header">
+            <span>Top Phim Thịnh Hành</span>
+        </div>
+
+        <div class="movie-carousel-wrapper">
+            <div class="nav-arrow nav-prev hidden" id="topPrevBtn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                </svg>
+            </div>
+            <div class="nav-arrow nav-next" id="topNextBtn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+                </svg>
+            </div>
+
+            <div class="movie-grid" id="topTrendingGrid">
+                <div class="loading-text">Đang load top thịnh hành...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="movie-section" id="newMoviesSection">
+        <div class="section-header">
+            <span>Phim mới cập nhật</span>
+        </div>
+
+        <div class="movie-carousel-wrapper">
+            <div class="nav-arrow nav-prev hidden" id="moviePrevBtn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                </svg>
+            </div>
+            <div class="nav-arrow nav-next" id="movieNextBtn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+                </svg>
+            </div>
+
+            <div class="movie-grid" id="newMoviesGrid">
+                <div class="loading-text">Đang tải phim...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="movie-section" id="romanceSection">
+        <div class="section-header interactive">
+            <span class="header-title">Tình Yêu Là Những gì Trái Tim Muốn</span>
+            <span class="header-more">Xem thêm</span>
+            <svg class="header-arrow" viewBox="0 0 24 24" width="24" height="24">
+                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+            </svg>
+        </div>
+
+        <div class="movie-carousel-wrapper">
+            <div class="nav-arrow nav-prev hidden" id="romancePrevBtn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                </svg>
+            </div>
+            <div class="nav-arrow nav-next" id="romanceNextBtn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+                </svg>
+            </div>
+
+            <div class="movie-grid" id="romanceGrid">
+                <div class="loading-text">Đang tải phim tình cảm...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

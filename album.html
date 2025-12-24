@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xem Phim Online</title>
+    <style>
+        /* --- Reset & Base --- */
+        body {
+            background-color: #111319;
+            font-family: 'SF Pro', 'Roboto', 'Noto Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #fff;
+            font-size: 14px;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        ul,
+        li {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        img {
+            border: none;
+            vertical-align: top;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        h1,
+        h2,
+        h3,
+        p {
+            margin: 0;
+            font-weight: normal;
+        }
+
+        button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: inherit;
+            font-family: inherit;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* ============================
+            BANNER SECTION
+        ============================ */
+        .banner-container {
+            position: relative;
+            width: 100%;
+            /* Desktop: Tự dãn theo nội dung */
+            min-height: 535px;
+            height: auto;
+            background-color: #0d0d0d;
+            overflow: hidden;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .banner-bg {
+            position: absolute;
+            opacity: 0.95;
+            width: 60%;
+            height: 535px;
+            cursor: pointer;
+            top: 0px;
+            right: 0px;
+            z-index: 1;
+            mask-image: linear-gradient(to right, transparent 0%, black 10%);
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%);
+        }
+
+        .banner-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+        }
+
+        .banner-mask-left {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 535px;
+            z-index: 2;
+            background: linear-gradient(90deg, #111319 15%, rgba(17, 19, 25, 0.5) 35%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .banner-bottom-fade {
+            position: absolute;
+            /* Desktop: Fade nằm ở đáy ảnh (535 - 150 = 385) */
+            top: 385px;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            z-index: 3;
+            background: linear-gradient(to bottom, transparent 0%, #111319 100%);
+            pointer-events: none;
+        }
+
+        .movie-info-wrap {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            padding-left: 60px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding-top: 130px;
+            padding-bottom: 40px;
+            height: 100%;
+        }
+
+        .movie-info {
+            max-width: 650px;
+        }
+
+        .movie-title {
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 12px;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            text-align: left;
+        }
+
+        .meta-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .star-icon {
+            margin-right: 6px;
+        }
+
+        .score {
+            color: #00cc36;
+            font-size: 18px;
+            margin-right: 15px;
+            font-weight: 800;
+        }
+
+        .meta-tag {
+            background: none;
+            padding: 0;
+            font-weight: normal;
+            font-size: 14px;
+            color: #e0e0e0;
+        }
+
+        .divider {
+            margin: 0 10px;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 12px;
+        }
+
+        .tags-row {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            background: rgba(43, 43, 48, 0.8);
+            color: #dcdcdc;
+            padding: 4px 8px;
+            border-radius: 2px;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+
+        .tag:hover {
+            color: #00cc36;
+        }
+
+        .text-label {
+            color: rgb(169, 169, 172);
+            margin-right: 4px;
+        }
+
+        .text-content-wrapper {
+            color: #ffffff;
+        }
+
+        /* --- CREDITS --- */
+        .credits {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 4px;
+        }
+
+        .credits a:hover {
+            color: #00cc36;
+        }
+
+        /* --- PHẦN MÔ TẢ --- */
+        .movie-desc {
+            position: relative;
+            margin-top: 8px;
+            margin-bottom: 25px;
+            color: rgb(255, 255, 255);
+            font-size: 16px;
+            line-height: 26px;
+            font-weight: 400;
+        }
+
+        .desc-content {
+            display: block;
+            position: relative;
+        }
+
+        /* STYLE CHO NÚT TOGGLE */
+        .toggle-btn {
+            color: #00cc36;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .toggle-btn:hover {
+            text-decoration: none;
+        }
+
+        .toggle-btn svg {
+            flex-shrink: 0;
+            display: block;
+        }
+
+        /* --- TRẠNG THÁI THU GỌN --- */
+        .movie-desc:not(.expanded) .desc-content {
+            max-height: 78px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+
+        .movie-desc:not(.expanded) .toggle-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            padding-left: 40px;
+            background: linear-gradient(to right, transparent, #111319 40%, #111319 100%);
+            z-index: 2;
+        }
+
+        /* --- TRẠNG THÁI MỞ RỘNG --- */
+        .movie-desc.expanded .desc-content {
+            max-height: none;
+            overflow: visible;
+            display: block;
+        }
+
+        .movie-desc.expanded .toggle-btn {
+            display: inline-flex;
+            float: right;
+            margin-top: 5px;
+            background: none;
+            position: relative;
+        }
+
+        .movie-desc.expanded::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        /* Actions */
+        .actions {
+            display: flex;
+            gap: 16px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            height: 45px;
+            padding: 0 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            font-weight: 700;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .btn svg {
+            margin-right: 8px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .btn-play {
+            background-color: #1CC749;
+            color: #000;
+        }
+
+        .btn-play:hover {
+            background-color: #49d26d;
+        }
+
+        .btn-secondary {
+            background-color: #23252b;
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background-color: #35373f;
+        }
+
+        /* ============================
+            NAV BAR (TAB MENU)
+        ============================ */
+        .nav-bar {
+            padding: 0 60px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            height: 60px;
+            position: relative;
+            z-index: 20;
+            background: transparent;
+        }
+
+        .nav-item {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-right: 40px;
+            cursor: pointer;
+            position: relative;
+            padding: 18px 0;
+            font-weight: normal;
+            white-space: nowrap;
+            flex-shrink: 0;
+            transition: color 0.3s;
+        }
+
+        .nav-item:hover {
+            color: #fff;
+        }
+
+        .nav-item.active {
+            color: #ffffff;
+            font-weight: 700;
+            opacity: 1;
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #00cc36;
+            border-radius: 2px 2px 0 0;
+        }
+
+        /* ============================
+            EPISODE LIST
+        ============================ */
+        .episode-container {
+            padding: 0 60px;
+            padding-bottom: 60px;
+        }
+
+        .episode-filter {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Custom Select Style */
+        .custom-select {
+            background: #23252b;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 36px 10px 16px;
+            border-radius: 4px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            min-width: 160px;
+            transition: border-color 0.2s;
+        }
+
+        .custom-select:hover {
+            border-color: #00cc36;
+        }
+
+        .custom-select option {
+            background: #111319;
+            color: #fff;
+            padding: 12px;
+        }
+
+        .grid-list {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 20px;
+        }
+
+        /* CARD STYLE */
+        .card {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            z-index: 10;
+        }
+
+        .card-img-box {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #23252b;
+        }
+
+        .card-img-box img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.3s;
+        }
+
+        .card:hover .card-img-box img {
+            transform: scale(1.05);
+        }
+
+        .play-btn-overlay {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 45px;
+            height: 45px;
+            background: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            z-index: 5;
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
+        }
+
+        .play-btn-overlay svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .card:hover .play-btn-overlay {
+            opacity: 1;
+        }
+
+        .card-title {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #dcdcdc;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .card:hover .card-title {
+            color: #00cc36;
+        }
+
+        @media (max-width: 1400px) {
+            .grid-list {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .grid-list {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        /* --- MOBILE RESPONSIVE QUAN TRỌNG --- */
+        @media (max-width: 768px) {
+            .banner-container {
+                display: block;
+                height: auto;
+                min-height: auto;
+                padding-bottom: 0;
+                /* Chứa các thành phần con absolute */
+                position: relative;
+            }
+
+            /* 1. ẢNH BANNER PHONE: Cố định chiều cao */
+            .banner-bg {
+                position: relative;
+                width: 100%;
+                height: 280px;
+                /* Chiều cao cố định cho phone */
+                mask-image: none;
+                -webkit-mask-image: none;
+                z-index: 1;
+            }
+
+            .banner-mask-left {
+                display: none;
+            }
+
+            /* 2. HIỆU ỨNG BLUR ĐEN: Nằm đè lên phần dưới ảnh */
+            .banner-bottom-fade {
+                height: 180px;
+                /* Độ cao của vùng làm mờ */
+                width: 100%;
+                /* Gradient từ trong suốt sang đen */
+                background: linear-gradient(to bottom, transparent 0%, #111319 85%, #111319 100%);
+                /* Căn chỉnh vị trí fade đè lên phần dưới của ảnh */
+                top: 100px;
+                /* (280px ảnh - 180px fade) + offset nhỏ */
+                bottom: auto;
+                z-index: 2;
+            }
+
+            /* 3. THÔNG TIN PHIM: Đẩy lên cao đè lên ảnh */
+            .movie-info-wrap {
+                padding: 0 16px;
+                display: block;
+                height: auto;
+                /* KEY: Margin âm để kéo toàn bộ khối này chạy lên trên đè vào ảnh */
+                margin-top: -100px;
+                padding-top: 0;
+                position: relative;
+                z-index: 10;
+                /* Phải cao hơn fade và banner-bg */
+            }
+
+            .movie-info {
+                max-width: 100%;
+            }
+
+            .movie-title {
+                font-size: 28px;
+                /* Shadow để nổi bật trên nền banner nếu fade chưa đủ đậm */
+                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+                margin-bottom: 8px;
+            }
+
+            .credits {
+                font-size: 13px;
+            }
+
+            .movie-desc {
+                font-size: 13px;
+                line-height: 20px;
+            }
+
+            .nav-bar {
+                padding: 0 16px;
+                display: flex;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                margin-top: 20px;
+            }
+
+            .nav-bar::-webkit-scrollbar {
+                display: none;
+            }
+
+            .nav-item {
+                margin-right: 25px;
+                font-size: 14px;
+            }
+
+            .episode-container {
+                padding: 0 16px;
+            }
+
+            .grid-list {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .btn {
+                height: 40px;
+                font-size: 14px;
+                padding: 0 16px;
+            }
+
+            .btn-secondary {
+                padding: 0;
+                width: 40px;
+                justify-content: center;
+            }
+
+            .btn-secondary .btn-text {
+                display: none;
+            }
+
+            .btn-secondary svg {
+                margin-right: 0;
+            }
+
+            .card-title {
+                margin-top: 8px;
+                font-size: 13px;
+            }
+
+            .play-btn-overlay {
+                width: 35px;
+                height: 35px;
+                bottom: 5px;
+                right: 5px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="banner-container">
+        <div class="banner-bg">
+            <img id="bannerImg" src="" alt="Background">
+        </div>
+
+        <div class="banner-mask-left"></div>
+
+        <div class="banner-bottom-fade"></div>
+
+        <div class="movie-info-wrap">
+            <div class="movie-info">
+                <h1 class="movie-title" id="movieTitle">Đang tải...</h1>
+
+                <div class="meta-row">
+                    <svg width="20px" height="20px" viewBox="0 0 28 27" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                        class="star-icon">
+                        <g id="V1.12.0_UI_4391_Watch-Page-Add-Rating" stroke="none" stroke-width="1" fill="none"
+                            fill-rule="evenodd">
+                            <g id="4391-6_1920_info" transform="translate(-948.000000, -906.000000)" fill="#1CC749"
+                                fill-rule="nonzero">
+                                <g id="Group-10-Copy-10" transform="translate(906.000000, 880.000000)">
+                                    <g id="ic/star_green" transform="translate(40.000000, 24.000000)">
+                                        <path
+                                            d="M16.7983826,2.56356746 L19.7968803,11.2875241 L29.1657516,11.3941138 C29.9719564,11.4033379 30.3057022,12.4128653 29.6590696,12.8853446 L22.1424877,18.3829131 L24.9344802,27.1724634 C25.17436,27.9288402 24.3014061,28.55198 23.643301,28.0938493 L16.0005215,22.7674392 L8.35669898,28.0928244 C7.69963687,28.5509551 6.82563997,27.9267904 7.06551979,27.1714385 L9.85751226,18.3818882 L2.34093036,12.8843197 C1.69429781,12.4118404 2.02804364,11.402313 2.83424842,11.3930889 L12.2031197,11.2864992 L15.2016174,2.56254256 C15.4602704,1.81231509 16.5407725,1.81231509 16.7983826,2.56356746 Z"
+                                            id="Star"></path>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                    </svg>
+                    <span class="score" id="movieScore">0.0</span>
+                    <span id="metaInfo"></span>
+                </div>
+
+                <div class="tags-row" id="tagList">
+                </div>
+
+                <div class="credits">
+                    <span class="text-label">Đạo diễn:</span>
+                    <span class="text-content-wrapper" id="directorList">
+                        Đang cập nhật
+                    </span>
+                </div>
+                <div class="credits">
+                    <span class="text-label">Diễn viên chính:</span>
+                    <span class="text-content-wrapper" id="actorList">
+                        Đang cập nhật
+                    </span>
+                </div>
+
+                <div class="movie-desc" id="movieDesc">
+                    <div class="desc-content">
+                        <span class="text-label">Miêu tả:</span>
+                        <span id="descText">Đang tải nội dung...</span>
+                    </div>
+                    <span class="toggle-btn" id="toggleBtn" onclick="toggleDescription()">
+                        Hiển thị thêm
+                        <svg width="12px" height="12px" viewBox="0 0 12 12" version="1.1"
+                            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <g id="UI" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <g id="1024/tab01" transform="translate(-532.000000, -407.000000)" fill-rule="nonzero">
+                                    <g id="上部分" transform="translate(64.000000, 0.000000)">
+                                        <g id="05-地区/配音/人员/简介" transform="translate(0.000000, 266.000000)">
+                                            <g id="more" transform="translate(0.000000, 72.000000)">
+                                                <g id="编组" transform="translate(468.500000, 68.000000)">
+                                                    <path
+                                                        d="M9.65685425,3.15685425 L9.65685425,4.07685425 C9.65690688,4.35299662 9.43304925,4.57685425 9.15690688,4.57685425 C9.15688933,4.57685425 9.15687179,4.57685425 9.15685425,4.57680162 L3.57685425,4.57621425 L3.57685425,4.57621425 L3.57685425,10.1568542 C3.57685425,10.4329966 3.35299662,10.6568542 3.07685425,10.6568542 L2.15685425,10.6568542 C1.88071187,10.6568542 1.65685425,10.4329966 1.65685425,10.1568542 L1.65685425,3.93685425 L1.65685425,3.93685425 C1.65685425,3.2620627 2.17901604,2.70922857 2.84132635,2.66036512 L9.15685432,2.65711181 C9.43299652,2.65671207 9.65696943,2.88045435 9.65711168,3.15659669 C9.65711173,3.15668254 9.65711175,3.15676839 9.65685425,3.15685425 Z"
+                                                        id="路径" fill-opacity="0.702969638" fill="#000000"
+                                                        transform="translate(5.656854, 6.656854) scale(-1, 1) rotate(-135.000000) translate(-5.656854, -6.656854) ">
+                                                    </path>
+                                                    <path
+                                                        d="M9.65685425,2.15685425 L9.65685425,3.07685425 C9.65690688,3.35299662 9.43304925,3.57685425 9.15690688,3.57685425 C9.15688933,3.57685425 9.15687179,3.57685425 9.15685425,3.57680162 L3.57685425,3.57621425 L3.57685425,3.57621425 L3.57685425,9.15685425 C3.57685425,9.43299662 3.35299662,9.65685425 3.07685425,9.65685425 L2.15685425,9.65685425 C1.88071187,9.65685425 1.65685425,9.43299662 1.65685425,9.15685425 L1.65685425,2.93685425 L1.65685425,2.93685425 C1.65685425,2.2620627 2.17901604,1.70922857 2.84132635,1.66036512 L9.15685432,1.65711181 C9.43299652,1.65671207 9.65696943,1.88045435 9.65711168,2.15659669 C9.65711173,2.15668254 9.65711175,2.15676839 9.65685425,2.15685425 Z"
+                                                        id="路径备份" fill="#1CC749"
+                                                        transform="translate(5.656854, 5.656854) scale(-1, 1) rotate(-135.000000) translate(-5.656854, -5.656854) ">
+                                                    </path>
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                            </g>
+                        </svg>
+                    </span>
+                </div>
+
+                <div class="actions">
+                    <button class="btn btn-play" id="btnPlayMain">
+                        <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"
+                            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <path
+                                d="M14.2480754,6.37211316 L20.9452998,16.4179497 C21.4048285,17.1072427 21.2185677,18.0385468 20.5292747,18.4980754 C20.2828734,18.662343 19.9933618,18.75 19.6972244,18.75 L6.30277564,18.75 C5.47434851,18.75 4.80277564,18.0784271 4.80277564,17.25 C4.80277564,16.9538625 4.89043268,16.664351 5.0547002,16.4179497 L11.7519246,6.37211316 C12.2114532,5.68282013 13.1427573,5.49655933 13.8320503,5.95608802 C13.9968287,6.0659403 14.1382232,6.20733473 14.2480754,6.37211316 Z"
+                                id="Triangle" fill="#000000"
+                                transform="translate(13.000000, 11.625000) rotate(-270.000000) translate(-13.000000, -11.625000) ">
+                            </path>
+                        </svg>
+                        <span class="btn-text">Chiếu phát</span>
+                    </button>
+
+                    <button class="btn btn-secondary">
+                        <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"
+                            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <g id="icon/分享" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <rect x="0" y="0" width="24" height="24"></rect>
+                                <path
+                                    d="M8.5,10 L7.14285714,10 L7.14285714,10 L7.14285714,19 L17.8571429,19 L17.8571429,10 L16.5,10 C16.2238576,10 16,9.77614237 16,9.5 L16,8.5 C16,8.22385763 16.2238576,8 16.5,8 L18.9285714,8 L18.9285714,8 C19.5203051,8 20,8.44771525 20,9 L20,20 C20,20.5522847 19.5203051,21 18.9285714,21 L6.07142857,21 C5.47969491,21 5,20.5522847 5,20 L5,9 C5,8.44771525 5.47969491,8 6.07142857,8 L8.5,8 C8.77614237,8 9,8.22385763 9,8.5 L9,9.5 C9,9.77614237 8.77614237,10 8.5,10 Z"
+                                    id="路径" fill="#FFFFFF" fill-rule="nonzero"></path>
+                                <path
+                                    d="M12.02,4 L12.98,4 C13.2671881,4 13.5,4.23281193 13.5,4.52 L13.5,13.5 C13.5,13.7761424 13.2761424,14 13,14 L12,14 C11.7238576,14 11.5,13.7761424 11.5,13.5 L11.5,4.52 C11.5,4.23281193 11.7328119,4 12.02,4 Z"
+                                    id="矩形" fill="#FFFFFF"></path>
+                                <path
+                                    d="M12.5319707,2.00411342 L12.6198987,2.01706646 C12.7067945,2.03756742 12.7895557,2.08073685 12.8588387,2.14679722 L12.876344,2.16430255 L12.876344,2.16430255 L15.8756351,5.30990884 C16.0671764,5.51079419 16.0671764,5.82670084 15.8756351,6.02758619 L15.1070136,6.83370353 C14.9088325,7.04155258 14.57968,7.04938998 14.3718309,6.85120885 C14.3658577,6.84551349 14.360021,6.83967673 14.3543256,6.83370353 L12.5,4.888 L10.6456744,6.83370353 C10.4474933,7.04155258 10.1183408,7.04938998 9.91049173,6.85120885 L9.8929864,6.83370353 L9.8929864,6.83370353 L9.12436493,6.02758619 C8.9328236,5.82670084 8.9328236,5.51079419 9.12436493,5.30990884 L12.123656,2.16430255 C12.2337566,2.04883085 12.3842805,1.99509115 12.5319707,2.00411342 Z"
+                                    id="形状结合" fill="#FFFFFF" fill-rule="nonzero"></path>
+                            </g>
+                        </svg>
+                        <span class="btn-text">Chia sẻ</span>
+                    </button>
+
+                    <button class="btn btn-secondary">
+                        <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"
+                            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <g id="icon/Add" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <rect x="0" y="0" width="24" height="24"></rect>
+                                <path
+                                    d="M11.5,3 C11.7761424,3 12,3.22385763 12,3.5 L12,4.5 C12,4.77614237 11.7761424,5 11.5,5 L7,5 L7,18.864 L11.0397234,15.4985222 C11.5562588,15.068076 12.2898613,15.0373299 12.8374063,15.4062837 L12.9602766,15.4985222 L17,18.865 L17,14.5 C17,14.2238576 17.2238576,14 17.5,14 L18.5,14 C18.7761424,14 19,14.2238576 19,14.5 L19,19.9324792 C19,20.760901 18.3284325,21.4325168 17.5,21.4325168 C17.1992161,21.4325168 16.9066001,21.3420927 16.6593788,21.1748017 L16.5397234,21.0848111 L12,17.301 L7.4602766,21.0848111 C6.86363721,21.5820106 5.99503637,21.5375119 5.45180014,21.0056172 L5.34766808,20.8927558 C5.15511629,20.6616936 5.03722367,20.3790363 5.0074697,20.0820147 L5,19.9324792 L5,5 C5,3.9456382 5.81587779,3.08183488 6.85073766,3.00548574 L7,3 L11.5,3 Z M18.5,3 C18.7761424,3 19,3.22385763 19,3.5 L18.999,6 L21.5,6 C21.7761424,6 22,6.22385763 22,6.5 L22,7.5 C22,7.77614237 21.7761424,8 21.5,8 L18.999,8 L19,10.5 C19,10.7761424 18.7761424,11 18.5,11 L17.5,11 C17.2238576,11 17,10.7761424 17,10.5 L16.999,8 L14.5,8 C14.2238576,8 14,7.77614237 14,7.5 L14,6.5 C14,6.22385763 14.2238576,6 14.5,6 L16.999,5.999 L17,3.5 C17,3.22385763 17.2238576,3 17.5,3 L18.5,3 Z"
+                                    id="形状结合" fill="#FFFFFF" fill-rule="nonzero"></path>
+                            </g>
+                        </svg>
+                        <span class="btn-text">Sưu tập</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-bar">
+        <div class="nav-item active">Chọn tập</div>
+        <div class="nav-item inactive">Nội dung đặc sắc</div>
+        <div class="nav-item inactive">Diễn viên</div>
+        <div class="nav-item inactive">Tuyển tập phim và truyền hình</div>
+        <div class="nav-item inactive">Đề xuất cho bạn</div>
+    </div>
+
+    <div class="episode-container">
+        <div class="episode-filter" id="episodeFilterContainer">
+        </div>
+
+        <div class="grid-list" id="episodeGrid">
+        </div>
+    </div>
+
+    <script>
+        // Biến toàn cục lưu danh sách tập phim để dùng cho pagination
+        let currentServerData = [];
+        let currentMovieInfo = {};
+
+        // Icon SVG cho nút thu gọn (Mũi tên lên - bạn cung cấp)
+        const iconCollapse = `
+            <svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 12 12" xml:space="preserve" width="12px" height="12px"><g id="UI"><g id="_x31_024_x2F_tab01" transform="translate(-532.000000, -407.000000)"><g id="上部分" transform="translate(64.000000, 0.000000)"><g id="_x30_5-地区_x2F_配音_x2F_人员_x2F_简介" transform="translate(0.000000, 266.000000)"><g id="more" transform="translate(0.000000, 72.000000)"><g id="编组" transform="translate(468.500000, 68.000000)"><path id="路径" fill-opacity="0.703" d="M0.4,10L1,10.6c0.2,0.2,0.5,0.2,0.7,0l0,0l3.9-3.9l0,0l3.9,3.9c0.2,0.2,0.5,0.2,0.7,0L11,10 c0.2-0.2,0.2-0.5,0-0.7L6.6,4.9l0,0C6.1,4.4,5.3,4.4,4.8,4.8L0.4,9.3C0.2,9.5,0.2,9.8,0.4,10L0.4,10z"></path><path id="路径备份" fill="#1CC749" d="M0.4,9L1,9.6c0.2,0.2,0.5,0.2,0.7,0l0,0l3.9-3.9l0,0l3.9,3.9c0.2,0.2,0.5,0.2,0.7,0 L11,9c0.2-0.2,0.2-0.5,0-0.7L6.6,3.9l0,0C6.1,3.4,5.3,3.4,4.8,3.8L0.4,8.3C0.2,8.5,0.2,8.8,0.4,9L0.4,9z"></path></g></g></g></g></g></g><path id="路径" fill-opacity="0.703" d="M0.4,10L1,10.6c0.2,0.2,0.5,0.2,0.7,0l0,0l3.9-3.9l0,0l3.9,3.9c0.2,0.2,0.5,0.2,0.7,0L11,10 c0.2-0.2,0.2-0.5,0-0.7L6.6,4.9l0,0C6.1,4.4,5.3,4.4,4.8,4.8L0.4,9.3C0.2,9.5,0.2,9.8,0.4,10L0.4,10z"></path></svg>
+        `;
+
+        // Icon SVG cho nút mở rộng (Mũi tên xuống - bạn cung cấp)
+        const iconExpand = `
+            <svg width="12px" height="12px" viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g id="UI" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="1024/tab01" transform="translate(-532.000000, -407.000000)" fill-rule="nonzero"><g id="上部分" transform="translate(64.000000, 0.000000)"><g id="05-地区/配音/人员/简介" transform="translate(0.000000, 266.000000)"><g id="more" transform="translate(0.000000, 72.000000)"><g id="编组" transform="translate(468.500000, 68.000000)"><path d="M9.65685425,3.15685425 L9.65685425,4.07685425 C9.65690688,4.35299662 9.43304925,4.57685425 9.15690688,4.57685425 C9.15688933,4.57685425 9.15687179,4.57685425 9.15685425,4.57680162 L3.57685425,4.57621425 L3.57685425,4.57621425 L3.57685425,10.1568542 C3.57685425,10.4329966 3.35299662,10.6568542 3.07685425,10.6568542 L2.15685425,10.6568542 C1.88071187,10.6568542 1.65685425,10.4329966 1.65685425,10.1568542 L1.65685425,3.93685425 L1.65685425,3.93685425 C1.65685425,3.2620627 2.17901604,2.70922857 2.84132635,2.66036512 L9.15685432,2.65711181 C9.43299652,2.65671207 9.65696943,2.88045435 9.65711168,3.15659669 C9.65711173,3.15668254 9.65711175,3.15676839 9.65685425,3.15685425 Z" id="路径" fill-opacity="0.702969638" fill="#000000" transform="translate(5.656854, 6.656854) scale(-1, 1) rotate(-135.000000) translate(-5.656854, -6.656854) "></path><path d="M9.65685425,2.15685425 L9.65685425,3.07685425 C9.65690688,3.35299662 9.43304925,3.57685425 9.15690688,3.57685425 C9.15688933,3.57685425 9.15687179,3.57685425 9.15685425,3.57680162 L3.57685425,3.57621425 L3.57685425,3.57621425 L3.57685425,9.15685425 C3.57685425,9.43299662 3.35299662,9.65685425 3.07685425,9.65685425 L2.15685425,9.65685425 C1.88071187,9.65685425 1.65685425,9.43299662 1.65685425,9.15685425 L1.65685425,2.93685425 L1.65685425,2.93685425 C1.65685425,2.2620627 2.17901604,1.70922857 2.84132635,1.66036512 L9.15685432,1.65711181 C9.43299652,1.65671207 9.65696943,1.88045435 9.65711168,2.15659669 C9.65711173,2.15668254 9.65711175,2.15676839 9.65685425,2.15685425 Z" id="路径备份" fill="#1CC749" transform="translate(5.656854, 5.656854) scale(-1, 1) rotate(-135.000000) translate(-5.656854, -5.656854) "></path></g></g></g></g></g></g></svg>
+        `;
+
+        // Toggle Description
+        function toggleDescription() {
+            var descContainer = document.getElementById("movieDesc");
+            var btn = document.getElementById("toggleBtn");
+            descContainer.classList.toggle("expanded");
+
+            if (descContainer.classList.contains("expanded")) {
+                btn.innerHTML = `Thu gọn giới thiệu ${iconCollapse}`;
+            } else {
+                btn.innerHTML = `Hiển thị thêm ${iconExpand}`;
+            }
+        }
+
+        // --- FETCH DATA LOGIC ---
+        document.addEventListener("DOMContentLoaded", function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            // Lấy slug từ URL, nếu không có thì null
+            const movieSlug = urlParams.get('url');
+
+            if (!movieSlug) {
+                document.getElementById('movieTitle').textContent = "Chưa chọn phim";
+                document.getElementById('descText').textContent = "Vui lòng thêm ?url={slug-phim} vào thanh địa chỉ để xem.";
+                return;
+            }
+
+            const apiUrl = `https://phimapi.com/phim/${movieSlug}`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status) {
+                        renderMovieData(data);
+                    } else {
+                        document.getElementById('movieTitle').textContent = "Không tìm thấy phim";
+                        document.getElementById('descText').textContent = "API trả về lỗi hoặc phim không tồn tại.";
+                    }
+                })
+                .catch(err => console.error("Error fetching data:", err));
+        });
+
+        function renderMovieData(data) {
+            const movie = data.movie;
+            const episodes = data.episodes;
+            currentMovieInfo = movie;
+
+            // 1. Banner & Image
+            document.getElementById('bannerImg').src = movie.thumb_url;
+
+            // 2. Title - CẬP NHẬT: Xóa chữ 【Thuyết Minh】
+            document.getElementById('movieTitle').textContent = movie.name;
+            document.title = `${movie.name} (${movie.year})`;
+
+            // 3. Meta Info
+            const score = movie.tmdb ? movie.tmdb.vote_average : 9.8;
+            document.getElementById('movieScore').textContent = score;
+
+            // Meta info không nền
+            let metaHtml = `
+                <span class="meta-tag">${movie.quality}</span> <span class="divider">|</span>
+                <span class="meta-tag">${movie.year}</span> <span class="divider">|</span>
+                <span class="meta-tag">${movie.time}</span>
+            `;
+            document.getElementById('metaInfo').innerHTML = metaHtml;
+
+            // 4. Tags
+            const tagContainer = document.getElementById('tagList');
+            let tagsHtml = "";
+            if (movie.country && movie.country.length > 0) {
+                movie.country.forEach(c => {
+                    tagsHtml += `<a href="#" class="tag">${c.name}</a>`;
+                });
+            }
+            if (movie.category && movie.category.length > 0) {
+                movie.category.forEach(cat => {
+                    tagsHtml += `<a href="#" class="tag">${cat.name}</a>`;
+                });
+            }
+            tagsHtml += `<a href="#" class="tag">${movie.lang}</a>`;
+            tagContainer.innerHTML = tagsHtml;
+
+            // 5. Credits
+            const directorList = document.getElementById('directorList');
+            directorList.innerHTML = movie.director.map(d => `<a href="#">${d}</a>`).join(", ");
+
+            const actorList = document.getElementById('actorList');
+            actorList.innerHTML = movie.actor.map(a => `<a href="#">${a}</a>`).join(", ");
+
+            // 6. Description
+            document.getElementById('descText').innerHTML = movie.content;
+
+            // 7. Episodes Logic
+            if (episodes && episodes.length > 0) {
+                // Lấy server đầu tiên
+                currentServerData = episodes[0].server_data;
+                const totalEpisodes = currentServerData.length;
+                const chunkSize = 24; // Số lượng tập mỗi trang
+
+                // Nút "Chiếu phát" lớn -> Mở tập 1
+                const btnPlayMain = document.getElementById('btnPlayMain');
+                btnPlayMain.onclick = function () {
+                    if (currentServerData.length > 0) window.open(currentServerData[0].link_embed, '_blank');
+                }
+
+                // Xử lý hiển thị Grid tập phim và Dropdown
+                const filterContainer = document.getElementById('episodeFilterContainer');
+
+                if (totalEpisodes > chunkSize) {
+                    // Nếu nhiều hơn 24 tập => Tạo dropdown select
+                    let selectHtml = `<select class="custom-select" id="chunkSelect" onchange="onChunkChange(this.value)">`;
+
+                    for (let i = 0; i < totalEpisodes; i += chunkSize) {
+                        let start = i + 1;
+                        let end = Math.min(i + chunkSize, totalEpisodes);
+                        selectHtml += `<option value="${i}">Chọn tập ${start}-${end}</option>`;
+                    }
+                    selectHtml += `</select>`;
+                    filterContainer.innerHTML = selectHtml;
+
+                    // Render trang đầu tiên (0 -> 24)
+                    renderEpisodeGrid(0, chunkSize);
+
+                } else {
+                    // Nếu <= 24 tập => Không cần dropdown
+                    filterContainer.innerHTML = `<button class="filter-btn" style="background:none; border:none; padding-left:0; font-size:16px;">Chọn tập 1-${totalEpisodes}</button>`;
+                    renderEpisodeGrid(0, totalEpisodes);
+                }
+            }
+        }
+
+        // Hàm xử lý khi chọn dropdown
+        function onChunkChange(startIndex) {
+            const chunkSize = 24;
+            renderEpisodeGrid(parseInt(startIndex), chunkSize);
+        }
+
+        // Hàm render danh sách tập phim dựa vào start index và limit
+        function renderEpisodeGrid(startIndex, limit) {
+            const grid = document.getElementById('episodeGrid');
+            let episodeHtml = "";
+            const endIndex = Math.min(startIndex + limit, currentServerData.length);
+
+            // Cắt mảng data theo trang
+            const pageData = currentServerData.slice(startIndex, endIndex);
+
+            pageData.forEach(ep => {
+                episodeHtml += `
+                <div class="card" onclick="window.open('${ep.link_embed}', '_blank')">
+                    <div class="card-img-box">
+                        <img src="${currentMovieInfo.thumb_url}" alt="${ep.name}">
+                        <div class="play-btn-overlay">
+                            <svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1"
+                                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                class="play-button">
+                                <g id="Btn/Play/Normal" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <circle id="bg" fill="#1CC749" cx="30" cy="30" r="30"></circle>
+                                    <path d="M35.7461509,22.4942263 L45.1405996,36.5858994 C46.059657,37.9644855 45.6871354,39.8270935 44.3085493,40.7461509 C43.8157468,41.0746859 43.2367237,41.25 42.6444487,41.25 L23.8555513,41.25 C22.198697,41.25 20.8555513,39.9068542 20.8555513,38.25 C20.8555513,37.657725 21.0308654,37.078702 21.3594004,36.5858994 L30.7538491,22.4942263 C31.6729065,21.1156403 33.5355145,20.7431187 34.9141006,21.662176 C35.2436575,21.8818806 35.5264463,22.1646695 35.7461509,22.4942263 Z"
+                                        id="Triangle" fill="#000000"
+                                        transform="translate(33.250000, 30.000000) rotate(-270.000000) translate(-33.250000, -30.000000) ">
+                                    </path>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="card-title">Tập ${ep.name} - ${currentMovieInfo.name}</div>
+                </div>
+                `;
+            });
+
+            grid.innerHTML = episodeHtml;
+        }
+    </script>
+
+</body>
+
+</html>
