@@ -529,21 +529,26 @@
 
         /* --- MOBILE RESPONSIVE QUAN TRỌNG --- */
         @media (max-width: 768px) {
+            body {
+                background-color: #111319;
+                /* Đảm bảo body cùng màu */
+            }
+
             .banner-container {
                 display: block;
                 height: auto;
                 min-height: auto;
                 padding-bottom: 0;
-                /* Chứa các thành phần con absolute */
                 position: relative;
+                background-color: #111319;
+                /* Đồng bộ màu nền container */
             }
 
-            /* 1. ẢNH BANNER PHONE: Cố định chiều cao */
+            /* 1. ẢNH BANNER PHONE */
             .banner-bg {
                 position: relative;
                 width: 100%;
                 height: 280px;
-                /* Chiều cao cố định cho phone */
                 mask-image: none;
                 -webkit-mask-image: none;
                 z-index: 1;
@@ -553,31 +558,30 @@
                 display: none;
             }
 
-            /* 2. HIỆU ỨNG BLUR ĐEN: Nằm đè lên phần dưới ảnh */
+            /* 2. HIỆU ỨNG BLUR (GRADIENT) - Đã chỉnh màu trùng nền */
             .banner-bottom-fade {
-                height: 180px;
-                /* Độ cao của vùng làm mờ */
+                height: 200px;
+                /* Tăng độ cao fade để mượt hơn */
                 width: 100%;
-                /* Gradient từ trong suốt sang đen */
-                background: linear-gradient(to bottom, transparent 0%, #111319 85%, #111319 100%);
-                /* Căn chỉnh vị trí fade đè lên phần dưới của ảnh */
-                top: 100px;
-                /* (280px ảnh - 180px fade) + offset nhỏ */
+                /* Gradient từ trong suốt -> #111319 (màu nền chủ đạo) */
+                background: linear-gradient(to bottom, rgba(17, 19, 25, 0) 0%, #111319 70%, #111319 100%);
+                /* Căn vị trí bắt đầu fade */
+                top: 80px;
+                /* (280px ảnh - 200px fade) = 80px */
                 bottom: auto;
                 z-index: 2;
             }
 
-            /* 3. THÔNG TIN PHIM: Đẩy lên cao đè lên ảnh */
+            /* 3. THÔNG TIN PHIM */
             .movie-info-wrap {
                 padding: 0 16px;
                 display: block;
                 height: auto;
-                /* KEY: Margin âm để kéo toàn bộ khối này chạy lên trên đè vào ảnh */
-                margin-top: -100px;
+                /* Kéo lên để đè lên phần fade */
+                margin-top: -120px;
                 padding-top: 0;
                 position: relative;
                 z-index: 10;
-                /* Phải cao hơn fade và banner-bg */
             }
 
             .movie-info {
@@ -586,7 +590,6 @@
 
             .movie-title {
                 font-size: 28px;
-                /* Shadow để nổi bật trên nền banner nếu fade chưa đủ đậm */
                 text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
                 margin-bottom: 8px;
             }
