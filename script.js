@@ -35,7 +35,8 @@ function initSlider() {
         const isActive = index === 0 ? 'active' : '';
         const tagsArray = slide.tags.split('|');
         let badgesHTML = `<div class="badges-container">${tagsArray.map(tag => `<span class="badge">${tag.trim()}</span>`).join('')}</div>`;
-        const starIcon = `<svg class="score-icon" width="16px" height="16px" viewBox="0 0 28 27" xmlns="http://www.w3.org/2000/svg"><g fill="#1CC749"><path d="M16.7983826,2.56356746 L19.7968803,11.2875241 L29.1657516,11.3941138 C29.9719564,11.4033379 30.3057022,12.4128653 29.6590696,12.8853446 L22.1424877,18.3829131 L24.9344802,27.1724634 C25.17436,27.9288402 24.3014061,28.55198 23.643301,28.0938493 L16.0005215,22.7674392 L8.35669898,28.0928244 C7.69963687,28.5509551 6.82563997,27.9267904 7.06551979,27.1714385 L9.85751226,18.3818882 L2.34093036,12.8843197 C1.69429781,12.4118404 2.02804364,11.402313 2.83424842,11.3930889 L12.2031197,11.2864992 L15.2016174,2.56254256 C15.4602704,1.81231509 16.5407725,1.81231509 16.7983826,2.56356746 Z"/></g></svg>`;
+        // UPDATE: SVG size is controlled by CSS class .score-icon, attributes here are backup
+        const starIcon = `<svg class="score-icon" width="14px" height="14px" viewBox="0 0 28 27" xmlns="http://www.w3.org/2000/svg"><g fill="#1CC749"><path d="M16.7983826,2.56356746 L19.7968803,11.2875241 L29.1657516,11.3941138 C29.9719564,11.4033379 30.3057022,12.4128653 29.6590696,12.8853446 L22.1424877,18.3829131 L24.9344802,27.1724634 C25.17436,27.9288402 24.3014061,28.55198 23.643301,28.0938493 L16.0005215,22.7674392 L8.35669898,28.0928244 C7.69963687,28.5509551 6.82563997,27.9267904 7.06551979,27.1714385 L9.85751226,18.3818882 L2.34093036,12.8843197 C1.69429781,12.4118404 2.02804364,11.402313 2.83424842,11.3930889 L12.2031197,11.2864992 L15.2016174,2.56254256 C15.4602704,1.81231509 16.5407725,1.81231509 16.7983826,2.56356746 Z"/></g></svg>`;
 
         const slideHTML = `
             <div class="slide-item" data-index="${index}">
@@ -158,6 +159,7 @@ function attachHoverEvent(card, slug) {
     if (window.innerWidth <= 768) return; 
 
     card.addEventListener('mouseenter', () => {
+        // UPDATE: Giảm delay xuống 50ms (gần như tức thì)
         hoverTimeout = setTimeout(async () => {
             const hoverCard = card.querySelector('.hover-details-card');
             
@@ -201,7 +203,7 @@ function attachHoverEvent(card, slug) {
                 console.error("Lỗi hover:", err);
             }
 
-        }, 400); 
+        }, 50); 
     });
 
     card.addEventListener('mouseleave', () => {
@@ -221,7 +223,7 @@ function fillHoverData(hoverCard, movie) {
     
     const addSvg = `
         <svg class="hover-btn-icon" viewBox="0 0 60 60"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><circle fill="#FFFFFF" cx="30" cy="30" r="30"></circle><path d="M29.3,17.25 C29.69,17.25 30,17.56 30,17.94 L30,19.39 C30,19.77 29.69,20.08 29.3,20.08 L22.91,20.08 L22.91,39.72 L28.64,34.95 C29.37,34.34 30.41,34.3 31.18,34.82 L31.36,34.95 L37.08,39.72 L37.08,33.52 C37.08,33.14 37.39,32.83 37.77,32.83 L39.22,32.83 C39.6,32.83 39.91,33.14 39.91,33.52 L39.91,41.23 C39.91,42.41 38.96,43.36 37.79,43.36 C37.36,43.36 36.95,43.23 36.6,43 L36.43,42.87 L30,37.51 L23.57,42.87 C22.72,43.57 21.49,43.51 20.72,42.75 L20.57,42.6 C20.3,42.27 20.13,41.87 20.09,41.45 L20.08,41.23 L20.08,20.08 C20.08,18.59 21.24,17.36 22.7,17.25 L22.91,17.25 L29.3,17.25 Z M39.22,17.25 C39.6,17.25 39.91,17.56 39.91,17.94 L39.91,21.5 L43.47,21.5 C43.85,21.5 44.16,21.81 44.16,22.19 L44.16,23.64 C44.16,24.02 43.85,24.33 43.47,24.33 L39.91,24.33 L39.91,27.89 C39.91,28.27 39.6,28.58 39.22,28.58 L37.77,28.58 C37.39,28.58 37.08,28.27 37.08,27.89 L37.08,24.33 L33.52,24.33 C33.14,24.33 32.83,24.02 32.83,23.64 L32.83,22.19 C32.83,21.81 33.14,21.5 33.52,21.5 L37.08,21.5 L37.08,17.94 C37.08,17.56 37.39,17.25 37.77,17.25 L39.22,17.25 Z" fill="#111319" fill-rule="nonzero"></path></g></svg>`;
-
+    
     const html = `
         <div class="hover-thumb-container">
             <img src="${movie.thumb_url || movie.poster_url}" class="hover-thumb-img" alt="${movie.name}">
