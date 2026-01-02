@@ -1,0 +1,333 @@
+/* --- 1. RESET --- */
+* { box-sizing: border-box; outline: none; }
+body { margin: 0; padding: 0; background-color: #111319; font-family: 'SF Pro', 'Roboto', 'Noto Sans', sans-serif; color: #fff; overflow-x: hidden; }
+a { text-decoration: none; color: inherit; cursor: pointer; }
+ul, li { list-style: none; padding: 0; margin: 0; }
+p { margin: 0; }
+select { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
+
+img { border: none; vertical-align: top; }
+
+/* --- 2. LAYOUT CHÍNH --- */
+.main-container { width: 100%; max-width: 1550px; margin: 0 auto; padding: 20px 0; display: flex; flex-direction: column; gap: 20px; }
+.top-section, .bottom-section { display: flex; justify-content: center; align-items: flex-start; gap: 20px; }
+.col-left { width: 1154px; flex-shrink: 0; }
+.col-right { width: 350px; flex-shrink: 0; }
+
+/* --- 3. PLAYER --- */
+.video-wrapper { position: relative; width: 100%; height: 648.547px; background-color: #000; border-radius: 0px !important; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); }
+.artplayer-app { width: 100%; height: 100%; }
+
+/* --- VIDEO ACTION BAR --- */
+.video-action-bar {
+    width: 100%;
+    background: rgb(26, 28, 34);
+    height: 44px;
+    padding: 0px 20px 0px 15px;
+    display: flex;
+    justify-content: flex-start; 
+    align-items: center;
+    gap: 30px; 
+    position: relative;
+    z-index: 5;
+    margin-top: -4px;
+}
+
+.action-btn { display: flex; align-items: center; gap: 10px; cursor: pointer; color: #a9a9ac; font-size: 14px; font-weight: 500; transition: color 0.3s ease; }
+.action-btn .icon-box { display: block; width: 24px; height: 24px; background-color: #a9a9ac; transition: background-color 0.3s ease; -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center; }
+.collection-btn .icon-box { -webkit-mask-image: url('IMG/icon_watch_gray@2x.png'); mask-image: url('IMG/icon_watch_gray@2x.png'); }
+.share-btn .icon-box { -webkit-mask-image: url('IMG/icon_share_gray@2x.png'); mask-image: url('IMG/icon_share_gray@2x.png'); }
+.action-btn:hover { color: #1cc749; }
+.action-btn:hover .icon-box { background-color: #1cc749; }
+
+/* --- 4. INFO PHIM & RECOMMEND CONTAINER --- */
+.video-info, 
+.recommend-section { 
+    width: 100%; 
+    padding-right: 0; 
+    position: relative;
+    box-sizing: border-box;
+}
+
+.video-title-row { display: flex; align-items: center; line-height: 1.2; margin-bottom: 8px; }
+.main-title { font-size: 34px; font-weight: 700; color: #fff; }
+.title-arrow { width: 20px; height: 20px; margin: 0 10px; fill: rgb(169, 169, 172); }
+.ep-title { font-size: 34px; font-weight: 700; color: rgb(169, 169, 172); }
+
+.rating-section { display: flex; align-items: center; margin-top: 6px; font-size: 14px; }
+.rating-star svg { width: 18px; height: 18px; fill: #00cc36; margin-right: 4px; vertical-align: text-bottom; }
+.rating-score { font-size: 18px; font-weight: 700; color: #00cc36; margin-right: 6px; }
+.rating-count { color: #828387; font-size: 14px; }
+.rating-dot { margin: 0 6px; color: #828387; }
+.rating-action { color: #00cc36; font-size: 14px; cursor: pointer; font-weight: 500; text-decoration: none; }
+
+.meta-info-row { margin-top: 12px; font-size: 16px; color: #fff; display: flex; align-items: center; font-weight: 500; }
+.meta-group { display: flex; align-items: center; }
+.meta-divider { margin: 0 10px; color: #666; font-size: 14px; }
+.meta-tags { display: flex; flex-wrap: wrap; overflow: hidden; height: auto; margin: 16px 0px; font-size: 14px; gap: 10px; align-items: center; }
+.tag-box { background: rgba(255, 255, 255, 0.1); padding: 0 8px; border-radius: 2px; color: rgb(236, 236, 236); height: 24px; line-height: 24px; display: inline-block; cursor: pointer; }
+
+/* Description */
+.description-wrapper { position: relative; font-size: 16px; line-height: 24px; margin-top: 12px; color: #fff; }
+.desc-label { color: rgb(169, 169, 172); margin-right: 4px; float: left; }
+.desc-text { display: inline; }
+.desc-content { display: block; overflow: hidden; } 
+.description-wrapper.collapsed .desc-content { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.toggle-btn-container { position: absolute; bottom: 0; right: 0; padding-left: 40px; background: linear-gradient(to right, rgba(17, 19, 25, 0), #111319 25%, #111319 100%); display: none; }
+.collapse-btn-container { display: none; text-align: right; margin-top: 5px; }
+.description-wrapper.collapsed .toggle-btn-container.show { display: block; }
+.description-wrapper.expanded .collapse-btn-container.show { display: block; }
+.toggle-btn { cursor: pointer; color: #fff; font-size: 16px; display: inline-flex; align-items: center; }
+.toggle-btn:hover { color: rgb(28, 199, 73); }
+.toggle-btn svg { margin-left: 5px; width: 12px; height: 12px; fill: currentColor; }
+.clearfix::after { content: ""; clear: both; display: table; }
+
+/* --- 5. LIST TẬP --- */
+.episode-box { background: #1a1c22; padding: 16px; border-radius: 4px; height: 648.547px; display: flex; flex-direction: column; overflow: hidden; }
+.right-header-title { font-size: 20px; line-height: 1.25; color: #fff; font-weight: 700; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; margin-bottom: 20px; }
+.list-tools { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; position: relative; }
+.select-wrapper { position: relative; }
+.lang-select { background: #1a1c22; color: #fff; cursor: pointer; border: 1px solid rgb(130, 131, 135); border-radius: 2px; width: 178px; height: 34px; padding: 0 30px 0 10px; font-size: 14px; outline: none; }
+.select-arrow { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 4px solid #fff; }
+
+.list-icon { display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; cursor: pointer; }
+.list-icon svg { width: 20px; height: 20px; fill: #a9a9ac; display: block; }
+.list-icon:hover svg { fill: #1cc749; }
+
+.range-info { font-size: 14px; line-height: 16px; color: #a9a9ac; margin-bottom: 12px; font-weight: 400; }
+.episode-scroll-container { overflow-y: auto; overflow-x: hidden; flex: 1; margin-right: -5px; padding-right: 5px; }
+.episode-scroll-container::-webkit-scrollbar { width: 4px; }
+.episode-scroll-container::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+
+/* Grid mặc định */
+.episode-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+.ep-item { background: rgba(255, 255, 255, 0.06); height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 2px; color: #fff; font-size: 14px; font-weight: 400; cursor: pointer; }
+.ep-item:hover { background: #23252b; color: #1cc749; }
+.ep-item.selected { background: #23252b; color: rgb(28, 199, 73); }
+
+/* --- STYLE DẠNG THUMBNAIL --- */
+.episode-grid.thumbnail-view { display: flex; flex-direction: column; gap: 10px; padding-bottom: 20px; grid-template-columns: none !important; }
+.ep-thumb-item { display: flex; align-items: center; gap: 15px; padding: 5px; cursor: pointer; border-radius: 4px; transition: background-color 0.2s; background: transparent; }
+.ep-thumb-item:hover { background-color: rgba(255, 255, 255, 0.08); }
+.ep-thumb-img-box { width: 128px; height: 72.25px; flex-shrink: 0; overflow: hidden; border-radius: 4px; position: relative; background-color: #23252b; }
+.ep-thumb-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: opacity 0.3s; }
+.ep-thumb-item:hover .ep-thumb-img, .ep-thumb-item.selected .ep-thumb-img { opacity: 1; }
+.ep-thumb-name { font-size: 14px; font-weight: 500; color: #fff; white-space: normal; line-height: 1.4; overflow: hidden; transition: color 0.2s; }
+.ep-thumb-item.selected .ep-thumb-name { color: #1cc749; }
+
+/* --- 6. BẢNG XẾP HẠNG --- */
+.ranking-container { width: 100%; }
+.ranking-header-title { font-size: 28px; line-height: 34px; font-weight: 700; color: #fff; margin-bottom: 16px; height: 40px; display: flex; align-items: center; }
+.ranking-box { background: transparent; }
+.ranking-list { display: flex; flex-direction: column; gap: 10px; }
+.rank-item { display: flex; flex-direction: column; position: relative; background-color: transparent; padding: 10px; border-radius: 6px; transition: all 0.3s ease; cursor: pointer; }
+.rank-item:hover { background-color: rgb(29, 31, 37); }
+.rank-item:hover .rank-poster-img { display: block; }
+.rank-item:first-child { background-color: rgb(29, 31, 37); }
+.rank-item:first-child .rank-poster-img { display: block; }
+.ranking-list:hover .rank-item:first-child:not(:hover) { background-color: transparent; }
+.ranking-list:hover .rank-item:first-child:not(:hover) .rank-poster-img { display: none; }
+.rank-header-row { display: flex; align-items: center; width: 100%; cursor: pointer; }
+.rank-num { font-size: 18px; font-weight: 700; width: 22px; text-align: center; font-style: normal; flex-shrink: 0; line-height: 30px; }
+.rank-num.top1 { color: #1cc749; font-size: 20px; }
+.rank-num.top2 { color: #1cc749; opacity: 0.8; }
+.rank-num.top3 { color: #1cc749; opacity: 0.6; }
+.rank-num.normal { color: #828387; font-size: 16px; }
+.rank-name { cursor: pointer; display: block; padding-left: 15px; font-size: 16px; line-height: 30px; color: rgb(204, 204, 204); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+.rank-poster-img { display: none; width: 100px; margin-left: 37px; border-radius: 4px; margin-top: 10px; margin-bottom: 5px; object-fit: cover; aspect-ratio: 2/3; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); }
+
+/* --- 7. DIỄN VIÊN --- */
+.actor-section { margin-top: 40px; position: relative; }
+
+/* FIX: 
+   - padding-left: 0 -> Căn thẳng lề trái với tiêu đề.
+   - padding-right: 45px -> Chừa chỗ trống bên phải cho mũi tên phải nằm.
+   - overflow: visible -> Để mũi tên trái có thể nằm "thò" ra ngoài bên trái.
+*/
+.actor-carousel-container { 
+    position: relative; 
+    width: 100%; 
+    padding: 0 45px 0 0; 
+    overflow: visible; 
+}
+
+.actor-slider { display: flex; gap: 20px; overflow-x: auto; padding: 10px 0 20px 0; scrollbar-width: none; scroll-behavior: smooth; }
+.actor-slider::-webkit-scrollbar { display: none; }
+.actor-item { text-align: center; width: 135px; flex-shrink: 0; cursor: pointer; }
+.actor-img-box { width: 132.141px; height: 132.141px; border-radius: 50%; position: relative; margin: 0 auto 12px; border: 2px solid transparent; box-sizing: content-box; overflow: hidden; }
+.actor-item:hover .actor-img-box { border-color: #1cc749; }
+.actor-img { width: 100%; height: 100%; object-fit: cover; }
+.actor-name { font-size: 16px; font-weight: 500; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.actor-role { font-size: 14px; color: rgb(169, 169, 172); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 3px; }
+
+/* --- 8. SECTION DIVIDER --- */
+.section-divider { width: 100%; height: 1px; background-color: rgba(255, 255, 255, 0.1); margin: 30px 0; }
+
+/* --- 9. ĐỀ XUẤT CHO BẠN --- */
+.section-header { font-size: 28px; line-height: 32px; font-weight: 700; color: #fff; margin-bottom: 20px; }
+
+/* FIX: Tương tự như diễn viên, căn trái 0, chừa phải 45px cho mũi tên */
+.recommend-carousel-wrapper { 
+    position: relative; 
+    width: 100%; 
+    padding: 0 45px 0 0; 
+    overflow: visible; 
+}
+
+.recommend-grid { display: flex; gap: 16px; overflow-x: auto; scroll-behavior: smooth; padding-bottom: 20px; scrollbar-width: none; }
+.recommend-grid::-webkit-scrollbar { display: none; }
+
+.rec-movie-card { position: relative; min-width: calc((100% - 80px) / 6); max-width: calc((100% - 80px) / 6); flex-shrink: 0; cursor: pointer; transition: transform 0.2s ease, z-index 0s; z-index: 1; }
+.rec-movie-card:hover { transform: scale(1.05); z-index: 100; }
+.rec-poster-wrapper { position: relative; width: 100%; padding-top: 133.33%; border-radius: 4px; overflow: hidden; background-color: #252525; margin-bottom: 8px; }
+.rec-poster-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+.rec-poster-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 40%); pointer-events: none; }
+.rec-episode-tag { position: absolute; bottom: 6px; left: 6px; font-size: 13px; font-weight: 400; color: #fff; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9); z-index: 5; }
+.rec-play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); width: 42px; height: 42px; z-index: 10; opacity: 0; transition: all 0.3s ease; }
+.rec-play-btn svg { width: 100%; height: 100%; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5)); }
+.rec-movie-card:hover .rec-play-btn { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.rec-collection-btn { position: absolute; bottom: 8px; right: 8px; width: 36px; height: 36px; background-color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 10; opacity: 0; transform: scale(0.8); transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.2s ease; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5); }
+.rec-collection-btn svg { width: 24px; height: 24px; fill: #111319; }
+.rec-movie-card:hover .rec-collection-btn { opacity: 1; transform: scale(1); }
+.rec-collection-btn:hover { background-color: #f0f0f0; }
+.rec-tooltip-text { position: absolute; right: 48px; top: 50%; transform: translateY(-50%); background-color: rgba(30, 30, 30, 0.9); color: #fff; padding: 6px 10px; border-radius: 4px; font-size: 12px; white-space: nowrap; opacity: 0; visibility: hidden; pointer-events: none; transition: none; border: 1px solid rgba(255, 255, 255, 0.15); }
+.rec-tooltip-text::after { content: ""; position: absolute; top: 50%; right: -4px; margin-top: -4px; border-width: 4px 0 4px 4px; border-style: solid; border-color: transparent transparent transparent rgba(30, 30, 30, 0.9); }
+.rec-collection-btn:hover .rec-tooltip-text { opacity: 1; visibility: visible; }
+.rec-movie-title { font-size: 15px; font-weight: 500; color: #e0e0e0; margin-top: 8px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; transition: color 0.2s; }
+.rec-movie-card:hover .rec-movie-title { color: #1cc749; }
+
+/* --- 10. NAV ARROW (ĐỊNH VỊ CHUẨN) --- */
+.nav-arrow {
+    position: absolute;
+    width: 40px; 
+    height: 80px; 
+    z-index: 20;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    background: none !important;
+    overflow: visible;
+    opacity: 1;
+    transition: none; 
+}
+.nav-arrow svg { width: 100%; height: 100%; fill: #a1a1a1; transition: fill 0.3s; }
+.nav-arrow:hover svg { fill: #ffffff; }
+
+/* FIX: Mũi tên trái
+   - Đặt left: -45px để nó nằm hẳn ra ngoài vùng nội dung phim.
+*/
+.nav-prev { 
+    left: -45px; 
+    transform: translateY(-50%) rotate(180deg) !important; 
+}
+
+/* FIX: Mũi tên phải
+   - Đặt right: 0. Vì container đã có padding-right: 45px, mũi tên sẽ nằm gọn trong khoảng trống này
+     mà không đè lên poster.
+*/
+.nav-next { 
+    right: 0; 
+    transform: translateY(-50%) !important; 
+}
+
+/* Ẩn ngay lập tức nếu không còn nội dung */
+.nav-arrow.hidden { display: none !important; }
+
+/* CĂN GIỮA MŨI TÊN DIỄN VIÊN 
+   Avatar 132px + 10px padding top = 142px. 
+   Tâm ảnh = 10px + 66px = 76px.
+*/
+.actor-carousel-container .nav-arrow { 
+    top: 76px; 
+}
+
+/* CĂN GIỮA MŨI TÊN ĐỀ XUẤT VỚI POSTER
+   Poster chiều cao ~230px. 
+   Tâm poster ~ 115px.
+*/
+.recommend-carousel-wrapper .nav-arrow { 
+    top: 115px; 
+}
+
+/* --- RESPONSIVE MOBILE --- */
+@media screen and (max-width: 1480px) {
+    .video-info, .recommend-section { padding-right: 0; }
+    .main-container { padding: 0; max-width: 100%; gap: 20px; }
+    .top-section, .bottom-section { display: contents; }
+    .video-area { order: 1; }
+    .info-area { order: 2; } 
+    .video-action-bar { order: 3; }
+    .list-area { order: 4; }
+    .recommend-section { order: 5 !important; margin-top: 10px; margin-bottom: 20px; padding: 0 15px; } 
+    .rank-area { order: 6; } 
+    .col-left, .col-right { width: 100%; padding: 0 15px; }
+    .video-wrapper { width: 100%; height: auto; padding-top: 56.25%; }
+    .artplayer-app { position: absolute; top: 0; left: 0; }
+    .rank-area { margin-top: 0; }
+    .episode-box { height: auto; min-height: auto; }
+    .right-header-title#sideTitle { display: none; }
+    .episode-scroll-container { padding: 6px 0px 0px; margin-right: 0; padding-right: 0; max-height: 40vh; overflow-y: auto; }
+    .episode-grid { grid-template-columns: repeat(7, 1fr); gap: 5px; }
+    .ep-item { font-size: 12px; padding: 0 2px; }
+    .video-info { margin-top: 10px; }
+    .main-title, .ep-title { font-size: 20px; }
+    .title-arrow { width: 14px; height: 14px; }
+    .ranking-header-title { font-size: 20px; }
+
+    .section-divider { display: none; }
+
+    .video-action-bar {
+        background-color: transparent;
+        height: auto;
+        padding: 0px 15px; 
+        margin-top: 5px; 
+        margin-bottom: 5px; 
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .action-btn { font-size: 14px; }
+    .action-btn .icon-box { width: 22px; height: 22px; }
+
+    .actor-section { margin-top: 10px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; }
+    
+    /* Mobile: Bỏ padding container để full màn hình, không cần mũi tên */
+    .actor-carousel-container, .recommend-carousel-wrapper { padding: 0; overflow: hidden; }
+    
+    .actor-item { width: 62px; }
+    .actor-img-box { width: 60px; height: 60px; aspect-ratio: auto; margin-bottom: 6px; }
+    .actor-name { font-size: 11px; margin-top: 0; }
+    .actor-role { font-size: 11px; margin-top: 5px; line-height: 1; }
+    .actor-slider { gap: 15px; padding: 10px 0 0 0; } 
+    .nav-arrow { display: none !important; }
+    
+    .list-area { margin-top: 0px !important; margin-bottom: 20px; } 
+
+    .recommend-section .section-header { font-size: 20px; line-height: normal; } 
+    
+    /* Logic card mobile */
+    .rec-movie-card { min-width: calc((100% - 24px) / 3); max-width: calc((100% - 24px) / 3); }
+    .rec-play-btn, .rec-collection-btn, .rec-poster-overlay { display: none; }
+    .rec-movie-title { font-size: 13px; }
+    .tag-box { font-size: 12px; line-height: 14px; padding: 5px 8px; height: auto; }
+    .description-wrapper { font-size: 13px; line-height: 16px; margin-bottom: 5px; display: flex; flex-direction: column; height: auto !important; }
+    .desc-label { float: none; display: inline; }
+    .desc-content { font-size: 13px; line-height: 16px; display: block; order: 1; }
+    .toggle-btn-container, .collapse-btn-container { position: static !important; background: none !important; padding-left: 0 !important; margin-top: 5px; text-align: right; display: none; order: 2; }
+    .description-wrapper.collapsed .toggle-btn-container { display: block; }
+    .description-wrapper.expanded .collapse-btn-container { display: block; }
+    .toggle-btn { font-size: 14px; }
+    .meta-info-row { font-size: 14px; line-height: 18px; flex-direction: column; align-items: flex-start; gap: 0px; }
+    .meta-divider.divider-pc { display: none; }
+    #totalEp { display: block; font-size: 14px; margin-top: 4px; }
+    .rating-star svg { width: 14px; height: 14px; }
+    .rating-action { display: none; }
+    .rating-count { font-size: 12px; line-height: 12px; }
+    .rating-dot { display: none; }
+    .rank-item:first-child .rank-poster-img { display: none !important; }
+    .rank-poster-img { display: none !important; }
+    .rank-name { padding-left: 12px; font-size: 12px; line-height: 20px; }
+    .rank-num { line-height: 20px; font-size: 14px; }
+    .rank-num.top1 { font-size: 16px; }
+    .rank-item { padding: 8px; margin-bottom: 6px; }
+    .episode-grid.thumbnail-view { padding-right: 5px; }
+    .ep-thumb-item { gap: 10px; }
+}

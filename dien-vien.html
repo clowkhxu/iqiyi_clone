@@ -48,6 +48,7 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 20px;
             width: 100%;
+            align-items: start;
         }
 
         /* --- KHỐI NGƯỜI (CARD CHÍNH) --- */
@@ -57,7 +58,7 @@
             padding: 24px 20px 20px 20px;
             display: flex;
             flex-direction: column;
-            min-height: auto;
+            height: auto;
             transition: background-color 0.2s;
         }
 
@@ -69,11 +70,13 @@
             margin-bottom: 20px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             position: relative;
+            transition: all 0.3s;
         }
 
+        /* --- AVATAR (PC) --- */
         .person-avatar {
-            width: 60px;
-            height: 60px;
+            width: 74.31px;
+            height: 80px;
             border-radius: 50%;
             overflow: hidden;
             margin-right: 14px;
@@ -82,39 +85,49 @@
             cursor: pointer;
         }
 
+        /* --- KHỐI CHỨA TÊN VÀ ROLE --- */
         .person-info {
             display: flex;
             flex-direction: column;
             justify-content: center;
             flex-grow: 1;
+            position: relative;
+            /* Để định vị nút Khác */
         }
 
+        /* --- TÊN DIỄN VIÊN (PC) --- */
         .person-name {
             font-size: 16px;
             font-weight: 700;
             color: #fff;
-            margin-bottom: 4px;
+            margin-bottom: 10px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            padding-right: 10px;
+            /* Tránh đè lên nút Khác */
         }
 
+        /* --- CHỨC VỤ (PC) --- */
         .person-role {
             font-size: 14px;
             color: #83858a;
             font-weight: 400;
         }
 
-        /* Nút Khác */
+        /* --- NÚT KHÁC (PC) --- */
         .more-link {
+            position: absolute;
+            bottom: 0;
+            /* Căn đáy với khối person-info */
+            right: 0;
+            /* Căn phải */
             color: #1CC749;
             font-size: 14px;
             font-weight: 400;
             display: flex;
             align-items: center;
-            flex-shrink: 0;
             cursor: pointer;
-            margin-left: auto;
         }
 
         .more-link:hover {
@@ -128,7 +141,7 @@
             height: 12px;
         }
 
-        /* --- GRID PHIM CỦA DIỄN VIÊN (2 PHIM) --- */
+        /* --- GRID PHIM --- */
         .person-movies-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -142,7 +155,6 @@
             cursor: pointer;
             position: relative;
             width: 198px;
-            /* PC cố định */
             transform-origin: center center;
             transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
@@ -152,7 +164,6 @@
             z-index: 10;
         }
 
-        /* Khung Poster */
         .poster-box {
             position: relative;
             width: 198px;
@@ -172,7 +183,6 @@
             object-fit: cover;
         }
 
-        /* --- 1. Gradient đen mờ --- */
         .poster-overlay-gradient {
             position: absolute;
             bottom: 0;
@@ -185,7 +195,6 @@
             opacity: 1;
         }
 
-        /* --- 2. NÚT PLAY --- */
         .play-btn-center {
             position: absolute;
             top: 50%;
@@ -209,7 +218,6 @@
             transform: translate(-50%, -50%) scale(1);
         }
 
-        /* --- 3. NÚT SƯU TẬP --- */
         .collection-btn {
             position: absolute;
             bottom: 8px;
@@ -245,7 +253,6 @@
             transition: transform 0.1s;
         }
 
-        /* Tooltip Sưu tập */
         .tooltip-text {
             position: absolute;
             right: 55px;
@@ -281,9 +288,8 @@
             visibility: visible;
         }
 
-        /* Tên phim */
         .poster-title {
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 400;
             color: #dcdcdc;
             line-height: 1.4;
@@ -312,7 +318,7 @@
             }
         }
 
-        /* --- MOBILE RESPONSIVE FIX --- */
+        /* --- MOBILE RESPONSIVE FIX (PHONE) --- */
         @media (max-width: 768px) {
             .main-container {
                 padding: 16px;
@@ -344,9 +350,24 @@
                 margin-bottom: 15px;
             }
 
-            /* --- FIX: TÊN DIỄN VIÊN KHÔNG IN ĐẬM Ở MOBILE --- */
+            .person-avatar {
+                width: 60px;
+                height: 60px;
+            }
+
             .person-name {
-                font-weight: 400;
+                font-size: 16px;
+                font-weight: 500;
+            }
+
+            .person-role {
+                font-size: 12px;
+                font-weight: 500;
+            }
+
+            .more-link {
+                font-size: 12px;
+                font-weight: 500;
             }
 
             .person-movies-grid {
@@ -368,10 +389,11 @@
             }
 
             .poster-title {
+                padding: 0.1rem 0px 0px;
                 font-size: 14px;
+                transition: color 0.3s;
             }
 
-            /* --- ẨN NÚT PLAY VÀ SƯU TẬP TRÊN MOBILE --- */
             .play-btn-center,
             .collection-btn {
                 display: none !important;
@@ -410,11 +432,10 @@
 
         // --- MAIN LOGIC ---
         document.addEventListener("DOMContentLoaded", function () {
-            const urlParams = new URLSearchParams(window.location.search);
-            const movieSlug = urlParams.get('url');
+            const movieSlug = window.location.search.substring(1);
 
             if (!movieSlug) {
-                document.getElementById('loadingMsg').textContent = "Vui lòng thêm ?url={slug-phim} vào thanh địa chỉ.";
+                document.getElementById('loadingMsg').textContent = "Vui lòng thêm ?[slug-phim] vào thanh địa chỉ.";
                 return;
             }
 
@@ -471,7 +492,6 @@
                 peopleList.push({ ...director, roleName: 'Đạo diễn' });
             }
 
-            // --- LOAD TOÀN BỘ DIỄN VIÊN (KHÔNG GIỚI HẠN) ---
             cast.forEach(c => {
                 peopleList.push({ ...c, roleName: 'Diễn viên' });
             });
@@ -480,22 +500,22 @@
                 const personBlock = document.createElement('div');
                 personBlock.className = 'person-block';
 
+                // --- LOGIC ẢNH AVATAR + FALLBACK ---
                 const avatarUrl = person.profile_path
                     ? TMDB_IMAGE_BASE + person.profile_path
-                    : 'https://via.placeholder.com/80x80?text=NA';
+                    : 'img/default_avatar.png'; // Nếu không có path thì dùng ảnh mặc định ngay
 
-                // --- ĐÃ BỎ CHỮ "Đang tải..." Ở DƯỚI ---
                 let html = `
                     <div class="person-header">
                         <div class="person-avatar">
-                            <img src="${avatarUrl}" alt="${person.name}">
+                            <img src="${avatarUrl}" alt="${person.name}" onerror="this.onerror=null; this.src='img/default_avatar.png';">
                         </div>
                         <div class="person-info">
                             <div class="person-name">${person.name}</div>
                             <div class="person-role">${person.roleName}</div>
-                        </div>
-                        <div class="more-link">
-                            Khác <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            <div class="more-link">
+                                Khác <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </div>
                         </div>
                     </div>
                     <div class="person-movies-grid" id="movies-of-${person.id}">
@@ -510,7 +530,6 @@
 
         async function fetchPersonCredits(personId, containerId) {
             try {
-                // 1. Lấy danh sách từ TMDB
                 const url = `${TMDB_BASE_URL}/person/${personId}/combined_credits?api_key=${TMDB_API_KEY}&language=vi-VN`;
                 const res = await fetch(url);
                 const data = await res.json();
@@ -518,15 +537,12 @@
                 let works = data.cast || [];
                 if (works.length === 0) works = data.crew || [];
 
-                // Sắp xếp theo độ phổ biến
                 works.sort((a, b) => b.popularity - a.popularity);
 
-                // Lấy TOP 6 phim tiềm năng
                 const candidates = works.slice(0, 6);
                 const gridContainer = document.getElementById(containerId);
 
                 if (candidates.length > 0) {
-                    // 2. Kiểm tra danh sách này trên PhimAPI
                     const processedMovies = await Promise.all(candidates.map(async (w) => {
                         let result = null;
                         try {
@@ -536,7 +552,6 @@
                             const searchResult = await searchRes.json();
 
                             if (searchResult.status === 'success' && searchResult.data && searchResult.data.items) {
-                                // Tìm kiếm chính xác theo ID TMDB
                                 const match = searchResult.data.items.find(item =>
                                     item.tmdb && item.tmdb.id == w.id
                                 );
@@ -559,15 +574,13 @@
                         return result;
                     }));
 
-                    // 3. Lọc & lấy 2 phim
                     const finalMovies = processedMovies.filter(m => m !== null).slice(0, 2);
 
                     if (finalMovies.length > 0) {
-                        // --- TRƯỜNG HỢP CÓ PHIM ---
                         let moviesHtml = "";
                         finalMovies.forEach(m => {
                             moviesHtml += `
-                                <div class="movie-card-vertical" title="${m.title}" onclick="window.location.href='?url=${m.slug}'">
+                                <div class="movie-card-vertical" title="${m.title}" onclick="window.location.href='?${m.slug}'">
                                     <div class="poster-box">
                                         <img src="${m.poster}" alt="${m.title}">
                                         <div class="poster-overlay-gradient"></div>
@@ -583,11 +596,9 @@
                         });
                         gridContainer.innerHTML = moviesHtml;
                     } else {
-                        // --- TRƯỜNG HỢP KHÔNG CÓ PHIM (ẨN NỀN) ---
                         handleNoMovies(gridContainer);
                     }
                 } else {
-                    // --- TRƯỜNG HỢP KHÔNG CÓ DATA TMDB (ẨN NỀN) ---
                     handleNoMovies(gridContainer);
                 }
             } catch (e) {
@@ -597,30 +608,19 @@
             }
         }
 
-        // Hàm xử lý ẩn nền khi không có phim
         function handleNoMovies(container) {
             if (!container) return;
-
-            // Ẩn container chứa grid phim
             container.innerHTML = "";
             container.style.display = "none";
-
-            // Tìm thẻ cha .person-block để xóa nền
             const parentBlock = container.closest('.person-block');
             if (parentBlock) {
-                // Xóa màu nền
-                parentBlock.style.backgroundColor = "transparent";
-                // Xóa box-shadow (nếu có)
-                parentBlock.style.boxShadow = "none";
-                // Tắt hiệu ứng hover của card (để không bị đổi màu khi di chuột vào vùng trống)
-                parentBlock.style.transition = "none";
-
-                // Ẩn đường kẻ dưới Header
                 const header = parentBlock.querySelector('.person-header');
                 if (header) {
                     header.style.borderBottom = "none";
-                    header.style.marginBottom = "0"; // Thu gọn khoảng cách
+                    header.style.marginBottom = "0";
+                    header.style.paddingBottom = "0";
                 }
+                parentBlock.style.paddingBottom = "24px";
             }
         }
     </script>

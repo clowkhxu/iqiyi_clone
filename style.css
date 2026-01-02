@@ -3,15 +3,33 @@ body { margin: 0; padding: 0; background-color: #111319; font-family: 'SF Pro', 
 /* --- SLIDER CONTAINER --- */
 .slider-container { position: relative; width: 100%; height: 56vw; max-height: 800px; min-height: 500px; overflow: hidden; cursor: default; touch-action: pan-y; transform: translate3d(0, 0, 0); }
 .slider-wrapper { position: relative; width: 100%; height: 100%; }
-.slide-item { position: absolute; width: 100%; height: 100%; top: 0; left: 0; overflow: hidden; }
+
+/* Slide Items */
+.slide-item { 
+    position: absolute; 
+    width: 100%; 
+    height: 100%; 
+    top: 0; 
+    left: 0; 
+    overflow: hidden; 
+    pointer-events: none; 
+}
+.slide-item.active {
+    pointer-events: auto; 
+}
+
 .slide-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-position: center; background-size: cover; background-repeat: no-repeat; opacity: 0; transition: opacity 1.0s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1; will-change: opacity; }
 .slide-bg.active { opacity: 1; }
 .slide-character-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0; transform: translate3d(50px, 0, 0); transition: opacity 1.0s ease-out, transform 1.0s cubic-bezier(0.2, 0.8, 0.2, 1); pointer-events: none; will-change: transform, opacity; }
 .slide-character-container.active { opacity: 1; transform: translate3d(0, 0, 0); }
 .slide-character { width: 50%; height: 100%; position: absolute; top: 0; right: 0; background-repeat: no-repeat; background-size: contain; background-position: bottom center; }
+
+/* Gradient Overlay */
 .gradient-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; }
 .gradient-left { position: absolute; left: 0; top: 0; width: 40%; height: 100%; background: linear-gradient(90deg, #111319 0%, rgba(17, 19, 25, 0) 100%); }
 .gradient-bottom { position: absolute; bottom: 0; left: 0; width: 100%; height: 30%; background: linear-gradient(0deg, #111319 0%, rgba(17, 19, 25, 0) 100%); }
+
+/* Slide Info & Buttons */
 .slide-info { position: absolute; left: 64px; z-index: 10; color: #fff; max-width: 600px; pointer-events: none; top: 50%; transform: translate3d(0, -60%, 0); opacity: 0; }
 .info-content-wrapper { transform: translate3d(0, 30px, 0); transition: opacity 0.8s ease-out, transform 0.8s ease-out; will-change: transform, opacity; }
 .slide-info.active { opacity: 1; }
@@ -30,12 +48,8 @@ body { margin: 0; padding: 0; background-color: #111319; font-family: 'SF Pro', 
 .badge:first-child { background-color: #00CC33; color: #000; font-weight: 700; border: none; }
 .meta-tags { display: flex; align-items: center; font-size: 14px; color: #ececec; font-weight: 500; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); margin-bottom: 12px; }
 
-/* UPDATE: Giảm cỡ chữ điểm số */
 .score { color: #1cc749; font-size: 14px; margin-right: 6px; font-weight: bold; }
-
-/* UPDATE: Giảm kích thước icon ngôi sao */
 .score-icon { width: 14px; height: 14px; margin-right: 4px; vertical-align: middle; }
-
 .divider { margin: 0 8px; opacity: 0.6; font-size: 12px; }
 .description { width: 525px; max-height: 72px; line-height: 1.5em; margin-top: 16px; font-size: 16px; color: #ffffff; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8); }
 .arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 60px; height: 60px; z-index: 50; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: opacity 0.3s ease; opacity: 0.6; background: none; }
@@ -52,72 +66,25 @@ body { margin: 0; padding: 0; background-color: #111319; font-family: 'SF Pro', 
    ========================================= */
 .filter-section {
     width: 100%;
-    padding: 5px 64px; 
+    padding: 0 64px; 
+    margin-top: -30px; 
+    margin-bottom: 25px; 
     background-color: #111319;
-    z-index: 10;
+    z-index: 9; 
     position: relative;
     box-sizing: border-box;
 }
-
-.filter-scroll-wrapper {
-    display: flex;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; 
-    padding-bottom: 5px;
-}
-
+.filter-scroll-wrapper { display: flex; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 5px; }
 .filter-scroll-wrapper::-webkit-scrollbar { display: none; }
-
-.filter-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: rgb(169, 169, 172);
-    text-decoration: none;
-    white-space: nowrap;
-    transition: all 0.2s;
-    font-weight: 500;
-    cursor: pointer;
-    font-size: 14px;
-    height: 36px;
-    margin-right: 12px;
-    padding: 0px 17px;
-    background: rgb(35, 37, 43);
-    border-radius: 4px;
-    flex-shrink: 0;
-}
-
-.filter-btn:hover, .filter-btn.active {
-    color: #1cc749;
-    background-color: #23252b;
-}
-
-.filter-icon {
-    width: 14px;
-    height: 14px;
-    margin-right: 6px;
-    fill: currentColor;
-}
-
+.filter-btn { display: inline-flex; align-items: center; justify-content: center; color: rgb(169, 169, 172); text-decoration: none; white-space: nowrap; transition: all 0.2s; font-weight: 500; cursor: pointer; font-size: 14px; height: 36px; margin-right: 12px; padding: 0px 17px; background: rgb(35, 37, 43); border-radius: 4px; flex-shrink: 0; }
+.filter-btn:hover, .filter-btn.active { color: #1cc749; background-color: #23252b; }
+.filter-icon { width: 14px; height: 14px; margin-right: 6px; fill: currentColor; }
 
 /* =========================================
    MOVIE SECTIONS (GENERAL)
    ========================================= */
 .movie-section { padding: 0 64px; position: relative; z-index: 10; margin-bottom: 10px; }
-
-.section-header { 
-    font-size: 24px; 
-    font-weight: 700; 
-    color: #fff; 
-    margin-bottom: 20px; 
-    display: flex; 
-    align-items: center; 
-    position: relative; 
-    z-index: 100;
-    margin-top: 10px;
-}
-
+.section-header { font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 20px; display: flex; align-items: center; position: relative; z-index: 100; margin-top: 10px; }
 .movie-carousel-wrapper { position: relative; width: 100%; }
 
 /* --- HEADER INTERACTIVE --- */
@@ -125,147 +92,180 @@ body { margin: 0; padding: 0; background-color: #111319; font-family: 'SF Pro', 
 .header-title { transition: color 0.3s ease; line-height: 1; }
 .header-more { font-size: 14px; color: #1cc749; font-weight: 600; max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap; transition: all 0.3s ease; margin-left: 0; padding-top: 2px; }
 .header-arrow { fill: #fff; margin-left: 2px; transition: all 0.3s ease; display: flex; }
-
 .section-header.interactive:hover .header-title { color: #1cc749; }
 .section-header.interactive:hover .header-more { max-width: 100px; opacity: 1; margin-left: 12px; margin-right: 4px; }
 .section-header.interactive:hover .header-arrow { fill: #1cc749; transform: translateX(4px); }
 
-/* --- NAV ARROW (CAROUSEL NAVIGATION) --- */
-/* UPDATE: Tăng kích thước mũi tên ở PC lên 50px */
+/* --- NAV ARROW --- */
 .nav-arrow { 
     position: absolute; 
     top: 40%; 
     transform: translateY(-50%); 
-    width: 50px; 
-    height: 50px; 
+    width: 80px; 
+    height: 80px; 
     z-index: 5000; 
     cursor: pointer; 
     display: flex; 
     align-items: center; 
     justify-content: center; 
-    transition: opacity 0.3s ease; 
+    transition: opacity 0.3s ease, transform 0.2s ease; 
     opacity: 1; 
-    background: rgba(0, 0, 0, 0.5); 
+    background: none; 
     border-radius: 50%;
 }
 
 .nav-arrow:hover { 
-    background: rgba(0, 0, 0, 0.8);
+    background: none; 
+    transform: translateY(-50%) scale(1.1); 
 }
 
-/* UPDATE: Tăng kích thước icon bên trong lên 32px */
 .nav-arrow svg { 
-    width: 32px; 
-    height: 32px; 
+    width: 48px; 
+    height: 48px; 
     fill: rgb(255, 255, 255); 
-    opacity: 0.8;
-    transition: opacity 0.3s ease;
+    opacity: 0.8; 
+    transition: opacity 0.3s ease; 
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8)); 
 }
+.nav-arrow:hover svg { opacity: 1; }
 
-.nav-arrow:hover svg {
-    opacity: 1;
-}
-
-.nav-prev { left: -55px; } /* Đẩy ra xa hơn một chút vì size to hơn */
-.nav-next { right: -55px; }
+.nav-prev { left: -60px; } 
+.nav-next { right: -60px; }
 .nav-arrow.hidden { opacity: 0; pointer-events: none; visibility: hidden; }
 
-/* Grid Styles */
-.movie-grid {
-    display: flex;
-    gap: 16px;
-    overflow-x: hidden;
-    overflow-y: hidden;
-    scroll-behavior: smooth;
-    padding-top: 60px;
-    padding-bottom: 60px;
+/* Grid Styles - UPDATE: align-items stretch để đều nhau */
+.movie-grid { 
+    display: flex; 
+    gap: 16px; 
+    overflow-x: hidden; 
+    overflow-y: hidden; 
+    scroll-behavior: smooth; 
+    padding-top: 60px; 
+    padding-bottom: 60px; 
     margin-top: -60px; 
-    margin-bottom: -20px;
+    margin-bottom: -20px; 
     position: relative;
+    align-items: stretch; /* QUAN TRỌNG: Ép các thẻ con cao bằng nhau */
 }
 
-.movie-card {
-    display: flex;
-    flex-direction: column;
-    cursor: pointer;
-    text-decoration: none;
-    color: #fff;
+/* Base Card Style */
+.movie-card { 
+    display: flex; 
+    flex-direction: column; 
+    cursor: pointer; 
+    text-decoration: none; 
+    color: #fff; 
     min-width: calc((100% - (16px * 7)) / 8); 
-    max-width: calc((100% - (16px * 7)) / 8);
-    flex-shrink: 0;
-    position: relative;
-    z-index: 1;
+    max-width: calc((100% - (16px * 7)) / 8); 
+    flex-shrink: 0; 
+    position: relative; 
+    z-index: 1; 
     overflow: visible !important; 
-    transition: z-index 0s;
-    border-radius: 3px;
+    transition: z-index 0s; 
+    border-radius: 3px; 
+    height: auto; /* Để flex stretch hoạt động */
 }
-
 .movie-card:hover { z-index: 2000; }
 
 /* =========================================
-   TOP TRENDING CARD STYLES
+   TOP TRENDING CARD STYLES (Fixed Size)
    ========================================= */
-.movie-card--trending .poster-wrapper {
+.movie-card--trending {
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    overflow: hidden;
+    cursor: pointer;
+    background-color: var(--theme-color, #222);
+    transition: box-shadow 0.3s ease;
+    
+    /* Kích thước */
+    min-width: calc((100% - (16px * 7)) / 8); 
+    max-width: calc((100% - (16px * 7)) / 8);
+    flex-shrink: 0;
+    flex-grow: 0;
+    height: auto; /* Tự động cao theo dòng */
+}
+
+.movie-card--trending:hover {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    z-index: 50; 
+}
+
+/* KHUNG CHỨA ẢNH - Bắt buộc tỷ lệ 2:3 */
+.movie-card--trending .poster-container {
     position: relative;
     width: 100%;
-    padding-top: 140%; 
+    padding-top: 150%; /* 2:3 aspect ratio */
     overflow: hidden;
-    background-color: #252525;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    margin-bottom: 0;
+    flex-shrink: 0; /* Không cho phép co lại */
+}
+
+.movie-card--trending .movie-poster {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Gradient */
+.movie-card--trending .poster-gradient {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(to top, var(--theme-color), transparent);
     z-index: 1;
 }
 
-.trending-info-box {
-    position: relative;
-    width: 100%;
-    height: 90px; 
-    background: linear-gradient(to bottom, var(--overlay-color), rgba(0,0,0,0.4));
-    border-bottom-left-radius: 3px;
-    border-bottom-right-radius: 3px;
+/* SỐ TOP */
+.movie-card--trending .top-rank {
+    position: absolute;
+    bottom: 5px;
+    left: 10px;
+    font-size: 42px;
+    font-weight: 900;
+    color: #fff;
+    z-index: 2;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    font-family: 'Times New Roman', serif;
+    font-style: normal;
+    line-height: 1;
+}
+
+/* THÔNG TIN (NỀN DƯỚI) - Giãn để lấp đầy chiều cao */
+.movie-card--trending .movie-info {
+    padding: 10px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end; 
-    padding: 10px;
-    box-sizing: border-box;
-    z-index: 2;
-    margin-top: -1px; 
-}
-
-.movie-card--trending .rank-text {
-    position: absolute;
-    top: -18px; 
-    left: 10px;
-    font-family: 'Impact', 'Arial Black', sans-serif;
-    font-size: 26px;
-    font-weight: 900;
-    font-style: italic;
+    justify-content: flex-start;
+    flex-grow: 1; /* Quan trọng: Đẩy content lấp đầy thẻ */
+    background-color: var(--theme-color, #222);
     color: #fff;
-    letter-spacing: 1px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
-    z-index: 3;
 }
 
-.movie-card--trending .rank-text::after { content: ""; display: block; width: 20px; height: 3px; background-color: #000; margin-top: 2px; }
-.rank-1 { color: #1cc749; } 
-
-.movie-card--trending .poster-title {
-    font-size: 16px; 
-    font-weight: 500; 
+.movie-card--trending .movie-name {
+    font-size: 15px;
+    font-weight: normal;
     line-height: 1.3;
-    margin-bottom: 2px; 
-    overflow: hidden;
+    margin-bottom: 6px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
-    color: #fff;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-shadow: none;
 }
 
-.movie-card--trending .episode-status { font-size: 13px; color: rgba(255, 255, 255, 0.85); font-weight: 500; }
+.movie-card--trending .episode-text {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: auto;
+    font-weight: normal;
+}
 
 /* =========================================
    STANDARD CARD STYLES
@@ -350,54 +350,17 @@ body { margin: 0; padding: 0; background-color: #111319; font-family: 'SF Pro', 
 .hover-actions { position: absolute; bottom: 12px; right: 12px; display: flex; gap: 10px; z-index: 10; align-items: center; }
 .hover-btn-icon { width: 40px; height: 40px; cursor: pointer; transition: filter 0.2s; display: block; }
 .hover-btn-icon:hover { transform: none; filter: brightness(1.2); }
-
-.hover-info { 
-    padding: 12px 16px 16px; 
-    color: #fff; 
-    text-align: left; 
-    display: flex;
-    flex-direction: column;
-}
-
+.hover-info { padding: 12px 16px 16px; color: #fff; text-align: left; display: flex; flex-direction: column; }
 .hover-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: rgb(255, 255, 255); flex-shrink: 0; }
 .hover-meta-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 14px; color: rgb(255, 255, 255); flex-shrink: 0; }
 .meta-score { color: #1cc749; font-weight: 700; }
 .meta-quality { border: 1px solid rgba(255,255,255,0.4); font-size: 11px; padding: 1px 4px; border-radius: 3px; color: #fff; background: rgba(0,0,0,0.3); }
 .meta-age { background-color: #1cc749; color: #000; font-weight: bold; font-size: 11px; padding: 1px 4px; border-radius: 2px; }
-
 .hover-tags { display: flex; flex-wrap: wrap; margin-bottom: 10px; flex-shrink: 0; }
 .hover-tag { padding: 2px 4px; margin-right: 8px; margin-bottom: 6px; font-size: 13px; color: rgb(236, 236, 236); font-weight: 500; background: rgba(255, 255, 255, 0.08); border-radius: 2px; }
-
-.hover-desc { 
-    width: 100%; 
-    margin-bottom: 12px; 
-    font-size: 14px; 
-    color: rgb(255, 255, 255); 
-    line-height: 20px; 
-    font-weight: 400; 
-    white-space: normal; 
-    display: -webkit-box; 
-    -webkit-line-clamp: 4; 
-    -webkit-box-orient: vertical; 
-    overflow: hidden; 
-    flex-grow: 1;
-}
-
-.hover-more-btn { 
-    font-size: 13px; 
-    color: #1cc749; 
-    font-weight: 500; 
-    cursor: pointer; 
-    text-align: right; 
-    display: flex; 
-    align-items: center; 
-    justify-content: flex-end; 
-    text-decoration: none; 
-    flex-shrink: 0; 
-    margin-top: auto; 
-}
+.hover-desc { width: 100%; margin-bottom: 12px; font-size: 14px; color: rgb(255, 255, 255); line-height: 20px; font-weight: 400; white-space: normal; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; flex-grow: 1; }
+.hover-more-btn { font-size: 14px; color: #1cc749; font-weight: 500; cursor: pointer; text-align: right; display: flex; align-items: center; justify-content: flex-end; text-decoration: none; flex-shrink: 0; margin-top: auto; }
 .hover-more-btn:hover { text-decoration: none; filter: brightness(1.2); }
-
 .loading-text { width: 100%; text-align: center; padding: 40px; color: #888; }
 
 /* =========================================
@@ -415,76 +378,29 @@ body { margin: 0; padding: 0; background-color: #111319; font-family: 'SF Pro', 
     .description, .action-buttons-container, .arrow { display: none !important; }
     .slider-pagination { bottom: 15px; right: 15px; }
     .pagination-dot { width: 4px; height: 4px; }
-
     .movie-section { padding: 13px 0; margin-bottom: 0; } 
-
-    .filter-section { padding: 13px 0; }
+    .filter-section { padding: 13px 0; margin-top: 0; margin-bottom: 0; }
     .filter-scroll-wrapper { padding: 0 16px; }
-    
-    .section-header { 
-        padding: 0 16px; 
-        margin-bottom: 10px; 
-        font-size: 15px !important; 
-        line-height: 15px !important;
-        margin-top: 0; 
-    }
+    .section-header { padding: 0 16px; margin-bottom: 10px; font-size: 15px !important; line-height: 15px !important; margin-top: 0; }
     .section-header span, .header-title { font-size: 15px !important; }
-
-    .movie-carousel-wrapper {
-        padding: 0 16px; 
-        box-sizing: border-box;
-        position: relative;
-    }
-
-    /* --- MOVIE GRID MOBILE (FREE SCROLL, NO SNAP) --- */
-    .movie-grid { 
-        gap: 12px; 
-        padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0; 
-        
-        /* Ẩn thanh cuộn */
-        scrollbar-width: none;  
-        -ms-overflow-style: none; 
-        
-        /* Free Scroll */
-        scroll-snap-type: none; 
-        -webkit-overflow-scrolling: touch; 
-        overflow-x: auto; 
-        display: flex;
-    }
-
+    .movie-carousel-wrapper { padding: 0 16px; box-sizing: border-box; position: relative; }
+    
+    /* MOVIE GRID MOBILE */
+    .movie-grid { gap: 12px; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0; scrollbar-width: none; -ms-overflow-style: none; scroll-snap-type: none; -webkit-overflow-scrolling: touch; overflow-x: auto; display: flex; align-items: stretch; }
     .movie-grid::-webkit-scrollbar { display: none; }
+    .movie-card, .movie-card--trending { min-width: 27vw; max-width: 27vw; flex-shrink: 0; scroll-snap-align: none; }
 
-    .movie-card {
-        min-width: 27vw; 
-        max-width: 27vw;
-        flex-shrink: 0; 
-        scroll-snap-align: none;
-    }
-
-    .poster-title, .movie-card--trending .poster-title { 
-        font-size: 13px;
-        white-space: normal;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        line-height: 1.3em;
-        max-height: 2.6em;
-        color: rgba(255, 255, 255, 0.8); 
-    }
-    
+    .poster-title { font-size: 13px; white-space: normal; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.3em; max-height: 2.6em; color: rgba(255, 255, 255, 0.8); }
     .episode-tag { font-size: 11px; bottom: 4px; left: 4px; }
-
     .nav-arrow { display: none !important; }
-    
     .hover-details-card { display: none !important; }
     
-    .movie-card--trending .poster-wrapper { padding-top: 150%; }
-    .movie-card--trending .trending-info-box { height: 70px; padding: 6px; }
-    .movie-card--trending .rank-text { font-size: 20px; top: -14px; left: 6px; }
-    
-    .movie-card--trending .episode-status { font-size: 10px; }
+    /* MOBILE TOP TRENDING */
+    .movie-card--trending .poster-container { padding-top: 150%; }
+    .movie-card--trending .movie-info { padding: 6px; }
+    .movie-card--trending .top-rank { font-size: 24px; bottom: 4px; left: 6px; }
+    .movie-card--trending .movie-name { font-size: 12px; -webkit-line-clamp: 2; }
+    .movie-card--trending .episode-text { font-size: 10px; }
     
     .section-header.interactive:hover .header-more { display: none; }
 }

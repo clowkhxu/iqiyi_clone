@@ -4,480 +4,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iQIYI Header Clone - Active Style Fix</title>
-    <style>
-        /* --- RESET & FONTS --- */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            outline: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #000;
-            color: #fff;
-            height: 200vh;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-            cursor: pointer;
-        }
-
-        ul,
-        li {
-            list-style: none;
-        }
-
-        button {
-            border: none;
-            background: none;
-            cursor: pointer;
-        }
-
-        /* --- VARIABLES --- */
-        :root {
-            --iq-green: #00CC36;
-            --iq-black-bg: #111319;
-            --iq-gold: #F2BF83;
-            --iq-text-gray: #A9A9AC;
-            --iq-hover-white: #FFFFFF;
-            --iq-dropdown-bg: #1f1f1f;
-            --iq-border-color: #333;
-        }
-
-        /* --- CONTAINER CHUNG --- */
-        .header-wrapper {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-            background-color: var(--iq-black-bg);
-            transition: background-color 0.3s;
-        }
-
-        /* =========================================
-           PC HEADER STYLES (Màn hình lớn)
-           ========================================= */
-        .pc-header {
-            display: flex;
-            align-items: center;
-            height: 60px;
-            padding: 0 24px;
-            max-width: 1920px;
-            margin: 0 auto;
-            justify-content: space-between;
-        }
-
-        /* LOGO */
-        .logo svg {
-            width: 82px;
-            height: 26px;
-            fill: var(--iq-green);
-            display: block;
-        }
-
-        /* NAVIGATION */
-        .nav-left {
-            display: flex;
-            align-items: center;
-            gap: 30px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 24px;
-            align-items: center;
-        }
-
-        .nav-link-container {
-            position: relative;
-            height: 60px;
-            display: flex;
-            align-items: center;
-        }
-
-        /* --- NAVIGATION ITEMS --- */
-        .nav-item {
-            font-size: 16px;
-            line-height: 24px;
-            color: var(--iq-text-gray);
-            font-weight: 400;
-            /* Mặc định không in đậm */
-            white-space: nowrap;
-            position: relative;
-            transition: color 0.2s;
-            padding: 10px 0;
-        }
-
-        .nav-item:hover,
-        .nav-link-container:hover .nav-item {
-            color: var(--iq-green);
-        }
-
-        /* --- SỬA PHẦN NÀY: ACTIVE STATE --- */
-        .nav-item.active {
-            color: #fff;
-            /* Màu trắng */
-            font-weight: 700;
-            /* In đậm */
-        }
-
-        .nav-item.dropdown::after {
-            content: '';
-            display: inline-block;
-            width: 0;
-            height: 0;
-            border-left: 4px solid transparent;
-            border-right: 4px solid transparent;
-            border-top: 4px solid currentColor;
-            margin-left: 6px;
-            vertical-align: middle;
-            transition: transform 0.2s;
-        }
-
-        .nav-link-container:hover .nav-item.dropdown::after {
-            transform: rotate(180deg);
-        }
-
-        /* --- DROPDOWN MENU STYLE --- */
-        .dropdown-box {
-            display: none;
-            position: absolute;
-            top: 50px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: var(--iq-dropdown-bg);
-            border: 1px solid var(--iq-border-color);
-            border-radius: 4px;
-            padding: 12px 20px;
-            min-width: 140px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-            text-align: center;
-            z-index: 1001;
-            animation: fadeIn 0.2s ease-in-out;
-        }
-
-        .nav-link-container:hover .dropdown-box {
-            display: block;
-        }
-
-        .dropdown-box::before,
-        .dropdown-box::after {
-            content: '';
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            border: solid transparent;
-            height: 0;
-            width: 0;
-            pointer-events: none;
-        }
-
-        .dropdown-box::before {
-            border-color: rgba(51, 51, 51, 0);
-            border-bottom-color: var(--iq-border-color);
-            border-width: 7px;
-            margin-left: 0px;
-        }
-
-        .dropdown-box::after {
-            border-color: rgba(31, 31, 31, 0);
-            border-bottom-color: var(--iq-dropdown-bg);
-            border-width: 6px;
-            margin-left: 0px;
-        }
-
-        .dropdown-link {
-            display: block;
-            color: #A9A9AC;
-            font-size: 14px;
-            font-weight: 500;
-            white-space: nowrap;
-        }
-
-        .dropdown-link:hover {
-            color: var(--iq-green);
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                margin-top: 10px;
-            }
-
-            to {
-                opacity: 1;
-                margin-top: 0;
-            }
-        }
-
-        /* RIGHT SECTION PC */
-        .nav-right {
-            display: flex;
-            align-items: center;
-        }
-
-        /* SEARCH BAR PC */
-        .search-box-pc {
-            position: relative;
-            width: 220px;
-            height: 36px;
-            background-color: #333333;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            margin-right: 16px;
-            border: 1px solid transparent;
-        }
-
-        .search-box-pc:hover {
-            background-color: #444;
-        }
-
-        .search-box-pc input {
-            background: transparent;
-            border: none;
-            color: #ccc;
-            font-size: 14px;
-            width: 100%;
-            height: 100%;
-            padding: 0 40px 0 12px;
-        }
-
-        .search-box-pc input::placeholder {
-            color: #828282;
-        }
-
-        .search-icon-pc {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-        }
-
-        .search-icon-pc svg {
-            width: 24px;
-            height: 24px;
-            fill: #fff;
-        }
-
-        /* ICONS ACTION */
-        .icon-action {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            margin-left: 20px;
-            cursor: pointer;
-            font-size: 12px;
-            min-width: 40px;
-        }
-
-        .icon-action:hover {
-            color: var(--iq-green);
-        }
-
-        .icon-action:hover svg,
-        .icon-action:hover svg g,
-        .icon-action:hover svg path {
-            fill: var(--iq-green);
-        }
-
-        .icon-action svg {
-            width: 28px;
-            height: 28px;
-            margin-bottom: 3px;
-            fill: #fff;
-        }
-
-        /* BUTTONS GROUP */
-        .btn-group {
-            display: flex;
-            align-items: center;
-            margin-left: 20px;
-            gap: 12px;
-        }
-
-        /* BUTTON APP PC */
-        .btn-app-pc {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 80px;
-            height: 32px;
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            border-radius: 4px;
-            background: transparent;
-            cursor: pointer;
-            color: #fff;
-            transition: 0.2s;
-        }
-
-        .btn-app-pc:hover {
-            border-color: var(--iq-green);
-            color: var(--iq-green);
-        }
-
-        .btn-app-pc:hover svg g {
-            fill: var(--iq-green);
-        }
-
-        .btn-app-pc svg {
-            width: 16px;
-            height: 16px;
-            margin-right: 4px;
-        }
-
-        .btn-app-pc span {
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        /* BUTTON VIP PC */
-        .btn-vip-pc {
-            width: 82px;
-            height: 32px;
-            background-color: var(--iq-gold);
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: #111319;
-            font-weight: bold;
-            font-size: 14px;
-            position: relative;
-        }
-
-        .btn-vip-pc:hover {
-            opacity: 0.9;
-        }
-
-        .vip-icon-svg {
-            width: 20px;
-            height: 20px;
-            margin-right: 4px;
-        }
-
-        /* =========================================
-           MOBILE HEADER STYLES
-           ========================================= */
-        .mobile-header {
-            display: none;
-            height: 50px;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 16px;
-        }
-
-        .m-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .menu-icon svg {
-            width: 24px;
-            height: 24px;
-            fill: #fff;
-        }
-
-        .m-logo svg {
-            width: 68px;
-            height: 22px;
-            fill: var(--iq-green);
-        }
-
-        .m-search-bar {
-            flex: 1;
-            margin: 0 12px;
-            height: 30px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 10px;
-        }
-
-        .m-search-input {
-            width: 100%;
-            height: 100%;
-            background: transparent;
-            border: none;
-            outline: none;
-            color: #fff;
-            font-size: 13px;
-            padding-right: 8px;
-        }
-
-        .m-search-input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .m-search-icon svg {
-            width: 16px;
-            height: 16px;
-            fill: #fff;
-            flex-shrink: 0;
-        }
-
-        .btn-app-mobile {
-            background-color: var(--iq-green);
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 10px;
-            height: 30px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 700;
-            white-space: nowrap;
-        }
-
-        .btn-app-mobile svg {
-            width: 14px;
-            height: 14px;
-            margin-right: 4px;
-            fill: #fff;
-        }
-
-        /* =========================================
-           MEDIA QUERIES
-           ========================================= */
-        @media screen and (max-width: 1024px) {
-            .nav-links {
-                display: none;
-            }
-
-            .icon-action span {
-                display: none;
-            }
-        }
-
-        @media screen and (max-width: 768px) {
-            .pc-header {
-                display: none !important;
-            }
-
-            .mobile-header {
-                display: flex !important;
-            }
-        }
-    </style>
+    <title>iQIYI Header Clone - Fixed Layout</title>
+    <link rel="stylesheet" href="header.css">
 </head>
 
 <body>
+
+    <div style="position: fixed; top: -9999px; left: -9999px; opacity: 0;">
+        <input type="text" name="fake_email_pre" tabindex="-1">
+        <input type="password" name="fake_password_pre" tabindex="-1">
+    </div>
+
+    <div class="mobile-sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="mobile-sidebar" id="mobileSidebar">
+        <div class="sidebar-header">
+            <div class="user-content-wrapper" id="mobileLoginBtn">
+                <img src="IMG/menu_avatar.png" alt="Avatar" class="sidebar-avatar" id="mobileUserAvatar">
+                <span class="sidebar-user-text" id="mobileUserName">Đăng nhập / Đăng ký</span>
+            </div>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li><a href="#" class="sidebar-item">Cài đặt cá nhân</a></li>
+            <li><a href="#" class="sidebar-item">Tiếng Việt</a></li>
+            <li class="sidebar-divider"></li>
+            <li><a href="#" class="sidebar-item">Lịch sử xem</a></li>
+            <li><a href="#" class="sidebar-item">Sưu tập của tôi</a></li>
+            <li class="sidebar-divider"></li>
+            <li>
+                <a href="#" class="sidebar-item" id="mobileLogoutBtn" style="display: none; color: #ff4d4f;">Đăng
+                    xuất</a>
+            </li>
+        </ul>
+    </div>
 
     <div class="header-wrapper">
 
@@ -497,7 +57,6 @@
                     <li class="nav-link-container"><a href="#" class="nav-item">Phim Bộ</a></li>
                     <li class="nav-link-container"><a href="#" class="nav-item">Phim Hàn</a></li>
                     <li class="nav-link-container"><a href="#" class="nav-item">Phim Lẻ</a></li>
-
                     <li class="nav-link-container">
                         <a href="#" class="nav-item dropdown">Khác</a>
                         <div class="dropdown-box">
@@ -509,7 +68,9 @@
 
             <div class="nav-right">
                 <div class="search-box-pc">
-                    <input type="text" placeholder="Tìm kiếm...">
+                    <input type="text" placeholder="Tìm kiếm..." name="iqiyi_search_pc_unique" id="pcSearchInput"
+                        autocomplete="off" readonly onfocus="this.removeAttribute('readonly');">
+
                     <div class="search-icon-pc">
                         <svg viewBox="0 0 24 24">
                             <path
@@ -519,7 +80,7 @@
                     </div>
                 </div>
 
-                <div class="icon-action">
+                <div class="icon-action history-action">
                     <svg viewBox="0 0 32 32">
                         <g fill="currentColor">
                             <path
@@ -535,36 +96,132 @@
                         </g>
                     </svg>
                     <span>Lịch sử xem</span>
+
+                    <div class="history-tooltip">
+                        <img src="IMG/box.png" alt="Empty" class="history-empty-img">
+                        <p class="history-text">Đăng nhập để quản lý lịch sử xem nội dung trên các thiết bị khác nhau.
+                        </p>
+                        <button class="btn-login-history" id="btnLoginHistory">Đăng nhập</button>
+                    </div>
                 </div>
 
                 <div class="icon-action">
-                    <svg viewBox="0 0 32 32">
-                        <g fill="currentColor" fill-rule="nonzero">
+                    <svg viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                        <g id="icon/language/normal" fill="#FFFFFF" fill-rule="nonzero">
                             <path
-                                d="M16,6 C21.5228475,6 26,10.4771525 26,16 C26,21.5228475 21.5228475,26 16,26 C10.4771525,26 6,21.5228475 6,16 C6,10.4771525 10.4771525,6 16,6 Z M18.9680668,17.0011121 L13.0319332,17.0011121 C13.1651001,19.076818 13.7084377,20.9701959 14.5427894,22.369792 C14.7225839,22.6713911 15.0290354,23.0415272 15.4621438,23.4802002 L15.6554904,23.6724255 C15.8483921,23.8607887 16.1558962,23.8623025 16.350643,23.6758476 C16.8600321,23.1881472 17.2288879,22.7527954 17.4572106,22.369792 C18.2915623,20.9701959 18.8348999,19.076818 18.9680668,17.0011121 Z M11.0247076,17.0004018 L8.06201291,17.0009551 C8.40483424,19.747474 10.1399105,22.0615118 12.5386417,23.2144687 C11.7029578,21.6120929 11.1456008,19.4346566 11.0247076,17.0004018 Z M23.9379871,17.0009551 L20.9752924,17.0004018 C20.8543992,19.4346566 20.2970422,21.6120929 19.4619572,23.215239 C21.8600895,22.0615118 23.5951658,19.747474 23.9379871,17.0009551 Z M12.5380428,8.78476098 L12.5118876,8.79845221 C10.1267235,9.95585972 8.4031369,12.2633118 8.06188768,15.0000487 L11.0246578,15.0006003 C11.1454478,12.565941 11.7028432,10.3881271 12.5380428,8.78476098 Z M15.6491922,8.32463677 C15.1398884,8.81272653 14.7710874,9.24825244 14.5427894,9.63121448 C13.7084377,11.0308106 13.1651001,12.9241885 13.0319332,14.9998944 L18.9680668,14.9998944 C18.8348999,12.9241885 18.2915623,11.0308106 17.4572106,9.63121448 C17.2774372,9.32965073 16.9710365,8.95938827 16.5380086,8.5204271 L16.3447137,8.32805278 C16.1517595,8.139465 15.8439894,8.1379534 15.6491922,8.32463677 Z M19.4613583,8.78553132 L19.4839504,8.82723968 C20.3069369,10.4264914 20.8556156,12.5873744 20.9753422,15.0006003 L23.9381123,15.0000487 C23.5955885,12.2530898 21.8603818,9.93862863 19.4613583,8.78553132 Z">
+                                d="M16,6 C21.5228475,6 26,10.4771525 26,16 C26,21.5228475 21.5228475,26 16,26 C10.4771525,26 6,21.5228475 6,16 C6,10.4771525 10.4771525,6 16,6 Z M18.9680668,17.0011121 L13.0319332,17.0011121 C13.1651001,19.076818 13.7084377,20.9701959 14.5427894,22.369792 C14.7225839,22.6713911 15.0290354,23.0415272 15.4621438,23.4802002 L15.6554904,23.6724255 C15.8483921,23.8607887 16.1558962,23.8623025 16.350643,23.6758476 C16.8600321,23.1881472 17.2288879,22.7527954 17.4572106,22.369792 C18.2915623,20.9701959 18.8348999,19.076818 18.9680668,17.0011121 Z M11.0247076,17.0004018 L8.06201291,17.0009551 C8.40483424,19.747474 10.1399105,22.0615118 12.5386417,23.2144687 C11.7029578,21.6120929 11.1456008,19.4346566 11.0247076,17.0004018 Z M23.9379871,17.0009551 L20.9752924,17.0004018 C20.8543992,19.4346566 20.2970422,21.6120929 19.4619572,23.215239 C21.8600895,22.0615118 23.5951658,19.747474 23.9379871,17.0009551 Z M12.5380428,8.78476098 L12.5118876,8.79845221 C10.1267235,9.95585972 8.4031369,12.2633118 8.06188768,15.0000487 L11.0246578,15.0006003 C11.1454478,12.565941 11.7028432,10.3881271 12.5380428,8.78476098 Z M15.6491922,8.32463677 C15.1398884,8.81272653 14.7710874,9.24825244 14.5427894,9.63121448 C13.7084377,11.0308106 13.1651001,12.9241885 13.0319332,14.9998944 L18.9680668,14.9998944 C18.8348999,12.9241885 18.2915623,11.0308106 17.4572106,9.63121448 C17.2774372,9.32965073 16.9710365,8.95938827 16.5380086,8.5204271 L16.3447137,8.32805278 C16.1517595,8.139465 15.8439894,8.1379534 15.6491922,8.32463677 Z M19.4613583,8.78553132 L19.4839504,8.82723968 C20.3069369,10.4264914 20.8556156,12.5873744 20.9753422,15.0006003 L23.9381123,15.0000487 C23.5955885,12.2530898 21.8603818,9.93862863 19.4619572,8.78553132 Z">
                             </path>
                         </g>
                     </svg>
                     <span>Ngôn ngữ</span>
                 </div>
 
-                <div class="icon-action">
-                    <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                <div class="icon-action user-action" id="userActionBtn">
+                    <svg width="36px" height="36px" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg"
+                        id="defaultUserIcon">
                         <title>Member login</title>
-                        <defs></defs>
-                        <g id="页面-1" stroke="none" stroke-width="1" fill="#fff" fill-rule="evenodd">
-                            <g id="01-顶导航_未登入_播单浮层" transform="translate(-1737.000000, -17.000000)">
-                                <g id="Member-login" transform="translate(1737.000000, 17.000000)">
-                                    <g id="icon/outlined/my-account" transform="translate(6.000000, 6.000000)">
+                        <g stroke="none" stroke-width="1" fill="#fff" fill-rule="evenodd">
+                            <g transform="translate(-1737.000000, -17.000000)">
+                                <g transform="translate(1737.000000, 17.000000)">
+                                    <g transform="translate(6.000000, 6.000000)">
                                         <path
-                                            d="M12.0000459,2 C15.8660392,2 19.0000459,5.13400675 19.0000459,9 C19.0000459,11.4419505 17.7496387,13.5918528 15.8541707,14.8443604 C18.4388236,16.0428052 20.3621539,18.406589 20.9439813,21.2096603 L20.9930496,21.4650491 C21.0369037,21.7131229 20.8713509,21.9497772 20.6232771,21.9936313 C20.597224,21.998237 20.5708195,22.0005672 20.5443623,22.0005654 L19.4567401,22.001734 C19.1658655,22.0020433 18.9088887,21.8241649 18.8029512,21.5608641 L18.7705334,21.4583033 C18.046866,18.3692895 15.3939447,16.0121983 12.0256558,16.0000472 L12.0000459,16 L12.0000459,16 L11.976,16 L11.7270085,16.0051529 C8.56948778,16.1250104 6.16781227,18.3226241 5.39060111,21.215465 L5.3295683,21.4583033 C5.26315733,21.741903 5.03078278,21.9515558 4.74982346,21.9943309 L4.64241557,22.0023676 L3.46109122,22.0007358 C3.20608554,22.0004163 2.99964819,21.7934079 3.00000045,21.5384022 L3.00180992,21.4981976 L3.00711352,21.4583033 C3.52333182,18.5515627 5.49262239,16.0861761 8.1561862,14.8502396 C6.25484435,13.5993954 5.0000459,11.4462346 5.0000459,9 C5.0000459,5.13400675 8.13405266,2 12.0000459,2 Z M12.0000459,4 C9.23862216,4 7.0000459,6.23857625 7.0000459,9 C7.0000459,11.7553959 9.22885975,13.9902244 11.9819699,13.999968 L12.0149881,14 L12.0149881,14 L12.03,13.999 L12.2169355,13.9953805 C14.8777392,13.8818181 17.0000459,11.6887547 17.0000459,9 C17.0000459,6.23857625 14.7614697,4 12.0000459,4 Z"
-                                            id="MemberLoginIconpath-1"></path>
+                                            d="M12.0000459,2 C15.8660392,2 19.0000459,5.13400675 19.0000459,9 C19.0000459,11.4419505 17.7496387,13.5918528 15.8541707,14.8462897 18.4388236,16.0428052 20.3621539,18.406589 20.9439813,21.2096603 L20.9930496,21.4650491 C21.0369037,21.7131229 20.8713509,21.9497772 20.6232771,21.9936313 C20.597224,21.998237 20.5708195,22.0005672 20.5443623,22.0005654 L19.4567401,22.001734 C19.1658655,22.0020433 18.9088887,21.8241649 18.8029512,21.5608641 L18.7705334,21.4583033 C18.046866,18.3692895 15.3939447,16.0121983 12.0256558,16.0000472 L12.0000459,16 L12.0000459,16 L11.976,16 L11.7270085,16.0051529 C8.56948778,16.1250104 6.16781227,18.3226241 5.39060111,21.215465 L5.3295683,21.4583033 C5.26315733,21.741903 5.03078278,21.9515558 4.74982346,21.9943309 L4.64241557,22.0023676 L3.46109122,22.0007358 C3.20608554,22.0004163 2.99964819,21.7934079 3.00000045,21.5384022 L3.00180992,21.4981976 L3.00711352,21.4583033 C3.52333182,18.5515627 5.49262239,16.0861761 8.1561862,14.8502396 C6.25484435,13.5993954 5.0000459,11.4462346 5.0000459,9 C5.0000459,5.13400675 8.13405266,2 12.0000459,2 Z M12.0000459,4 C9.23862216,4 7.0000459,6.23857625 7.0000459,9 C7.0000459,11.7553959 9.22885975,13.9902244 11.9819699,13.999968 L12.0149881,14 L12.0149881,14 L12.03,13.999 L12.2169355,13.9953805 C14.8777392,13.8818181 17.0000459,11.6887547 17.0000459,9 C17.0000459,6.23857625 14.7614697,4 12.0000459,4 Z">
+                                        </path>
                                     </g>
                                 </g>
                             </g>
                         </g>
                     </svg>
-                    <span>Của tôi</span>
+
+                    <img src="IMG/menu_avatar.png" alt="User" id="loggedInUserAvatar" class="header-avatar-login">
+
+                    <span id="headerUserName">Của tôi</span>
+
+                    <div class="user-action-container">
+
+                        <div class="user-login-tooltip" id="guestTooltip">
+                            <p>Đăng nhập để theo dõi các nội dung mới nhất</p>
+                            <button class="btn-login-popup" id="btnLoginTooltip">Đăng nhập</button>
+                        </div>
+
+                        <div class="user-menu-dropdown" id="userMenuDropdown">
+                            <div class="user-menu-header">
+                                <div class="menu-user-info">
+                                    <img src="IMG/menu_avatar.png" class="menu-avatar-large" id="menuUserAvatar">
+                                    <span class="menu-user-name" id="menuUserName">Lộc Thành</span>
+                                </div>
+                            </div>
+                            <ul class="user-menu-list">
+                                <li>
+                                    <a href="#">
+                                        <div class="menu-item-left">
+                                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <path d="M5 5v16l7-5 7 5V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2z"></path>
+                                            </svg>
+                                            <span>Sưu tập của tôi</span>
+                                        </div>
+                                        <span class="arrow-right">›</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <div class="menu-item-left">
+                                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <polyline points="12 6 12 12 16 14"></polyline>
+                                            </svg>
+                                            <span>Phim đặt trước</span>
+                                        </div>
+                                        <span class="arrow-right">›</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <div class="menu-item-left">
+                                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z">
+                                                </path>
+                                                <line x1="4" y1="22" x2="4" y2="15"></line>
+                                            </svg>
+                                            <span>Bản dịch phụ đề</span>
+                                        </div>
+                                        <span class="arrow-right">›</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <div class="menu-item-left">
+                                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                                <circle cx="12" cy="7" r="4"></circle>
+                                            </svg>
+                                            <span>Cài đặt cá nhân</span>
+                                        </div>
+                                        <span class="arrow-right">›</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" id="btnLogoutMenu">
+                                        <div class="menu-item-left">
+                                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                                <polyline points="16 17 21 12 16 7"></polyline>
+                                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                                            </svg>
+                                            <span>Đăng xuất</span>
+                                        </div>
+                                        <span class="arrow-right">›</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
                 </div>
 
                 <div class="btn-group">
@@ -592,7 +249,7 @@
                     <div class="btn-vip-pc">
                         <svg class="vip-icon-svg" viewBox="0 0 20 20">
                             <path
-                                d="M9.34387684,1.2294673 C9.38302432,1.26274265 9.41941398,1.29913231 9.45268933,1.33827979 L12.6438005,5.09252826 C12.7678334,5.23844933 12.9672341,5.29583356 13.1498573,5.23816308 L16.3928959,4.21404564 C16.7689495,4.09529187 17.1700701,4.30387461 17.2888239,4.67992822 C17.3197801,4.77795604 17.3292049,4.88151223 17.3164542,4.9835179 L16.0912642,14.7850379 C16.0354346,15.218502 15.6919302,15.5585618 15.2578125,15.6090605 C13.0809659,15.8696868 10.9041193,16 8.72727273,16 C6.55042614,16 4.37357955,15.8696868 2.19673295,15.6090605 C1.76261525,15.5585618 1.41911089,15.218502 1.36328125,14.7850379 L0.138091253,4.9835179 C0.0891770767,4.59220449 0.366746499,4.23532952 0.75805991,4.18641534 C0.86006558,4.17366464 0.963621768,4.18308949 1.06164959,4.21404564 L4.30468813,5.23816308 C4.48731134,5.29583356 4.68671201,5.23844933 4.81074492,5.09252826 L8.00185612,1.33827979 C8.34239717,0.937643258 8.94324031,0.888926246 9.34387684,1.2294673 Z M11.3255702,7.62206953 C11.1070773,7.475867 10.8114285,7.53443367 10.6651731,7.75289118 L8.71175939,10.6712476 L6.75834571,7.75289118 C6.61209027,7.53443367 6.31644149,7.475867 6.09794856,7.62206953 L5.27743248,8.17122304 C5.05894533,8.31745172 5.00036827,8.61311232 5.14659695,8.83159946 L7.90589538,12.954397 L7.94722469,13.0117087 C8.34756424,13.5275144 9.14683426,13.5084104 9.51762341,12.954397 L12.2769218,8.83159946 C12.4231505,8.61311232 12.3645735,8.31745172 12.1460863,8.17122304 Z"
+                                d="M9.34387684,1.2294673 C9.38302432,1.26274265 9.41941398,1.29913231 9.45268933,1.33827979 L12.6438005,5.09252826 C12.7678334,5.23844933 12.9672341,5.29583356 13.1498573,5.23816308 L16.3928959,4.21404564 C16.7689495,4.09529187 17.1700701,4.30387461 17.2888239,4.67992822 C17.3197801,4.77795604 17.3292049,4.88151223 17.3164542,4.9835179 L16.0912642,14.7850379 C16.0354346,15.218502 15.6919302,15.5585618 15.2578125,15.6090605 C13.0809659,15.8696868 10.9041193,16 8.72727273,16 C6.55042614,16 4.37357955,15.8696868 2.19673295,15.6090605 C1.76261525,15.5585618 1.41911089,15.218502 1.36328125,14.7850379 L0.138091253,4.9835179 C0.0891770767,4.59220449 0.366746499,4.23532952 0.75805991,4.18641534 C0.86006558,4.17366464 0.963621768,4.18308949 1.06164959,4.21404564 L4.30468813,5.23816308 C4.48731134,5.29583356 4.68671201,5.23844933 4.81074492,5.09252826 L8.00185612,1.33827979 C8.34239717,0.937643258 8.94324031,0.888926246 9.34387684,1.2294673 Z"
                                 fill="#111319"></path>
                         </svg>
                         <span>VIP</span>
@@ -603,7 +260,7 @@
 
         <div class="mobile-header">
             <div class="m-left">
-                <div class="menu-icon">
+                <div class="menu-icon" id="openMobileMenu">
                     <svg viewBox="0 0 20 18">
                         <path
                             d="M18.229 14.843c.6 0 1 .4 1 1v.3c0 .6-.4 1-1 1h-16.7c-.6 0-1-.4-1-1v-.3c0-.6.4-1 1-1h16.7zm0-7c.6 0 1 .4 1 1v.3c0 .6-.4 1-1 1h-16.7c-.6 0-1-.4-1-1v-.3c0-.6.4-1 1-1h16.7zm0-7c.6 0 1 .4 1 1v.3c0 .6-.4 1-1 1h-16.7c-.6 0-1-.4-1-1v-.3c0-.6.4-1 1-1h16.7z"
@@ -619,64 +276,306 @@
                         </g>
                     </svg>
                 </div>
-            </div>
+                <div class="m-search-bar">
+                    <input type="text" class="m-search-input" placeholder="Tìm kiếm..."
+                        name="iqiyi_search_mobile_unique" id="mobileSearchInput" autocomplete="off" readonly
+                        onfocus="this.removeAttribute('readonly');">
+                    <div class="m-search-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M11.5,4 C15.6421356,4 19,7.35786438 19,11.5 C19,13.2425442 18.4057323,14.8462897 17.408807,16.1196265 L20.1793786,18.890165 C20.3746408,19.0854272 20.3746408,19.4020097 20.1793786,19.5972718 L19.4722718,20.3043786 C19.2770097,20.4996408 18.9604272,20.4996408 18.765165,20.3043786 L15.9775948,17.5173134 C14.7279648,18.4487017 13.1783637,19 11.5,19 C7.35786438,19 4,15.6421356 4,11.5 C4,7.35786438 7.35786438,4 11.5,4 Z M11.5,6 C8.46243388,6 6,8.46243388 6,11.5 C6,14.5375661 8.46243388,17 11.5,17 C14.5375661,17 17,14.5375661 17,11.5 C17,8.46243388 14.5375661,6 11.5,6 Z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
 
-            <div class="m-search-bar">
-                <input type="text" class="m-search-input" placeholder="Tìm kiếm...">
-                <div class="m-search-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path
-                            d="M11.5 4c4.14 0 7.5 3.36 7.5 7.5 0 1.74-.59 3.35-1.59 4.62l2.77 2.77c.2.2.2.5 0 .7-.2.2-.5.2-.7 0l-2.78-2.78c-1.25.93-2.8 1.48-4.21 1.48-4.14 0-7.5-3.36-7.5-7.5s3.36-7.5 7.5-7.5zm0 2c-3.04 0-5.5 2.46-5.5 5.5s2.46 5.5 5.5 5.5 5.5-2.46 5.5-5.5-2.46-5.5-5.5-5.5z">
-                        </path>
+                <div class="btn-app-mobile">
+                    <svg viewBox="0 0 22 22">
+                        <g fill="none" fill-rule="evenodd">
+                            <g fill="#FFFFFF">
+                                <rect x="0" y="14" width="16.8" height="1.8" rx="0.5" transform="translate(3,3)"></rect>
+                                <rect x="0" y="0" width="16.8" height="1.8" rx="0.5" transform="translate(3,3)"></rect>
+                                <rect x="0" y="0" width="1.8" height="15.8" rx="0.5" transform="translate(3,3)"></rect>
+                                <rect x="15" y="0" width="1.8" height="15.8" rx="0.5" transform="translate(3,3)"></rect>
+                                <path
+                                    d="M9,3.5 C9.27614237,3.5 9.5,3.72385763 9.5,4 L9.49910678,9.02 L10.5090031,8.01057599 C10.7042653,7.81531385 11.0208478,7.81531385 11.2161099,8.01057599 L11.6875144,8.48198052 C11.8827766,8.67724266 11.8827766,8.99382515 11.6875144,9.1890873 L9.09478956,11.7818122 C8.80078771,12.075814 8.40172177,12.1172804 8.01989386,11.8595542 L7.91627825,11.7818122 L5.32355339,9.1890873 C5.12829124,8.99382515 5.12829124,8.67724266 5.32355339,8.48198052 L5.79495791,8.01057599 C5.99022006,7.81531385 6.30680255,7.81531385 6.50206469,8.01057599 L7.49910678,9.008 L7.5,4 C7.5,3.72385763 7.72385763,3.5 8,3.5 L9,3.5 Z"
+                                    transform="translate(3,3)" fill-rule="nonzero"></path>
+                            </g>
+                        </g>
                     </svg>
+                    <span>APP</span>
                 </div>
             </div>
 
-            <div class="btn-app-mobile">
-                <svg viewBox="0 0 22 22">
-                    <g fill="none" fill-rule="evenodd">
-                        <g fill="#FFFFFF">
-                            <rect x="0" y="14" width="16.8" height="1.8" rx="0.5" transform="translate(3,3)"></rect>
-                            <rect x="0" y="0" width="16.8" height="1.8" rx="0.5" transform="translate(3,3)"></rect>
-                            <rect x="0" y="0" width="1.8" height="15.8" rx="0.5" transform="translate(3,3)"></rect>
-                            <rect x="15" y="0" width="1.8" height="15.8" rx="0.5" transform="translate(3,3)"></rect>
-                            <path
-                                d="M9,3.5 C9.27614237,3.5 9.5,3.72385763 9.5,4 L9.49910678,9.02 L10.5090031,8.01057599 C10.7042653,7.81531385 11.0208478,7.81531385 11.2161099,8.01057599 L11.6875144,8.48198052 C11.8827766,8.67724266 11.8827766,8.99382515 11.6875144,9.1890873 L9.09478956,11.7818122 C8.80078771,12.075814 8.40172177,12.1172804 8.01989386,11.8595542 L7.91627825,11.7818122 L5.32355339,9.1890873 C5.12829124,8.99382515 5.12829124,8.67724266 5.32355339,8.48198052 L5.79495791,8.01057599 C5.99022006,7.81531385 6.30680255,7.81531385 6.50206469,8.01057599 L7.49910678,9.008 L7.5,4 C7.5,3.72385763 7.72385763,3.5 8,3.5 L9,3.5 Z"
-                                transform="translate(3,3)" fill-rule="nonzero"></path>
-                        </g>
-                    </g>
-                </svg>
-                <span>APP</span>
+            <div class="mobile-sub-nav">
+                <a href="#" class="sub-nav-item active">Đề xuất</a>
+                <a href="#" class="sub-nav-item">Phim Bộ</a>
+                <a href="#" class="sub-nav-item">Phim Hàn</a>
+                <a href="#" class="sub-nav-item">Phim Lẻ</a>
+                <a href="#" class="sub-nav-item">Hoạt Hình</a>
+                <a href="#" class="sub-nav-item">TV Show</a>
             </div>
         </div>
 
-    </div>
+        <div class="login-overlay-wrapper" id="loginOverlayWrapper">
+            <div class="login-modal-box">
+                <div class="login-close-btn" id="closeLoginModal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </div>
 
-    <script>
-        // Hiệu ứng đổi màu nền Header khi cuộn trang
-        window.addEventListener('scroll', function () {
-            const header = document.querySelector('.header-wrapper');
-            if (window.scrollY > 0) {
-                header.style.backgroundColor = 'rgba(17, 19, 25, 0.98)';
-                header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.3)';
-            } else {
-                header.style.backgroundColor = '#111319';
-                header.style.boxShadow = 'none';
-            }
-        });
+                <div id="loginForm" class="form-view">
+                    <div class="login-header">
+                        <h2>Đăng nhập</h2>
+                    </div>
 
-        // --- CẬP NHẬT: Script xử lý click menu ---
-        const navItems = document.querySelectorAll('.nav-item');
-        navItems.forEach(item => {
-            item.addEventListener('click', function (e) {
-                // Nếu click vào dropdown thì không set active cho chính nó mà để hành vi mặc định
-                if (!this.classList.contains('dropdown')) {
-                    navItems.forEach(nav => nav.classList.remove('active'));
-                    this.classList.add('active');
-                }
-            });
-        });
-    </script>
+                    <p class="login-desc">Bạn có thể quản lý tài khoản sau khi đăng nhập, có thể đồng bộ lịch sử xem và
+                        mục yêu thích trên nhiều đầu cuối.</p>
+
+                    <div class="login-options">
+                        <button class="login-btn">
+                            <img src="SVG/qr-icon.svg" class="login-icon" alt="QR">
+                            <rect x="2" y="11" width="20" height="1.5" fill="var(--iq-green)" rx="0.5" />
+                            <span>Đăng nhập bằng Scan QR code</span>
+                        </button>
+
+                        <button class="login-btn" id="btnOpenEmailLogin">
+                            <img src="SVG/email-icon.svg" class="login-icon" alt="Email">
+                            <span>Đăng nhập bằng Email</span>
+                        </button>
+
+                        <button class="login-btn">
+                            <img src="SVG/mobile-icon.SVG" class="login-icon" alt="SMS">
+                            <span>Đăng nhập bằng SMS</span>
+                        </button>
+
+                        <button class="login-btn">
+                            <img src="SVG/google-icon.svg" class="login-icon" alt="Google">
+                            <span>Đăng nhập bằng Google</span>
+                        </button>
+
+                        <button class="login-btn">
+                            <img src="SVG/facebook-icon.svg" class="login-icon fb-large" alt="Facebook">
+                            <span>Đăng nhập bằng Facebook</span>
+                        </button>
+                    </div>
+
+                    <div class="login-footer-text">
+                        Bạn không có tài khoản?<a href="#" id="switchToRegister" style="color: var(--iq-green);">Đăng
+                            ký</a>
+                    </div>
+
+                    <div class="login-disclaimer">
+                        Nhấn chọn " Đăng nhập " có nghĩa là bạn đã đọc và đồng ý <a href="#">Thỏa thuận quyền riêng
+                            tư</a> & <a href="#">Điều khoản dịch vụ</a>, đồng thời có nghĩa là bạn xác nhận đã tròn 18
+                        tuổi có thể sử dụng dịch vụ của chúng tôi
+                    </div>
+                </div>
+
+                <div id="registerForm" class="form-view" style="display: none;">
+                    <div class="login-header">
+                        <h2>Đăng ký</h2>
+                    </div>
+
+                    <p class="login-desc">Tạo tài khoản của bạn, có thể lưu lại lịch sử xem và mục yêu thích trên nhiều
+                        thiết bị.</p>
+
+                    <div class="login-options">
+                        <button class="login-btn" id="btnUseEmailRegister">
+                            <img src="SVG/email-icon.svg" class="login-icon" alt="Email">
+                            <span>Sử dụng Email để đăng ký</span>
+                        </button>
+
+                        <button class="login-btn">
+                            <img src="SVG/mobile-icon.SVG" class="login-icon" alt="SMS">
+                            <span>Sử dụng SMS để đăng ký</span>
+                        </button>
+
+                        <button class="login-btn">
+                            <img src="SVG/google-icon.svg" class="login-icon" alt="Google">
+                            <span>Sử dụng Google để đăng ký</span>
+                        </button>
+
+                        <button class="login-btn">
+                            <img src="SVG/facebook-icon.svg" class="login-icon fb-large" alt="Facebook">
+                            <span>Sử dụng Facebook để đăng ký</span>
+                        </button>
+                    </div>
+
+                    <div class="login-footer-text">
+                        Có phải đã có tài khoản?<a href="#" id="switchToLogin" style="color: var(--iq-green);">Đăng
+                            nhập</a>
+                    </div>
+
+                    <div class="login-disclaimer">
+                        Nhấn chọn " Đăng ký " có nghĩa là bạn đã đọc và đồng ý <a href="#">Thỏa thuận quyền riêng tư</a>
+                        & <a href="#">Điều khoản dịch vụ</a>, đồng thời có nghĩa là bạn xác nhận đã tròn 18 tuổi có thể
+                        sử dụng dịch vụ của chúng tôi
+                    </div>
+                </div>
+
+                <div id="emailRegisterForm" class="form-view" style="display: none;">
+                    <div class="login-header"
+                        style="justify-content: space-between; position: relative; margin-bottom: 20px;">
+                        <div class="back-btn" id="btnEmailRegisterBack" style="cursor: pointer; padding: 5px;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15 18L9 12L15 6" stroke="#666" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <h2 style="font-size: 18px; margin: 0; flex-grow: 1; text-align: center; padding-right: 24px;">
+                            Sử dụng Email để đăng ký</h2>
+                    </div>
+
+                    <div class="login-options" style="gap: 16px;">
+                        <div class="auth-input-group">
+                            <input type="text" class="auth-input" placeholder="Tên hiển thị" id="regName">
+                        </div>
+
+                        <div class="auth-input-group">
+                            <input type="email" class="auth-input" placeholder="E-mail" id="regEmail">
+                        </div>
+
+                        <div class="auth-input-group">
+                            <input type="password" class="auth-input" placeholder="Mật khẩu" id="regPassword">
+                            <span class="toggle-password" id="togglePassword">
+                                <svg class="icon-eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                    stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                <svg class="icon-eye-close" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                    stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                    style="display: none;">
+                                    <path
+                                        d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
+                                    </path>
+                                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                                </svg>
+                            </span>
+                        </div>
+                        <p style="font-size: 12px; color: #999; margin-top: -8px; line-height: 1.4;">
+                            Từ 8- 20 ký tự<br>ít nhất là tổ hợp của hai loại tùy ý gồm chữ cái, con số hoặc ký tự
+                        </p>
+
+                        <div class="auth-input-group">
+                            <input type="password" class="auth-input" placeholder="Nhập lại mật khẩu của bạn"
+                                id="regConfirmPassword">
+                            <span class="toggle-password" id="toggleConfirmPassword">
+                                <svg class="icon-eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                    stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                <svg class="icon-eye-close" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                    stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                    style="display: none;">
+                                    <path
+                                        d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
+                                    </path>
+                                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                                </svg>
+                            </span>
+                        </div>
+
+                        <div class="dob-wrapper">
+                            <label
+                                style="font-size: 13px; color: #333; display: block; margin-bottom: 8px; font-weight: 600;">Ngày
+                                sinh</label>
+                            <div class="dob-container">
+                                <select class="dob-select" id="dobDay">
+                                    <option value="">DD</option>
+                                </select>
+                                <select class="dob-select" id="dobMonth">
+                                    <option value="">MM</option>
+                                </select>
+                                <select class="dob-select" id="dobYear">
+                                    <option value="">YYYY</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button class="login-btn" id="btnSubmitRegister"
+                            style="background-color: var(--iq-green); color: #fff; border: none; font-weight: 700;">
+                            Đăng ký
+                        </button>
+
+                    </div>
+
+                    <div class="login-footer-text"
+                        style="display: flex; justify-content: center; gap: 20px; font-weight: 700; margin-top: 24px;">
+                        <a href="#" id="backToLoginFromEmail" style="color: var(--iq-green);">Đăng nhập</a>
+                        <span style="color: #ddd;">|</span>
+                        <a href="#" id="backToRegisterMain" style="color: var(--iq-green);">Dùng tài khoản khác đăng
+                            nhập</a>
+                    </div>
+
+                    <div class="login-disclaimer">
+                        Nhấn chọn " Đăng ký " có nghĩa là bạn đã đọc và đồng ý <a href="#">Thỏa thuận quyền riêng tư</a>
+                        & <a href="#">Điều khoản dịch vụ</a>, đồng thời có nghĩa là bạn xác nhận đã tròn 18 tuổi có thể
+                        sử dụng dịch vụ của chúng tôi
+                    </div>
+                </div>
+
+                <div id="emailLoginForm" class="form-view" style="display: none;">
+                    <div class="login-header"
+                        style="justify-content: space-between; position: relative; margin-bottom: 20px;">
+                        <div class="back-btn" id="btnEmailLoginBack" style="cursor: pointer; padding: 5px;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15 18L9 12L15 6" stroke="#666" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <h2 style="font-size: 18px; margin: 0; flex-grow: 1; text-align: center; padding-right: 24px;">
+                            Đăng nhập bằng Email</h2>
+                    </div>
+
+                    <div class="login-options" style="gap: 16px;">
+                        <div class="auth-input-group">
+                            <input type="email" class="auth-input" placeholder="E-mail" id="loginEmail">
+                        </div>
+
+                        <div class="auth-input-group">
+                            <input type="password" class="auth-input" placeholder="Mật khẩu" id="loginPassword">
+                            <span class="toggle-password" id="toggleLoginPassword">
+                                <svg class="icon-eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                    stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                <svg class="icon-eye-close" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                    stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                    style="display: none;">
+                                    <path
+                                        d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
+                                    </path>
+                                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                                </svg>
+                            </span>
+                        </div>
+
+                        <button class="login-btn" id="btnSubmitLogin"
+                            style="background-color: var(--iq-green); color: #fff; border: none; font-weight: 700;">
+                            Đăng nhập
+                        </button>
+                    </div>
+
+                    <div class="login-footer-text"
+                        style="display: flex; justify-content: center; gap: 20px; font-weight: 700; margin-top: 24px;">
+                        <a href="#" id="backToRegisterFromLogin" style="color: var(--iq-green);">Đăng ký ngay</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <script src="header.js"></script>
 </body>
 
 </html>
