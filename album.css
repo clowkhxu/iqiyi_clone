@@ -427,10 +427,12 @@ button {
     cursor: pointer;
     display: flex;
     flex-direction: column;
+    /* CHỈNH SỬA: Đảm bảo toàn bộ card có hiệu ứng transition */
     transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .card:hover {
+    /* CHỈNH SỬA: Zoom toàn bộ card (cả ảnh và chữ) */
     transform: scale(1.05);
     z-index: 10;
 }
@@ -450,12 +452,11 @@ button {
     left: 0;
     width: 100%;
     height: 100%;
-    transition: transform 0.3s;
+    /* CHỈNH SỬA: Xóa transition/scale riêng ở đây để không bị zoom ảnh trong */
+    object-fit: cover;
 }
 
-.card:hover .card-img-box img {
-    transform: scale(1.05);
-}
+/* CHỈNH SỬA: Đã xóa đoạn .card:hover .card-img-box img { transform: scale(...) } */
 
 .play-btn-overlay {
     position: absolute;
@@ -485,7 +486,7 @@ button {
 
 .card-title {
     margin-top: 10px;
-    font-size: 14px;
+    font-size: 16px;
     color: #dcdcdc;
     line-height: 1.4;
     display: -webkit-box;
@@ -497,11 +498,12 @@ button {
 }
 
 .card:hover .card-title {
+    /* CHỈNH SỬA: Đổi màu chữ khi hover (còn kích thước đã to lên theo card) */
     color: #00cc36;
 }
 
 /* ============================
-   CAST SECTION CSS (SỬA LẠI ĐỂ KHÔNG BỊ TRÀN)
+   CAST SECTION CSS
 ============================ */
 .main-container-cast {
     padding: 0 60px 60px 60px;
@@ -596,21 +598,19 @@ button {
     height: 12px;
 }
 
-/* --- SỬA LỖI GRID PHIM BỊ LỆCH --- */
 .person-movies-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
     margin-top: auto;
     justify-items: center;
-    width: 100%; /* Đảm bảo grid chiếm đủ chiều rộng */
+    width: 100%;
 }
 
-/* Chỉnh sửa thẻ phim để responsive (không dùng width cứng nữa) */
 .movie-card-vertical {
     cursor: pointer;
     position: relative;
-    width: 100%; /* Sửa: Thay vì 198px cố định, dùng 100% để co giãn trong grid */
+    width: 100%;
     transform-origin: center center;
     transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
@@ -622,9 +622,9 @@ button {
 
 .poster-box {
     position: relative;
-    width: 100%; /* Sửa: 100% thay vì 198px */
-    aspect-ratio: 3/4; /* Sửa: Giữ tỷ lệ ảnh (khoảng 198x264) */
-    height: auto; /* Sửa: Bỏ height cố định */
+    width: 100%;
+    aspect-ratio: 3/4;
+    height: auto;
     border-radius: 0;
     overflow: hidden;
     background: #23252b;
@@ -762,6 +762,161 @@ button {
     color: #1CC749;
 }
 
+/* =========================================================
+   NEW SECTION: RECOMMEND (Đề xuất cho bạn) - Styles ported
+========================================================= */
+
+.recommend-container {
+    padding: 0 60px 60px 60px;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+}
+
+.movie-grid-recommend {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr); 
+    gap: 16px;
+    width: 100%;
+}
+
+/* MOVIE CARD STYLE from de-xuat-cho-ban */
+.movie-card-recommend {
+    position: relative;
+    width: 100%;
+    cursor: pointer;
+    transition: transform 0.2s ease, z-index 0s;
+    z-index: 1;
+}
+
+.movie-card-recommend:hover {
+    transform: scale(1.05);
+    z-index: 100;
+}
+
+.poster-wrapper-rec {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 222.6 / 296.79; 
+    border-radius: 0;
+    overflow: hidden;
+    background-color: #252525;
+    margin-bottom: 8px;
+}
+
+.poster-img-rec {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.poster-overlay-rec {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 40%);
+    pointer-events: none;
+}
+
+.episode-tag-rec {
+    position: absolute;
+    bottom: 6px;
+    left: 6px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #fff;
+    background: transparent;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+    z-index: 5;
+}
+
+.movie-title-rec {
+    font-size: 16px;
+    font-weight: 500;
+    color: #e0e0e0;
+    margin-top: 8px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color 0.2s;
+}
+
+.movie-card-recommend:hover .movie-title-rec {
+    color: #1cc749;
+}
+
+/* Play & Collection Btn Reuse */
+.play-btn-rec {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    width: 42px;
+    height: 42px;
+    z-index: 10;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.play-btn-rec svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+}
+
+.movie-card-recommend:hover .play-btn-rec {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.collection-btn-rec {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    width: 42px;
+    height: 42px;
+    background-color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.collection-btn-rec svg {
+    width: 30px;
+    height: 30px;
+    fill: #111319;
+}
+
+.movie-card-recommend:hover .collection-btn-rec {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.collection-btn-rec:hover {
+    background-color: #f0f0f0;
+}
+
+/* Tooltip for rec */
+.collection-btn-rec:hover .tooltip-text {
+    opacity: 1;
+    visibility: visible;
+}
+
+
 /* ============================
     MEDIA QUERIES (COMBINED)
 ============================ */
@@ -769,10 +924,21 @@ button {
     .main-container-cast {
         padding: 30px;
     }
+    
+    /* Responsive for Recommend Grid */
+    .recommend-container {
+        padding: 30px;
+    }
+    .movie-grid-recommend {
+        grid-template-columns: repeat(6, 1fr);
+    }
 }
 
 @media (max-width: 1400px) {
     .grid-list {
+        grid-template-columns: repeat(5, 1fr);
+    }
+    .movie-grid-recommend {
         grid-template-columns: repeat(5, 1fr);
     }
 }
@@ -784,6 +950,10 @@ button {
 
     #castListContainer {
         grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .movie-grid-recommend {
+        grid-template-columns: repeat(4, 1fr);
     }
 }
 
@@ -872,11 +1042,17 @@ button {
     }
 
     .episode-container,
-    .main-container-cast {
+    .main-container-cast,
+    .recommend-container {
         padding: 0 16px;
     }
 
     .grid-list {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .movie-grid-recommend {
         grid-template-columns: repeat(2, 1fr);
         gap: 12px;
     }
@@ -997,7 +1173,9 @@ button {
     }
 
     .play-btn-center,
-    .collection-btn {
+    .collection-btn,
+    .play-btn-rec,
+    .collection-btn-rec {
         display: none !important;
     }
 }

@@ -1,6 +1,7 @@
 // Biến toàn cục lưu danh sách tập phim để dùng cho pagination
 let currentServerData = [];
 let currentMovieInfo = {};
+let isRecommendLoaded = false; // Biến kiểm tra đã tải tab đề xuất chưa
 
 // --- CONFIG CHO CAST SECTION ---
 const TMDB_API_KEY = 'd628e326b0c87e3f67133dabc797e5d0';
@@ -26,9 +27,12 @@ const playBtnSvg = `
     </svg>
 `;
 
+// ĐÃ SỬA: Cập nhật icon sưu tập mới.
 const collectionBtnSvg = `
-    <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M29.3,17.25 C29.7,17.25 30,17.56 30,17.94 L30,19.4 C30,19.8 29.7,20.1 29.3,20.1 L22.9,20.1 L22.9,39.7 L28.6,34.9 C29.4,34.3 30.4,34.3 31.2,34.8 L31.4,34.9 L37.1,39.7 L37.1,33.5 C37.1,33.1 37.4,32.8 37.8,32.8 L39.2,32.8 C39.6,32.8 39.9,33.1 39.9,33.5 L39.9,41.2 C39.9,42.4 39,43.4 37.8,43.4 C37.4,43.4 37,43.2 36.6,43 L36.4,42.9 L30,37.5 L23.6,42.9 C22.7,43.6 21.5,43.5 20.7,42.8 L20.6,42.6 C20.3,42.3 20.1,41.9 20.1,41.4 L20.1,41.2 L20.1,20.1 C20.1,18.6 21.2,17.4 22.7,17.3 L22.9,17.25 L29.3,17.25 Z M39.2,17.25 C39.6,17.25 39.9,17.56 39.9,17.94 L39.9,21.5 L43.5,21.5 C43.9,21.5 44.2,21.8 44.2,22.2 L44.2,23.6 C44.2,24 43.9,24.3 43.5,24.3 L39.9,24.3 L39.9,27.9 C39.9,28.3 39.6,28.6 39.2,28.6 L37.8,28.6 C37.4,28.6 37.1,28.3 37.1,27.9 L37.1,24.3 L33.5,24.3 C33.1,24.3 32.8,24 32.8,23.6 L32.8,22.2 C32.8,21.8 33.1,21.5 33.5,21.5 L37.1,21.5 L37.1,17.9 C37.1,17.6 37.4,17.25 37.8,17.25 L39.2,17.25 Z" fill="#111319" fill-rule="nonzero"/>
+    <svg width="24px" height="24px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+             <path d="M29.3,17.25 C29.69,17.25 30,17.56 30,17.94 L30,19.39 C30,19.77 29.69,20.08 29.3,20.08 L22.91,20.08 L22.91,39.72 L28.64,34.95 C29.37,34.34 30.41,34.3 31.18,34.82 L31.36,34.95 L37.08,39.72 L37.08,33.52 C37.08,33.14 37.39,32.83 37.77,32.83 L39.22,32.83 C39.6,32.83 39.91,33.14 39.91,33.52 L39.91,41.23 C39.91,42.41 38.96,43.36 37.79,43.36 C37.36,43.36 36.95,43.23 36.6,43 L36.43,42.87 L30,37.51 L23.57,42.87 C22.72,43.57 21.49,43.51 20.72,42.75 L20.57,42.6 C20.3,42.27 20.13,41.87 20.09,41.45 L20.08,41.23 L20.08,20.08 C20.08,18.59 21.24,17.36 22.7,17.25 L22.91,17.25 L29.3,17.25 Z M39.22,17.25 C39.6,17.25 39.91,17.56 39.91,17.94 L39.91,21.5 L43.47,21.5 C43.85,21.5 44.16,21.81 44.16,22.19 L44.16,23.64 C44.16,24.02 43.85,24.33 43.47,24.33 L39.91,24.33 L39.91,27.89 C39.91,28.27 39.6,28.58 39.22,28.58 L37.77,28.58 C37.39,28.58 37.08,28.27 37.08,27.89 L37.08,24.33 L33.52,24.33 C33.14,24.33 32.83,24.02 32.83,23.64 L32.83,22.19 C32.83,21.81 33.14,21.5 33.52,21.5 L37.08,21.5 L37.08,17.94 C37.08,17.56 37.39,17.25 37.77,17.25 L39.22,17.25 Z" fill="#111319" fill-rule="nonzero"></path>
+        </g>
     </svg>
 `;
 
@@ -51,27 +55,36 @@ function switchTab(tabName) {
     // Nav Items
     const navEpisodes = document.getElementById('nav-episodes');
     const navCast = document.getElementById('nav-cast');
+    const navRecommend = document.getElementById('nav-recommend');
 
     // Content Containers
     const tabEpisodes = document.getElementById('tab-episodes');
     const tabCast = document.getElementById('tab-cast');
+    const tabRecommend = document.getElementById('tab-recommend');
+
+    // Reset all
+    navEpisodes.className = 'nav-item inactive';
+    navCast.className = 'nav-item inactive';
+    navRecommend.className = 'nav-item inactive';
+
+    tabEpisodes.style.display = 'none';
+    tabCast.style.display = 'none';
+    tabRecommend.style.display = 'none';
 
     if (tabName === 'episodes') {
-        navEpisodes.classList.add('active');
-        navEpisodes.classList.remove('inactive');
-        navCast.classList.remove('active');
-        navCast.classList.add('inactive');
-
+        navEpisodes.className = 'nav-item active';
         tabEpisodes.style.display = 'block';
-        tabCast.style.display = 'none';
     } else if (tabName === 'cast') {
-        navCast.classList.add('active');
-        navCast.classList.remove('inactive');
-        navEpisodes.classList.remove('active');
-        navEpisodes.classList.add('inactive');
-
+        navCast.className = 'nav-item active';
         tabCast.style.display = 'block';
-        tabEpisodes.style.display = 'none';
+    } else if (tabName === 'recommend') {
+        navRecommend.className = 'nav-item active';
+        tabRecommend.style.display = 'block';
+        
+        // Gọi hàm tải dữ liệu nếu chưa tải
+        if (!isRecommendLoaded) {
+            fetchRecommendMovies();
+        }
     }
 }
 
@@ -388,5 +401,89 @@ function handleNoMovies(container) {
             header.style.paddingBottom = "0";
         }
         parentBlock.style.paddingBottom = "24px";
+    }
+}
+
+// --- RECOMMENDATION LOGIC ---
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+function formatEpisodeText(epStr) {
+    if (!epStr) return "";
+    const lowerEp = epStr.toLowerCase().trim();
+
+    if (lowerEp === 'full') return "Trọn bộ";
+
+    if (lowerEp.includes('hoàn tất')) {
+        const match = epStr.match(/\((\d+)/);
+        if (match && match[1]) {
+            return `Trọn bộ ${match[1]} tập`;
+        }
+        return "Trọn bộ";
+    }
+
+    if (lowerEp.startsWith('tập')) {
+        return `Cập nhật tới ${lowerEp}`;
+    }
+
+    return epStr;
+}
+
+async function fetchRecommendMovies() {
+    const grid = document.getElementById('recommendGrid');
+    const totalItemsNeeded = 32;
+
+    try {
+        // Fetch 4 trang
+        const pageRequests = [1, 2, 3, 4].map(page =>
+            fetch(`https://phimapi.com/danh-sach/phim-moi-cap-nhat-v2?page=${page}`).then(res => res.json())
+        );
+
+        const results = await Promise.all(pageRequests);
+        let allMovies = [];
+
+        results.forEach(data => {
+            if (data.status && data.items) {
+                allMovies = allMovies.concat(data.items);
+            }
+        });
+
+        allMovies = shuffleArray(allMovies);
+        const finalMovies = allMovies.slice(0, totalItemsNeeded);
+
+        grid.innerHTML = '';
+        finalMovies.forEach(movie => {
+            const episodeDisplay = formatEpisodeText(movie.episode_current);
+            const card = document.createElement('div');
+            card.className = 'movie-card-recommend';
+            // Logic chuyển trang giữ nguyên định dạng ?{slug} của trang web
+            card.onclick = () => { window.location.href = `?${movie.slug}`; };
+
+            card.innerHTML = `
+                <div class="poster-wrapper-rec">
+                    <img class="poster-img-rec" src="${movie.poster_url}" alt="${movie.name}">
+                    <div class="poster-overlay-rec"></div>
+                    <div class="episode-tag-rec">${episodeDisplay}</div>
+                    <div class="play-btn-rec">${playBtnSvg}</div>
+                    <div class="collection-btn-rec">
+                        ${collectionBtnSvg}
+                        <div class="tooltip-text">Sưu tập</div>
+                    </div>
+                </div>
+                <div class="movie-title-rec">${movie.name}</div>
+            `;
+            grid.appendChild(card);
+        });
+        
+        isRecommendLoaded = true; // Đánh dấu đã tải xong
+
+    } catch (error) {
+        console.error(error);
+        grid.innerHTML = '<div style="color:red; grid-column:1/-1; text-align:center;">Lỗi tải dữ liệu đề xuất.</div>';
     }
 }

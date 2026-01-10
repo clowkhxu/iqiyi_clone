@@ -1,6 +1,11 @@
 // --- CONFIG & UTILS ---
 const SLIDE_JSON_FILE = 'slide.json';
-const TOP_RANK_FILE = 'top-bang-xep-hang.json'; // Config file Top
+const TOP_RANK_FILE = 'top-bang-xep-hang.json'; 
+
+// API Config
+const API_NEW_MOVIES = 'https://script.google.com/macros/s/AKfycbw_GAE1i8oNXsVC2SyZsW-iS4hYXd2d61j0SRwFaP2eVLKwXZ9CAFyY5W0xbY47-olH/exec';
+// Lưu ý: Đã bỏ đuôi /phim/{slug} để chuyển sang dùng ?slug={slug} an toàn hơn
+const API_DETAILS_BASE = 'https://script.google.com/macros/s/AKfycbz4nZrKHjlTxsGwNKy0K_jdxOSQ_u0urzfCH1y2yBag8RXMK8Y8QdDrpnKXFtwnMD0/exec';
 
 const bgColors = [
     'rgb(21, 51, 51)',
@@ -155,6 +160,7 @@ function setupCarousel(containerId, prevBtnId, nextBtnId) {
     const container = document.getElementById(containerId);
     const prevBtn = document.getElementById(prevBtnId);
     const nextBtn = document.getElementById(nextBtnId);
+    if(!container || !prevBtn || !nextBtn) return;
 
     const checkScroll = () => {
         if (container.scrollLeft <= 1) {
@@ -181,6 +187,36 @@ function setupCarousel(containerId, prevBtnId, nextBtnId) {
 const movieCache = {};
 let hoverTimeout;
 
+// Hàm gọi API chi tiết (DÙNG QUERY PARAM - QUAN TRỌNG)
+async function fetchMovieDetail(slug) {
+    if (movieCache[slug]) return movieCache[slug];
+
+    // Thay vì /exec/phim/slug -> Dùng /exec?slug=slug
+    // Thêm &t=... để tránh browser cache kết quả lỗi CORS cũ
+    const url = `${API_DETAILS_BASE}?slug=${slug}&t=${Date.now()}`;
+    
+    // redirect: 'follow' là BẮT BUỘC với Google Apps Script
+    const res = await fetch(url, { method: 'GET', redirect: 'follow' });
+    
+    // Nếu Google Script trả về lỗi (404/500), res.ok sẽ là false
+    if (!res.ok) {
+        console.error(`API trả về lỗi ${res.status} cho slug: ${slug}`);
+        return null; 
+    }
+
+    try {
+        const json = await res.json();
+        const movieData = json.movie || (json.status === true ? json.movie : null);
+        if (movieData) {
+            movieCache[slug] = movieData;
+            return movieData;
+        }
+    } catch (e) {
+        console.error("Lỗi parse JSON (có thể do API trả về HTML lỗi):", e);
+    }
+    return null;
+}
+
 function attachHoverEvent(card, slug) {
     if (window.innerWidth <= 768) return; 
 
@@ -191,51 +227,59 @@ function attachHoverEvent(card, slug) {
             const screenWidth = window.innerWidth;
             const hoverWidth = 300; 
 
+            // 1. Tính toán vị trí
             hoverCard.classList.remove('align-left', 'align-right');
             if (cardRect.left < 100) hoverCard.classList.add('align-left');
             else if (cardRect.right + (hoverWidth/2) > screenWidth) hoverCard.classList.add('align-right');
 
-            if (hoverCard.dataset.loaded === "true") {
-                hoverCard.classList.add('active');
-                return;
-            }
+            // 2. Hiện ngay
+            hoverCard.classList.add('active');
+
+            // 3. Nếu đã tải xong
+            if (hoverCard.dataset.loaded === "true") return;
 
             try {
-                let movieData;
-                if (movieCache[slug]) {
-                    movieData = movieCache[slug];
-                } else {
-                    const res = await fetch(`https://phimapi.com/phim/${slug}`);
-                    const json = await res.json();
-                    if(json.status) {
-                        movieData = json.movie;
-                        movieCache[slug] = movieData;
-                    }
-                }
-
+                const movieData = await fetchMovieDetail(slug);
                 if (movieData) {
                     fillHoverData(hoverCard, movieData);
-                    hoverCard.classList.add('active');
                     hoverCard.dataset.loaded = "true";
+                } else {
+                     hoverCard.querySelector('.loading-text').innerText = "Không tìm thấy dữ liệu.";
                 }
             } catch (err) {
-                console.error("Lỗi hover:", err);
+                console.error("Lỗi hover chi tiết:", err);
+                hoverCard.querySelector('.loading-text').innerText = "Lỗi kết nối";
+                hoverCard.querySelector('.loading-text').style.color = "red";
             }
-        }, 50); 
+        }, 300); 
     });
 
     card.addEventListener('mouseleave', () => {
         clearTimeout(hoverTimeout);
         const hoverCard = card.querySelector('.hover-details-card');
         hoverCard.classList.remove('active');
+        if (hoverCard.dataset.loaded !== "true") {
+             hoverCard.innerHTML = '<div class="loading-text" style="padding:20px; font-size:12px;">Đang tải...</div>';
+        }
     });
 }
 
 function fillHoverData(hoverCard, movie) {
     const randomRating = (Math.random() * (9.9 - 8.5) + 8.5).toFixed(1);
-    const categories = movie.category ? movie.category.slice(0, 3).map(c => `<span class="hover-tag">${c.name}</span>`).join('') : '';
-    let content = movie.content ? movie.content.replace(/<[^>]*>?/gm, '') : 'Đang cập nhật nội dung...';
     
+    const categories = (movie.category && Array.isArray(movie.category)) 
+        ? movie.category.slice(0, 3).map(c => `<span class="hover-tag">${c.name}</span>`).join('') 
+        : '';
+        
+    let content = movie.content ? movie.content.replace(/<[^>]*>?/gm, '') : 'Đang cập nhật nội dung...';
+    if(content.length > 100) content = content.substring(0, 100) + '...';
+
+    const thumbUrl = movie.thumb_url || movie.poster_url;
+    
+    const countryName = (movie.country && Array.isArray(movie.country) && movie.country[0]) 
+        ? movie.country[0].name 
+        : 'Trung Quốc';
+
     const playSvg = `
         <div class="hover-btn-icon" onclick="event.stopPropagation(); window.location.href='play.html?url=${movie.slug}'">
             <svg viewBox="0 0 60 60" style="width:100%;height:100%;">
@@ -251,7 +295,7 @@ function fillHoverData(hoverCard, movie) {
     
     const html = `
         <div class="hover-thumb-container">
-            <img src="${movie.thumb_url || movie.poster_url}" class="hover-thumb-img" alt="${movie.name}">
+            <img src="${thumbUrl}" class="hover-thumb-img" alt="${movie.name}">
             <div class="hover-actions">
                 ${playSvg}
                 ${addSvg}
@@ -267,7 +311,7 @@ function fillHoverData(hoverCard, movie) {
             </div>
             <div class="hover-tags">
                 ${categories}
-                <span class="hover-tag">${movie.country?.[0]?.name || 'Trung Quốc'}</span>
+                <span class="hover-tag">${countryName}</span>
             </div>
             <div class="hover-desc">${content}</div>
             <div class="hover-more-btn" onclick="event.stopPropagation(); window.location.href='album.html?slug=${movie.slug}'">
@@ -281,14 +325,13 @@ function fillHoverData(hoverCard, movie) {
 // --- FETCH NEW MOVIES ---
 async function fetchNewMovies() {
     const grid = document.getElementById('newMoviesGrid');
+    if(!grid) return;
+    grid.innerHTML = '<div class="loading-container"><div class="loading-spinner"></div></div>';
+
     try {
-        const [res1, res2] = await Promise.all([
-            fetch('https://phimapi.com/danh-sach/phim-moi-cap-nhat-v2?page=1&limit=10'),
-            fetch('https://phimapi.com/danh-sach/phim-moi-cap-nhat-v2?page=2&limit=10')
-        ]);
-        const data1 = await res1.json();
-        const data2 = await res2.json();
-        const allMovies = [...(data1.items || []), ...(data2.items || [])];
+        const response = await fetch(`${API_NEW_MOVIES}?phim-moi-cap-nhat?page=1`, { redirect: 'follow' });
+        const data = await response.json();
+        const allMovies = data.items || [];
 
         if (allMovies.length > 0) {
             grid.innerHTML = ''; 
@@ -305,7 +348,6 @@ async function fetchNewMovies() {
                         <div class="loading-text" style="padding:20px; font-size:12px;">Đang tải...</div>
                     </div>
                 `;
-                // Click Card -> album.html?slug={slug}
                 card.onclick = () => window.location.href = `album.html?slug=${movie.slug}`;
                 
                 attachHoverEvent(card, movie.slug);
@@ -321,6 +363,9 @@ async function fetchNewMovies() {
 // --- FETCH ROMANCE MOVIES ---
 async function fetchRomanceMovies() {
     const grid = document.getElementById('romanceGrid');
+    if(!grid) return;
+    grid.innerHTML = '<div class="loading-container"><div class="loading-spinner"></div></div>';
+
     try {
         const response = await fetch('https://phimapi.com/v1/api/the-loai/tinh-cam?page=1&limit=10');
         const json = await response.json();
@@ -343,7 +388,6 @@ async function fetchRomanceMovies() {
                         <div class="loading-text" style="padding:20px; font-size:12px;">Đang tải...</div>
                     </div>
                 `;
-                // Click Card -> album.html?slug={slug}
                 card.onclick = () => window.location.href = `album.html?slug=${movie.slug}`;
 
                 attachHoverEvent(card, movie.slug);
@@ -359,37 +403,27 @@ async function fetchRomanceMovies() {
     }
 }
 
-// --- FETCH TOP TRENDING (UPDATED: LOAD FROM LOCAL JSON & FETCH EPISODE) ---
+// --- FETCH TOP TRENDING ---
 async function fetchTopTrending() {
     const grid = document.getElementById('topTrendingGrid');
+    if(!grid) return;
+    grid.innerHTML = '<div class="loading-container"><div class="loading-spinner"></div></div>';
+
     try {
-        const response = await fetch(TOP_RANK_FILE); // Tải file top-bang-xep-hang.json
+        const response = await fetch(TOP_RANK_FILE); 
         const items = await response.json();
 
         if (items.length > 0) {
             grid.innerHTML = '';
 
-            // Duyệt qua danh sách và gọi API để lấy thông tin tập phim
-            // Sử dụng Promise.all để tải song song cho nhanh
-            const renderPromises = items.map(async (movie, index) => {
+            // Render khung trước
+            items.forEach((movie, index) => {
                 const rank = index + 1;
                 const stableColor = getStableColor(movie.slug, bgColors);
-                let episodeText = "Đang cập nhật";
-
-                try {
-                    const apiRes = await fetch(`https://phimapi.com/phim/${movie.slug}`);
-                    const apiData = await apiRes.json();
-                    if(apiData.status && apiData.movie) {
-                        episodeText = formatEpisodeText(apiData.movie.episode_current);
-                        // Có thể lưu thêm dữ liệu vào cache để hover không phải load lại
-                        movieCache[movie.slug] = apiData.movie;
-                    }
-                } catch (err) {
-                    console.error(`Lỗi API chi tiết cho ${movie.slug}:`, err);
-                }
-
+                
                 const card = document.createElement('div');
                 card.className = 'movie-card movie-card--trending'; 
+                card.id = `trending-${movie.slug}`; 
                 card.style.setProperty('--theme-color', stableColor);
                 
                 card.innerHTML = `
@@ -398,28 +432,35 @@ async function fetchTopTrending() {
                         <div class="poster-gradient"></div>
                         <div class="top-rank">TOP ${rank}</div>
                     </div>
-                    
                     <div class="movie-info">
                         <div class="movie-name">${movie.name}</div>
-                        <div class="episode-text">${episodeText}</div>
+                        <div class="episode-text">Đang tải...</div>
                     </div>
-
                     <div class="hover-details-card" data-loaded="false">
                         <div class="loading-text" style="padding:20px; font-size:12px;">Đang tải...</div>
                     </div>
                 `;
-                // Click Card -> album.html?slug={slug}
                 card.onclick = () => window.location.href = `album.html?slug=${movie.slug}`;
-
                 attachHoverEvent(card, movie.slug);
-                return card;
+                grid.appendChild(card);
             });
 
-            // Đợi tất cả API trả về rồi mới append vào DOM để đảm bảo đúng thứ tự
-            const cards = await Promise.all(renderPromises);
-            cards.forEach(card => grid.appendChild(card));
-
             setupCarousel('topTrendingGrid', 'topPrevBtn', 'topNextBtn');
+
+            // Load tuần tự (Sequential) để tránh quá tải
+            for (const movie of items) {
+                try {
+                    const movieDetail = await fetchMovieDetail(movie.slug);
+                    if(movieDetail) {
+                        const card = document.getElementById(`trending-${movie.slug}`);
+                        if(card) {
+                            card.querySelector('.episode-text').innerText = formatEpisodeText(movieDetail.episode_current);
+                        }
+                    }
+                } catch (err) {
+                    // Lỗi ở đây không quan trọng, cứ tiếp tục chạy phim tiếp theo
+                }
+            }
         }
     } catch (error) {
         console.error('Lỗi khi tải top trending:', error);
@@ -428,7 +469,9 @@ async function fetchTopTrending() {
 }
 
 // --- INIT ---
-initSlider();
-fetchNewMovies();
-fetchRomanceMovies(); 
-fetchTopTrending();
+document.addEventListener('DOMContentLoaded', () => {
+    initSlider();
+    fetchNewMovies();
+    fetchRomanceMovies(); 
+    fetchTopTrending();
+});

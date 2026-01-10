@@ -308,8 +308,22 @@ button {
     display: block; 
 }
 
-.user-login-tooltip p {
-    color: #A9A9AC; font-size: 14px; line-height: 1.5; margin-bottom: 0px; font-weight: normal;
+.user-login-tooltip p,
+.history-tooltip .history-text {
+    color: #A9A9AC; 
+    font-size: 14px; 
+    line-height: 1.5; 
+    margin-bottom: 0px; 
+    font-weight: normal;
+}
+
+/* --- CHỈNH SỬA ẢNH HỘP QUÀ TRONG LỊCH SỬ XEM --- */
+.history-empty-img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 12px; /* Khoảng cách xuống dòng chữ */
+    display: inline-block;
 }
 
 /* --- NEW USER MENU DROPDOWN (LOGGED IN) - CẤU HÌNH DISPLAY: BLOCK --- */
@@ -438,6 +452,8 @@ button {
     padding: 6px 24px;
     height: 32px;
     transition: opacity 0.2s;
+    margin-top: 16px; /* Cách chữ 1 chút */
+    cursor: pointer;
 }
 .btn-login-history:hover { opacity: 0.9; }
 

@@ -4,20 +4,12 @@ let movieData = {};
 let isThumbnailMode = false;
 let currentServerData = [];
 
-// --- SVG ICONS ---
+// --- SVG ICONS (CẬP NHẬT MỚI) ---
 const listIconSvg = `
-<svg viewBox="0 0 24 24">
-    <path d="M5.5,17 C5.77614237,17 6,17.2238576 6,17.5 L6,19.5 C6,19.7761424 5.77614237,20 5.5,20 L3.5,20 C3.22385763,20 3,19.7761424 3,19.5 L3,17.5 C3,17.2238576 3.22385763,17 3.5,17 L5.5,17 Z M20.5,17 C20.7761424,17 21,17.2238576 21,17.5 L21,19.5 C21,19.7761424 20.7761424,20 20.5,20 L9.5,20 C9.22385763,20 9,19.7761424 9,19.5 L9,17.5 C9,17.2238576 9.22385763,17 9.5,17 L20.5,17 Z M5.5,10 C5.77614237,10 6,10.2238576 6,10.5 L6,12.5 C6,12.7761424 5.77614237,13 5.5,13 L3.5,13 C3.22385763,13 3,12.7761424 3,12.5 L3,10.5 C3,10.2238576 3.22385763,10 3.5,10 L5.5,10 Z M12.5,10 C12.7761424,10 13,10.2238576 13,10.5 L13,12.5 C13,12.7761424 12.7761424,13 12.5,13 L10.5,13 C10.2238576,13 10,12.7761424 10,12.5 L10,10.5 C10,10.2238576 10.2238576,10 10.5,10 L12.5,10 Z M19.5,10 C19.7761424,10 20,10.2238576 20,10.5 L20,12.5 C20,12.7761424 19.7761424,13 19.5,13 L17.5,13 C17.2238576,13 17,12.7761424 17,12.5 L17,10.5 C17,10.2238576 17.2238576,10 17.5,10 L19.5,10 Z M5.5,3 C5.77614237,3 6,3.22385763 6,3.5 L6,5.5 C6,5.77614237 5.77614237,6 5.5,6 L3.5,6 C3.22385763,6 3,5.77614237 3,5.5 L3,3.5 C3,3.22385763 3.22385763,3 3.5,3 L5.5,3 Z M12.5,3 C12.7761424,3 13,3.22385763 13,3.5 L13,5.5 C13,5.77614237 12.7761424,6 12.5,6 L10.5,6 C10.2238576,6 10,5.77614237 10,5.5 L10,3.5 C10,3.22385763 10.2238576,3 10.5,3 L12.5,3 Z M19.5,3 C19.7761424,3 20,3.22385763 20,3.5 L20,5.5 C20,5.77614237 19.7761424,6 19.5,6 L17.5,6 C17.2238576,6 17,5.77614237 17,5.5 L17,3.5 C17,3.22385763 17.2238576,3 17.5,3 L19.5,3 Z"></path>
-</svg>`;
+<svg width="18px" height="17px" viewBox="0 0 18 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g id="控件" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="icon/listmode" transform="translate(-3.000000, -3.000000)" fill="#A9A9AC"><path d="M5.5,17 C5.77614237,17 6,17.2238576 6,17.5 L6,19.5 C6,19.7761424 5.77614237,20 5.5,20 L3.5,20 C3.22385763,20 3,19.7761424 3,19.5 L3,17.5 C3,17.2238576 3.22385763,17 3.5,17 L5.5,17 Z M20.5,17 C20.7761424,17 21,17.2238576 21,17.5 L21,19.5 C21,19.7761424 20.7761424,20 20.5,20 L9.5,20 C9.22385763,20 9,19.7761424 9,19.5 L9,17.5 C9,17.2238576 9.22385763,17 9.5,17 L20.5,17 Z M5.5,10 C5.77614237,10 6,10.2238576 6,10.5 L6,12.5 C6,12.7761424 5.77614237,13 5.5,13 L3.5,13 C3.22385763,13 3,12.7761424 3,12.5 L3,10.5 C3,10.2238576 3.22385763,10 3.5,10 L5.5,10 Z M20.5,10 C20.7761424,10 21,10.2238576 21,10.5 L21,12.5 C21,12.7761424 20.7761424,13 20.5,13 L9.5,13 C9.22385763,13 9,12.7761424 9,12.5 L9,10.5 C9,10.2238576 9.22385763,10 9.5,10 L20.5,10 Z M5.5,3 C5.77614237,3 6,3.22385763 6,3.5 L6,5.5 C6,5.77614237 5.77614237,6 5.5,6 L3.5,6 C3.22385763,6 3,5.77614237 3,5.5 L3,3.5 C3,3.22385763 3.22385763,3 3.5,3 L5.5,3 Z M20.5,3 C20.7761424,3 21,3.22385763 21,3.5 L21,5.5 C21,5.77614237 20.7761424,6 20.5,6 L9.5,6 C9.22385763,6 9,5.77614237 9,5.5 L9,3.5 C9,3.22385763 9.22385763,3 9.5,3 L20.5,3 Z" id="Combined-Shape"></path></g></g></svg>`;
 
 const gridIconSvg = `
-<svg viewBox="0 0 17 17">
-    <g fill="none" fill-rule="evenodd">
-        <g fill="#A9A9AC" transform="translate(-3 -3)">
-            <path d="M5.5,17 C5.77614237,17 6,17.2238576 6,17.5 L6,19.5 C6,19.7761424 5.77614237,20 5.5,20 L3.5,20 C3.22385763,20 3,19.7761424 3,19.5 L3,17.5 C3,17.2238576 3.22385763,17 3.5,17 L5.5,17 Z M12.5,17 C12.7761424,17 13,17.2238576 13,17.5 L13,19.5 C13,19.7761424 12.7761424,20 12.5,20 L10.5,20 C10.2238576,20 10,19.7761424 10,19.5 L10,17.5 C10,17.2238576 10.2238576,17 10.5,17 L12.5,17 Z M19.5,17 C19.7761424,17 20,17.2238576 20,17.5 L20,19.5 C20,19.7761424 19.7761424,20 19.5,20 L17.5,20 C17.2238576,20 17,19.7761424 17,19.5 L17,17.5 C17,17.2238576 17.2238576,17 17.5,17 L19.5,17 Z M5.5,10 C5.77614237,10 6,10.2238576 6,10.5 L6,12.5 C6,12.7761424 5.77614237,13 5.5,13 L3.5,13 C3.22385763,13 3,12.7761424 3,12.5 L3,10.5 C3,10.2238576 3.22385763,10 3.5,10 L5.5,10 Z M12.5,10 C12.7761424,10 13,10.2238576 13,10.5 L13,12.5 C13,12.7761424 12.7761424,13 12.5,13 L10.5,13 C10.2238576,13 10,12.7761424 10,12.5 L10,10.5 C10,10.2238576 10.2238576,10 10.5,10 L12.5,10 Z M19.5,10 C19.7761424,10 20,10.2238576 20,10.5 L20,12.5 C20,12.7761424 19.7761424,13 19.5,13 L17.5,13 C17.2238576,13 17,12.7761424 17,12.5 L17,10.5 C17,10.2238576 17.2238576,10 17.5,10 L19.5,10 Z M5.5,3 C5.77614237,3 6,3.22385763 6,3.5 L6,5.5 C6,5.77614237 5.77614237,6 5.5,6 L3.5,6 C3.22385763,6 3,5.77614237 3,5.5 L3,3.5 C3,3.22385763 3.22385763,3 3.5,3 L5.5,3 Z M12.5,3 C12.7761424,3 13,3.22385763 13,3.5 L13,5.5 C13,5.77614237 12.7761424,6 12.5,6 L10.5,6 C10.2238576,6 10,5.77614237 10,5.5 L10,3.5 C10,3.22385763 10.2238576,3 10.5,3 L12.5,3 Z M19.5,3 C19.7761424,3 20,3.22385763 20,3.5 L20,5.5 C20,5.77614237 19.7761424,6 19.5,6 L17.5,6 C17.2238576,6 17,5.77614237 17,5.5 L17,3.5 C17,3.22385763 17.2238576,3 17.5,3 L19.5,3 Z"></path>
-        </g>
-    </g>
-</svg>`;
+<svg width="17px" height="17px" viewBox="0 0 17 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g id="控件" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="icon/btnmode" transform="translate(-3.000000, -3.000000)" fill="#A9A9AC"><path d="M5.5,17 C5.77614237,17 6,17.2238576 6,17.5 L6,19.5 C6,19.7761424 5.77614237,20 5.5,20 L3.5,20 C3.22385763,20 3,19.7761424 3,19.5 L3,17.5 C3,17.2238576 3.22385763,17 3.5,17 L5.5,17 Z M12.5,17 C12.7761424,17 13,17.2238576 13,17.5 L13,19.5 C13,19.7761424 12.7761424,20 12.5,20 L10.5,20 C10.2238576,20 10,19.7761424 10,19.5 L10,17.5 C10,17.2238576 10.2238576,17 10.5,17 L12.5,17 Z M19.5,17 C19.7761424,17 20,17.2238576 20,17.5 L20,19.5 C20,19.7761424 19.7761424,20 19.5,20 L17.5,20 C17.2238576,20 17,19.7761424 17,19.5 L17,17.5 C17,17.2238576 17.2238576,17 17.5,17 L19.5,17 Z M5.5,10 C5.77614237,10 6,10.2238576 6,10.5 L6,12.5 C6,12.7761424 5.77614237,13 5.5,13 L3.5,13 C3.22385763,13 3,12.7761424 3,12.5 L3,10.5 C3,10.2238576 3.22385763,10 3.5,10 L5.5,10 Z M12.5,10 C12.7761424,10 13,10.2238576 13,10.5 L13,12.5 C13,12.7761424 12.7761424,13 12.5,13 L10.5,13 C10.2238576,13 10,12.7761424 10,12.5 L10,10.5 C10,10.2238576 10.2238576,10 10.5,10 L12.5,10 Z M19.5,10 C19.7761424,10 20,10.2238576 20,10.5 L20,12.5 C20,12.7761424 19.7761424,13 19.5,13 L17.5,13 C17.2238576,13 17,12.7761424 17,12.5 L17,10.5 C17,10.2238576 17.2238576,10 17.5,10 L19.5,10 Z M5.5,3 C5.77614237,3 6,3.22385763 6,3.5 L6,5.5 C6,5.77614237 5.77614237,6 5.5,6 L3.5,6 C3.22385763,6 3,5.77614237 3,5.5 L3,3.5 C3,3.22385763 3.22385763,3 3.5,3 L5.5,3 Z M12.5,3 C12.7761424,3 13,3.22385763 13,3.5 L13,5.5 C13,5.77614237 12.7761424,6 12.5,6 L10.5,6 C10.2238576,6 10,5.77614237 10,5.5 L10,3.5 C10,3.22385763 10.2238576,3 10.5,3 L12.5,3 Z M19.5,3 C19.7761424,3 20,3.22385763 20,3.5 L20,5.5 C20,5.77614237 19.7761424,6 19.5,6 L17.5,6 C17.2238576,6 17,5.77614237 17,5.5 L17,3.5 C17,3.22385763 17.2238576,3 17.5,3 L19.5,3 Z" id="Combined-Shape"></path></g></g></svg>`;
 
 const playSvg = `
 <svg viewBox="0 0 60 60">
@@ -35,9 +27,9 @@ document.getElementById('viewModeBtn').addEventListener('click', () => {
     isThumbnailMode = !isThumbnailMode;
     const btn = document.getElementById('viewModeBtn');
     if (isThumbnailMode) {
-        btn.innerHTML = gridIconSvg; 
+        btn.innerHTML = gridIconSvg; // Bấm vào sẽ hiện icon thứ 2 (Grid)
     } else {
-        btn.innerHTML = listIconSvg; 
+        btn.innerHTML = listIconSvg; // Bấm lại sẽ về icon ban đầu (List)
     }
     renderEpisodeGrid(currentServerData);
 });
@@ -48,6 +40,38 @@ function getSlug() {
         return search.substring(1);
     }
     return ''; 
+}
+
+// --- NEW FUNCTION: XỬ LÝ VỊ TRÍ MŨI TÊN ---
+function updateTitleLayout() {
+    const titleMain = document.getElementById('titleMain');
+    const arrowContainer = document.querySelector('.arrow-container');
+    const titleEp = document.getElementById('titleEp');
+
+    if (titleMain && arrowContainer && titleEp) {
+        // Chỉ áp dụng tính toán vị trí tuyệt đối trên PC (> 1480px)
+        // Trên mobile, CSS Flexbox sẽ tự lo
+        if (window.innerWidth > 1480) {
+            arrowContainer.style.position = 'absolute';
+            arrowContainer.style.top = '50%';
+            arrowContainer.style.transform = 'translateY(-50%)';
+            arrowContainer.style.zIndex = '20';
+            
+            const mainWidth = titleMain.offsetWidth;
+            const leftPos = mainWidth + 15; 
+            arrowContainer.style.left = leftPos + 'px';
+
+            titleEp.style.marginLeft = '40px'; 
+        } else {
+            // Reset style cho mobile
+            arrowContainer.style.position = '';
+            arrowContainer.style.top = '';
+            arrowContainer.style.transform = '';
+            arrowContainer.style.zIndex = '';
+            arrowContainer.style.left = '';
+            titleEp.style.marginLeft = '';
+        }
+    }
 }
 
 async function fetchMovieData() {
@@ -106,9 +130,17 @@ function renderUI(data) {
     const movie = data.movie;
     const episodes = data.episodes;
 
-    document.getElementById('titleMain').innerText = movie.name || "Chưa có tên";
+    const titleMain = document.getElementById('titleMain');
+    titleMain.innerText = movie.name || "Chưa có tên";
+    titleMain.href = `album.html?${movie.slug}`;
+
     document.getElementById('titleEp').innerText = "Tập 1";
-    document.getElementById('sideTitle').innerText = movie.name;
+
+    const sideTitle = document.getElementById('sideTitle');
+    sideTitle.innerText = movie.name;
+    sideTitle.href = `album.html?${movie.slug}`;
+
+    setTimeout(updateTitleLayout, 0);
 
     const queryName = movie.origin_name || movie.name;
     getTmdbRating(queryName);
@@ -129,7 +161,7 @@ function renderUI(data) {
     if (episodes && episodes.length > 0) {
         renderServerSelect(episodes);
         if (episodes[0].server_data && episodes[0].server_data.length > 0) {
-            initPlayer(episodes[0].server_data[0].link_m3u8, movie.poster_url);
+            initPlayer(episodes[0].server_data[0].link_m3u8, '');
         }
     }
 }
@@ -159,14 +191,18 @@ async function getTmdbRating(query) {
         const data = await res.json();
         if (data.results && data.results.length > 0) {
             const bestMatch = data.results[0];
+            // Nếu có kết quả nhưng chưa có vote (0), vẫn hiển thị 0.0
             document.getElementById('ratingScore').innerText = bestMatch.vote_average ? bestMatch.vote_average.toFixed(1) : '0.0';
             document.getElementById('ratingCount').innerText = `(${bestMatch.vote_count || 0} người đã đánh giá)`;
         } else {
-            document.getElementById('ratingScore').innerText = 'N/A';
-            document.getElementById('ratingCount').innerText = '(Chưa có đánh giá)';
+            // Không tìm thấy phim
+            document.getElementById('ratingScore').innerText = '0.0';
+            document.getElementById('ratingCount').innerText = '(0 người đã đánh giá)';
         }
     } catch (e) {
-        document.getElementById('ratingCount').innerText = '(Lỗi kết nối TMDB)';
+        // Lỗi kết nối
+        document.getElementById('ratingScore').innerText = '0.0';
+        document.getElementById('ratingCount').innerText = '(0 người đã đánh giá)';
     }
 }
 
@@ -467,25 +503,48 @@ function setupCarousel(containerId, prevBtnId, nextBtnId, itemsPerScroll) {
 
 function handleResponsiveLayout() {
     const width = window.innerWidth;
+    
+    // Các phần tử cần di chuyển
     const recSec = document.getElementById('recommendSection');
     const listBox = document.getElementById('box-list');
-    const infoBox = document.getElementById('box-info');
+    const infoBox = document.getElementById('box-info'); // Cha của Rec ở PC
     const actionBar = document.getElementById('videoActionBar');
-    const videoArea = document.getElementById('box-player');
+    const videoArea = document.getElementById('box-player'); // Cha của Action ở PC
+    const rankBox = document.getElementById('box-rank'); 
+    const bottomSection = document.querySelector('.bottom-section'); // Cha của Rank ở PC
 
     if (width <= 1480) {
-        if (listBox && recSec && listBox.parentNode) {
-            listBox.parentNode.insertBefore(recSec, listBox.nextSibling);
-        }
+        // --- MOBILE LOGIC ---
+        // 1. Action Bar lên trước List
         if (listBox && actionBar && listBox.parentNode) {
              listBox.parentNode.insertBefore(actionBar, listBox);
         }
+        
+        // 2. Recommend lên sau List (TRƯỚC Rank)
+        if (listBox && recSec && listBox.parentNode) {
+             listBox.parentNode.insertBefore(recSec, listBox.nextSibling);
+        }
+
+        // 3. Rank xuống sau Recommend (Ở CUỐI CÙNG)
+        if (recSec && rankBox && recSec.parentNode) {
+            recSec.parentNode.insertBefore(rankBox, recSec.nextSibling);
+        }
+
     } else {
+        // --- PC LOGIC (RESTORE) ---
+        // 1. Trả Recommend về Box Info (cuối box)
         if (infoBox && recSec) {
              infoBox.appendChild(recSec);
         }
+
+        // 2. Trả Action Bar về Video Area (cuối box)
         if (videoArea && actionBar) {
             videoArea.appendChild(actionBar);
+        }
+
+        // 3. Trả Ranking Box về Bottom Section
+        if (bottomSection && rankBox) {
+            bottomSection.appendChild(rankBox);
         }
     }
 }
@@ -493,6 +552,7 @@ function handleResponsiveLayout() {
 window.addEventListener('load', handleResponsiveLayout);
 window.addEventListener('resize', handleResponsiveLayout);
 window.addEventListener('resize', checkDescriptionOverflow);
+window.addEventListener('resize', updateTitleLayout);
 
 // INIT
 fetchMovieData();

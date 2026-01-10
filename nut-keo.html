@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Floating Widget Responsive</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: sans-serif;
+            height: 2000px;
+            /* Tạo chiều cao giả lập */
+        }
+
+        /* --- STYLES CHO PC (MẶC ĐỊNH) --- */
+
+        /* Container chính của Widget */
+        .floating-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 56px;
+            /* Rộng 56px theo yêu cầu */
+            background: rgb(49, 52, 57);
+            border-radius: 28px;
+            /* Bo tròn viên thuốc (1/2 chiều rộng) */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            opacity: 0.95;
+            transition: opacity 0.3s, transform 0.3s;
+            /* Thêm transition cho transform */
+        }
+
+        .floating-widget:hover {
+            opacity: 1;
+        }
+
+        /* Nút bấm bên trong */
+        .widget-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            cursor: pointer;
+            border: none;
+            background: none;
+            padding: 5px 0;
+            transition: transform 0.2s;
+            text-decoration: none;
+        }
+
+        .widget-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Đường kẻ phân cách */
+        .widget-divider {
+            width: 24px;
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.1);
+            margin: 4px 0;
+        }
+
+        /* Icon SVG chung */
+        .icon-svg {
+            fill: rgb(28, 199, 73);
+        }
+
+        .home-icon {
+            width: 26px;
+            height: 26px;
+        }
+
+        .scroll-icon {
+            width: 32px;
+            height: 32px;
+        }
+
+        /* --- RESPONSIVE (ĐIỆN THOẠI & MÁY TÍNH BẢNG) --- */
+        @media (max-width: 768px) {
+            .floating-widget {
+                right: 15px;
+                /* Sát lề phải hơn */
+                bottom: 20px;
+                /* Sát lề dưới hơn */
+                /* Thu nhỏ toàn bộ widget xuống 90% cho gọn trên màn hình bé */
+                transform: scale(0.9);
+                transform-origin: bottom right;
+                /* Giữ gốc ở góc phải dưới khi thu nhỏ */
+            }
+
+            /* Trên điện thoại, bỏ hiệu ứng scale khi chạm để tránh bị dính trạng thái to */
+            .widget-btn:hover {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div style="padding: 20px;">
+        <h1>Test Responsive</h1>
+        <p>Thử co nhỏ trình duyệt hoặc mở trên điện thoại để thấy vị trí nút thay đổi.</p>
+    </div>
+
+    <div class="floating-widget">
+
+        <a href="index.html" class="widget-btn" title="Trang chủ">
+            <svg class="icon-svg home-icon" viewBox="0 0 24 24">
+                <path
+                    d="M3 13h1v7c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-7h1a1 1 0 0 0 .707-1.707l-9-9a1 1 0 0 0-1.414 0l-9 9A1 1 0 0 0 3 13zm7 7v-5h4v5h-4zm2-15.586 6 6V15l.001 5H16v-5c0-1.103-.897-2-2-2h-4c-1.103 0-2 .897-2 2v5H6v-9.586l6-6z" />
+            </svg>
+        </a>
+
+        <div class="widget-divider"></div>
+
+        <div class="widget-btn" onclick="scrollToTop()" title="Lên đầu trang">
+            <svg class="icon-svg scroll-icon" viewBox="0 0 24 24">
+                <path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z" />
+            </svg>
+        </div>
+
+    </div>
+    <script>
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -25,7 +25,8 @@ async function apiRequest(endpoint, method, body = null) {
         return await response.json();
     } catch (error) {
         console.error("Lỗi kết nối API:", error);
-        return { status: "error", message: "Không thể kết nối đến Server" };
+        // Trả về null để không làm crash code phía sau
+        return null;
     }
 }
 
@@ -34,6 +35,7 @@ async function apiRequest(endpoint, method, body = null) {
 // ==========================================
 
 function saveUser(user) {
+    // Lưu vào LocalStorage (Lưu vĩnh viễn trên trình duyệt)
     localStorage.setItem('iq_user', JSON.stringify(user));
     updateUI(user);
 }
@@ -80,10 +82,7 @@ function updateUI(user) {
         // 2. Dropdown / Tooltip
         if (guestTooltip) guestTooltip.style.display = 'none'; // Ẩn tooltip đăng nhập
         if (userMenuDropdown) {
-             // Để CSS hover xử lý việc display block, 
-             // nhưng ta cần đảm bảo nó có thể hiện ra trong DOM.
-             // Ta gán class hoặc style để logic CSS active hoạt động đúng (với cấu trúc mới, chỉ cần style.display='none' là ẩn hẳn)
-             // Ở đây ta xoá style inline để CSS hover có tác dụng
+             // Để CSS hover xử lý việc display block
              userMenuDropdown.removeAttribute('style'); 
         }
 
@@ -95,7 +94,8 @@ function updateUI(user) {
         if (btnLogoutMenu) {
             btnLogoutMenu.onclick = (e) => { 
                 e.preventDefault(); 
-                clearUser(); 
+                clearUser(); // Chỉ đăng xuất khi bấm nút này
+                window.location.reload(); // Load lại trang cho sạch
             };
         }
 
@@ -127,21 +127,33 @@ function updateUI(user) {
     }
 }
 
-// Kiểm tra Session khi tải trang
+// Kiểm tra Session khi tải trang (ĐÃ SỬA ĐỂ KHÔNG BỊ DISCONNECT)
 async function checkSession() {
     const user = getUser();
-    if (user && user.email) {
-        // Gọi API check để đảm bảo user vẫn tồn tại
-        const res = await apiRequest('/check', 'POST', { email: user.email });
-        if (res.logged_in) {
-            saveUser(res.user); // Cập nhật lại thông tin mới nhất
-        } else {
-            clearUser(); // User không tồn tại hoặc bị xóa
+    
+    if (user) {
+        // 1. Nếu có user trong LocalStorage, hiện đăng nhập NGAY LẬP TỨC
+        // Không chờ server trả lời -> Giúp trải nghiệm mượt mà, không bị nháy
+        updateUI(user);
+
+        // 2. Gọi API kiểm tra ngầm (Optional)
+        // Mục đích: Chỉ để cập nhật thông tin mới nếu có (ví dụ đổi tên)
+        // QUAN TRỌNG: Nếu lỗi mạng hoặc server chết, KHÔNG gọi clearUser()
+        if (user.email) {
+            const res = await apiRequest('/check', 'POST', { email: user.email });
+            
+            // Chỉ cập nhật nếu server trả về thành công và có dữ liệu user mới
+            if (res && res.logged_in && res.user) {
+                saveUser(res.user); 
+            }
+            // Nếu res lỗi hoặc logged_in = false -> TA BỎ QUA, VẪN GIỮ ĐĂNG NHẬP CŨ
+            // Trừ khi bạn muốn bắt buộc đá user ra thì mới thêm else { clearUser() }
         }
     } else {
         updateUI(null);
     }
 }
+// Chạy ngay khi load file
 checkSession();
 
 // ==========================================
@@ -283,14 +295,14 @@ if (btnRegSubmit) {
         
         btnRegSubmit.innerText = "Đăng ký";
 
-        if (res.status === 'success') {
+        if (res && res.status === 'success') {
             alert("Đăng ký thành công! Hãy đăng nhập.");
             hideAllForms();
             const loginEmailIn = document.getElementById('loginEmail');
             if(loginEmailIn) loginEmailIn.value = email;
             if (emailLoginForm) emailLoginForm.style.display = 'flex';
         } else {
-            alert("Lỗi: " + (res.message || "Lỗi không xác định"));
+            alert("Lỗi: " + (res ? res.message : "Không thể kết nối Server"));
         }
     });
 }
@@ -317,12 +329,12 @@ if (btnLoginSubmit) {
 
         btnLoginSubmit.innerText = "Đăng nhập";
 
-        if (res.status === 'success') {
+        if (res && res.status === 'success') {
             saveUser(res.user);
             if (loginOverlay) loginOverlay.classList.remove('active');
             alert(`Chào mừng ${res.user.name}!`);
         } else {
-            alert("Lỗi: " + (res.message || "Sai tài khoản hoặc mật khẩu"));
+            alert("Lỗi: " + (res ? res.message : "Sai tài khoản hoặc mật khẩu"));
         }
     });
 }

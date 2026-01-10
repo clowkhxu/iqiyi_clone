@@ -21,7 +21,7 @@ img { border: none; vertical-align: top; }
 /* --- VIDEO ACTION BAR --- */
 .video-action-bar {
     width: 100%;
-    background: rgb(26, 28, 34);
+    background: #1a1c22;
     height: 44px;
     padding: 0px 20px 0px 15px;
     display: flex;
@@ -31,6 +31,18 @@ img { border: none; vertical-align: top; }
     position: relative;
     z-index: 5;
     margin-top: -4px;
+    border-bottom-left-radius: 4px;
+}
+
+.video-action-bar::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -20px;
+    width: 20px;
+    height: 100%;
+    background: #1a1c22;
+    z-index: 5;
 }
 
 .action-btn { display: flex; align-items: center; gap: 10px; cursor: pointer; color: #a9a9ac; font-size: 14px; font-weight: 500; transition: color 0.3s ease; }
@@ -49,11 +61,91 @@ img { border: none; vertical-align: top; }
     box-sizing: border-box;
 }
 
-.video-title-row { display: flex; align-items: center; line-height: 1.2; margin-bottom: 8px; }
-.main-title { font-size: 34px; font-weight: 700; color: #fff; }
-.title-arrow { width: 20px; height: 20px; margin: 0 10px; fill: rgb(169, 169, 172); }
-.ep-title { font-size: 34px; font-weight: 700; color: rgb(169, 169, 172); }
+/* --- TITLE ROW & HOVER EFFECT --- */
+.video-title-row {
+    display: flex;
+    align-items: center;
+    line-height: 1.2;
+    margin-bottom: 8px;
+    position: relative; 
+    overflow: hidden; 
+    cursor: pointer; 
+}
 
+.main-title {
+    font-size: 34px;
+    font-weight: 700;
+    color: #fff;
+    position: relative;
+    z-index: 10;
+    margin-right: 0px; 
+    text-decoration: none;
+    transition: color 0.3s ease; 
+}
+
+.arrow-container {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.see-more-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1cc749; 
+    opacity: 0; 
+    max-width: 0; 
+    overflow: hidden;
+    transition: max-width 0.4s ease, opacity 0.3s ease;
+}
+
+.title-arrow {
+    width: 14px;
+    height: 14px;
+    margin-left: 6px;
+    position: relative;
+    top: 2px;
+    fill: rgb(169, 169, 172);
+    transition: fill 0.3s ease;
+    flex-shrink: 0; 
+}
+
+.ep-title {
+    font-size: 34px;
+    font-weight: 700;
+    color: rgb(169, 169, 172);
+    position: relative;
+    z-index: 1; 
+}
+
+.title-hover-bg {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -20%; 
+    width: 150%; 
+    background: linear-gradient(to right, 
+        rgba(17, 19, 25, 0.95) 0%, 
+        rgba(17, 19, 25, 0.9) 20%, 
+        rgba(17, 19, 25, 0.6) 50%,
+        rgba(17, 19, 25, 0) 100%
+    );
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 5; 
+    opacity: 0;
+    pointer-events: none; 
+    transform: skewX(-10deg) translateX(0); 
+    transition: all 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.video-title-row:hover .main-title { color: #1cc749; }
+.video-title-row:hover .title-hover-bg { opacity: 1; left: 0%; }
+.video-title-row:hover .see-more-text { opacity: 1; max-width: 85px; }
+.video-title-row:hover .title-arrow { fill: #1cc749 !important; }
+
+/* --- Rating & Meta --- */
 .rating-section { display: flex; align-items: center; margin-top: 6px; font-size: 14px; }
 .rating-star svg { width: 18px; height: 18px; fill: #00cc36; margin-right: 4px; vertical-align: text-bottom; }
 .rating-score { font-size: 18px; font-weight: 700; color: #00cc36; margin-right: 6px; }
@@ -82,16 +174,43 @@ img { border: none; vertical-align: top; }
 .toggle-btn svg { margin-left: 5px; width: 12px; height: 12px; fill: currentColor; }
 .clearfix::after { content: ""; clear: both; display: table; }
 
-/* --- 5. LIST TẬP --- */
-.episode-box { background: #1a1c22; padding: 16px; border-radius: 4px; height: 648.547px; display: flex; flex-direction: column; overflow: hidden; }
-.right-header-title { font-size: 20px; line-height: 1.25; color: #fff; font-weight: 700; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; margin-bottom: 20px; }
+/* --- 5. LIST TẬP & SIDE TITLE --- */
+.episode-box { 
+    background: #1a1c22; 
+    padding: 16px; 
+    border-radius: 4px; 
+    height: 688.547px; 
+    display: flex; 
+    flex-direction: column; 
+    overflow: hidden; 
+}
+
+.right-header-title { 
+    font-size: 20px; 
+    line-height: 1.25; 
+    color: #fff; 
+    font-weight: 700; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    display: -webkit-box; 
+    -webkit-line-clamp: 2; 
+    -webkit-box-orient: vertical; 
+    margin-bottom: 20px; 
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+.right-header-title:hover { color: #1cc749; }
+
 .list-tools { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; position: relative; }
 .select-wrapper { position: relative; }
 .lang-select { background: #1a1c22; color: #fff; cursor: pointer; border: 1px solid rgb(130, 131, 135); border-radius: 2px; width: 178px; height: 34px; padding: 0 30px 0 10px; font-size: 14px; outline: none; }
 .select-arrow { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 4px solid #fff; }
 
 .list-icon { display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; cursor: pointer; }
-.list-icon svg { width: 20px; height: 20px; fill: #a9a9ac; display: block; }
+
+/* FIX: CẬP NHẬT KÍCH THƯỚC ICON 18px TẠI ĐÂY */
+.list-icon svg { width: 18px; height: 18px; fill: #a9a9ac; display: block; }
 .list-icon:hover svg { fill: #1cc749; }
 
 .range-info { font-size: 14px; line-height: 16px; color: #a9a9ac; margin-bottom: 12px; font-weight: 400; }
@@ -99,13 +218,11 @@ img { border: none; vertical-align: top; }
 .episode-scroll-container::-webkit-scrollbar { width: 4px; }
 .episode-scroll-container::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
 
-/* Grid mặc định */
 .episode-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
 .ep-item { background: rgba(255, 255, 255, 0.06); height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 2px; color: #fff; font-size: 14px; font-weight: 400; cursor: pointer; }
 .ep-item:hover { background: #23252b; color: #1cc749; }
 .ep-item.selected { background: #23252b; color: rgb(28, 199, 73); }
 
-/* --- STYLE DẠNG THUMBNAIL --- */
 .episode-grid.thumbnail-view { display: flex; flex-direction: column; gap: 10px; padding-bottom: 20px; grid-template-columns: none !important; }
 .ep-thumb-item { display: flex; align-items: center; gap: 15px; padding: 5px; cursor: pointer; border-radius: 4px; transition: background-color 0.2s; background: transparent; }
 .ep-thumb-item:hover { background-color: rgba(255, 255, 255, 0.08); }
@@ -116,17 +233,22 @@ img { border: none; vertical-align: top; }
 .ep-thumb-item.selected .ep-thumb-name { color: #1cc749; }
 
 /* --- 6. BẢNG XẾP HẠNG --- */
-.ranking-container { width: 100%; }
+.ranking-container { 
+    width: 100%; 
+    position: -webkit-sticky;
+    position: sticky;
+    top: 20px;
+}
+
 .ranking-header-title { font-size: 28px; line-height: 34px; font-weight: 700; color: #fff; margin-bottom: 16px; height: 40px; display: flex; align-items: center; }
 .ranking-box { background: transparent; }
 .ranking-list { display: flex; flex-direction: column; gap: 10px; }
+
 .rank-item { display: flex; flex-direction: column; position: relative; background-color: transparent; padding: 10px; border-radius: 6px; transition: all 0.3s ease; cursor: pointer; }
 .rank-item:hover { background-color: rgb(29, 31, 37); }
-.rank-item:hover .rank-poster-img { display: block; }
 .rank-item:first-child { background-color: rgb(29, 31, 37); }
-.rank-item:first-child .rank-poster-img { display: block; }
 .ranking-list:hover .rank-item:first-child:not(:hover) { background-color: transparent; }
-.ranking-list:hover .rank-item:first-child:not(:hover) .rank-poster-img { display: none; }
+
 .rank-header-row { display: flex; align-items: center; width: 100%; cursor: pointer; }
 .rank-num { font-size: 18px; font-weight: 700; width: 22px; text-align: center; font-style: normal; flex-shrink: 0; line-height: 30px; }
 .rank-num.top1 { color: #1cc749; font-size: 20px; }
@@ -134,30 +256,75 @@ img { border: none; vertical-align: top; }
 .rank-num.top3 { color: #1cc749; opacity: 0.6; }
 .rank-num.normal { color: #828387; font-size: 16px; }
 .rank-name { cursor: pointer; display: block; padding-left: 15px; font-size: 16px; line-height: 30px; color: rgb(204, 204, 204); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
-.rank-poster-img { display: none; width: 100px; margin-left: 37px; border-radius: 4px; margin-top: 10px; margin-bottom: 5px; object-fit: cover; aspect-ratio: 2/3; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); }
+
+.rank-poster-img { 
+    display: none; 
+    width: 100px; 
+    margin-left: 37px; 
+    border-radius: 4px; 
+    margin-top: 10px; 
+    margin-bottom: 5px; 
+    object-fit: cover; 
+    aspect-ratio: 2/3; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); 
+}
+
+.rank-item:hover .rank-poster-img { display: block; }
+.rank-item:first-child .rank-poster-img { display: block; }
+.ranking-list:hover .rank-item:first-child:not(:hover) .rank-poster-img { display: none; }
 
 /* --- 7. DIỄN VIÊN --- */
 .actor-section { margin-top: 40px; position: relative; }
 
-/* FIX: 
-   - padding-left: 0 -> Căn thẳng lề trái với tiêu đề.
-   - padding-right: 45px -> Chừa chỗ trống bên phải cho mũi tên phải nằm.
-   - overflow: visible -> Để mũi tên trái có thể nằm "thò" ra ngoài bên trái.
-*/
 .actor-carousel-container { 
     position: relative; 
     width: 100%; 
-    padding: 0 45px 0 0; 
+    padding-right: 52px;
     overflow: visible; 
 }
 
 .actor-slider { display: flex; gap: 20px; overflow-x: auto; padding: 10px 0 20px 0; scrollbar-width: none; scroll-behavior: smooth; }
 .actor-slider::-webkit-scrollbar { display: none; }
-.actor-item { text-align: center; width: 135px; flex-shrink: 0; cursor: pointer; }
-.actor-img-box { width: 132.141px; height: 132.141px; border-radius: 50%; position: relative; margin: 0 auto 12px; border: 2px solid transparent; box-sizing: content-box; overflow: hidden; }
-.actor-item:hover .actor-img-box { border-color: #1cc749; }
+
+.actor-item { 
+    text-align: center; 
+    width: 135px; 
+    flex-shrink: 0; 
+    cursor: pointer; 
+    transition: transform 0.2s ease;
+}
+.actor-item:hover { 
+    transform: scale(1.05); 
+}
+
+.actor-img-box { 
+    width: 132.141px; 
+    height: 132.141px; 
+    border-radius: 50%; 
+    position: relative; 
+    margin: 0 auto 12px; 
+    border: 2px solid transparent; 
+    box-sizing: content-box; 
+    overflow: hidden; 
+    transition: border-color 0.2s ease;
+}
+.actor-item:hover .actor-img-box { 
+    border-color: #1cc749; 
+}
+
 .actor-img { width: 100%; height: 100%; object-fit: cover; }
-.actor-name { font-size: 16px; font-weight: 500; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.actor-name { 
+    font-size: 16px; 
+    font-weight: 500; 
+    color: #fff; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    white-space: nowrap; 
+    transition: color 0.2s ease; 
+}
+.actor-item:hover .actor-name { color: #1cc749; }
+
 .actor-role { font-size: 14px; color: rgb(169, 169, 172); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 3px; }
 
 /* --- 8. SECTION DIVIDER --- */
@@ -166,26 +333,71 @@ img { border: none; vertical-align: top; }
 /* --- 9. ĐỀ XUẤT CHO BẠN --- */
 .section-header { font-size: 28px; line-height: 32px; font-weight: 700; color: #fff; margin-bottom: 20px; }
 
-/* FIX: Tương tự như diễn viên, căn trái 0, chừa phải 45px cho mũi tên */
 .recommend-carousel-wrapper { 
     position: relative; 
     width: 100%; 
-    padding: 0 45px 0 0; 
+    padding-right: 52px;
     overflow: visible; 
 }
 
-.recommend-grid { display: flex; gap: 16px; overflow-x: auto; scroll-behavior: smooth; padding-bottom: 20px; scrollbar-width: none; }
+.recommend-grid { 
+    display: flex; 
+    gap: 16px; 
+    overflow-x: auto; 
+    scroll-behavior: smooth; 
+    padding-bottom: 20px; 
+    padding-top: 15px;
+    scrollbar-width: none; 
+}
 .recommend-grid::-webkit-scrollbar { display: none; }
 
-.rec-movie-card { position: relative; min-width: calc((100% - 80px) / 6); max-width: calc((100% - 80px) / 6); flex-shrink: 0; cursor: pointer; transition: transform 0.2s ease, z-index 0s; z-index: 1; }
-.rec-movie-card:hover { transform: scale(1.05); z-index: 100; }
-.rec-poster-wrapper { position: relative; width: 100%; padding-top: 133.33%; border-radius: 4px; overflow: hidden; background-color: #252525; margin-bottom: 8px; }
+.rec-movie-card { 
+    position: relative; 
+    min-width: calc((100% - 80px) / 6); 
+    max-width: calc((100% - 80px) / 6); 
+    flex-shrink: 0; 
+    cursor: pointer; 
+    transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), z-index 0s; 
+    z-index: 1; 
+}
+.rec-movie-card:hover { 
+    transform: scale(1.05);
+    z-index: 100; 
+}
+
+.rec-poster-wrapper { 
+    position: relative; 
+    width: 100%; 
+    padding-top: 133.33%; 
+    border-radius: 4px; 
+    overflow: hidden; 
+    background-color: #252525; 
+    margin-bottom: 8px; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: box-shadow 0.2s ease;
+}
+.rec-movie-card:hover .rec-poster-wrapper {
+    box-shadow: 0 10px 25px rgba(0,0,0,0.7); 
+}
+
 .rec-poster-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
 .rec-poster-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 40%); pointer-events: none; }
 .rec-episode-tag { position: absolute; bottom: 6px; left: 6px; font-size: 13px; font-weight: 400; color: #fff; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9); z-index: 5; }
-.rec-play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); width: 42px; height: 42px; z-index: 10; opacity: 0; transition: all 0.3s ease; }
+
+.rec-play-btn { 
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%) scale(0.5); 
+    width: 42px;
+    height: 42px;
+    z-index: 10; 
+    opacity: 0; 
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+}
 .rec-play-btn svg { width: 100%; height: 100%; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5)); }
 .rec-movie-card:hover .rec-play-btn { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
 .rec-collection-btn { position: absolute; bottom: 8px; right: 8px; width: 36px; height: 36px; background-color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 10; opacity: 0; transform: scale(0.8); transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.2s ease; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5); }
 .rec-collection-btn svg { width: 24px; height: 24px; fill: #111319; }
 .rec-movie-card:hover .rec-collection-btn { opacity: 1; transform: scale(1); }
@@ -193,10 +405,11 @@ img { border: none; vertical-align: top; }
 .rec-tooltip-text { position: absolute; right: 48px; top: 50%; transform: translateY(-50%); background-color: rgba(30, 30, 30, 0.9); color: #fff; padding: 6px 10px; border-radius: 4px; font-size: 12px; white-space: nowrap; opacity: 0; visibility: hidden; pointer-events: none; transition: none; border: 1px solid rgba(255, 255, 255, 0.15); }
 .rec-tooltip-text::after { content: ""; position: absolute; top: 50%; right: -4px; margin-top: -4px; border-width: 4px 0 4px 4px; border-style: solid; border-color: transparent transparent transparent rgba(30, 30, 30, 0.9); }
 .rec-collection-btn:hover .rec-tooltip-text { opacity: 1; visibility: visible; }
+
 .rec-movie-title { font-size: 15px; font-weight: 500; color: #e0e0e0; margin-top: 8px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; transition: color 0.2s; }
 .rec-movie-card:hover .rec-movie-title { color: #1cc749; }
 
-/* --- 10. NAV ARROW (ĐỊNH VỊ CHUẨN) --- */
+/* --- 10. NAV ARROW --- */
 .nav-arrow {
     position: absolute;
     width: 40px; 
@@ -212,66 +425,89 @@ img { border: none; vertical-align: top; }
 .nav-arrow svg { width: 100%; height: 100%; fill: #a1a1a1; transition: fill 0.3s; }
 .nav-arrow:hover svg { fill: #ffffff; }
 
-/* FIX: Mũi tên trái
-   - Đặt left: -45px để nó nằm hẳn ra ngoài vùng nội dung phim.
-*/
 .nav-prev { 
-    left: -45px; 
+    left: -52px; 
     transform: translateY(-50%) rotate(180deg) !important; 
 }
 
-/* FIX: Mũi tên phải
-   - Đặt right: 0. Vì container đã có padding-right: 45px, mũi tên sẽ nằm gọn trong khoảng trống này
-     mà không đè lên poster.
-*/
 .nav-next { 
     right: 0; 
     transform: translateY(-50%) !important; 
 }
 
-/* Ẩn ngay lập tức nếu không còn nội dung */
 .nav-arrow.hidden { display: none !important; }
 
-/* CĂN GIỮA MŨI TÊN DIỄN VIÊN 
-   Avatar 132px + 10px padding top = 142px. 
-   Tâm ảnh = 10px + 66px = 76px.
-*/
-.actor-carousel-container .nav-arrow { 
-    top: 76px; 
-}
+.actor-carousel-container .nav-arrow { top: 76px; }
 
-/* CĂN GIỮA MŨI TÊN ĐỀ XUẤT VỚI POSTER
-   Poster chiều cao ~230px. 
-   Tâm poster ~ 115px.
-*/
-.recommend-carousel-wrapper .nav-arrow { 
-    top: 115px; 
-}
+.recommend-carousel-wrapper .nav-arrow { top: 115px; }
 
 /* --- RESPONSIVE MOBILE --- */
 @media screen and (max-width: 1480px) {
     .video-info, .recommend-section { padding-right: 0; }
     .main-container { padding: 0; max-width: 100%; gap: 20px; }
     .top-section, .bottom-section { display: contents; }
-    .video-area { order: 1; }
-    .info-area { order: 2; } 
-    .video-action-bar { order: 3; }
-    .list-area { order: 4; }
-    .recommend-section { order: 5 !important; margin-top: 10px; margin-bottom: 20px; padding: 0 15px; } 
-    .rank-area { order: 6; } 
+    
     .col-left, .col-right { width: 100%; padding: 0 15px; }
     .video-wrapper { width: 100%; height: auto; padding-top: 56.25%; }
     .artplayer-app { position: absolute; top: 0; left: 0; }
-    .rank-area { margin-top: 0; }
-    .episode-box { height: auto; min-height: auto; }
+    
+    /* RANKING STYLE FIX - Đã chỉnh margin để nằm gần Đề xuất hơn */
+    .rank-area { 
+        margin-top: 0px; 
+        margin-bottom: 20px; 
+    } 
+    .episode-box { height: auto; min-height: auto; margin-bottom: 0px; } 
+    
     .right-header-title#sideTitle { display: none; }
-    .episode-scroll-container { padding: 6px 0px 0px; margin-right: 0; padding-right: 0; max-height: 40vh; overflow-y: auto; }
-    .episode-grid { grid-template-columns: repeat(7, 1fr); gap: 5px; }
-    .ep-item { font-size: 12px; padding: 0 2px; }
+    
+    /* STYLE CHO TEXT "Chọn tập..." */
+    .range-info {
+        font-size: 12px;
+        text-align: left;
+        color: rgb(236, 236, 236);
+        line-height: 16px;
+        margin-bottom: 12px;
+    }
+
+    /* --- TRẢ LẠI GRID TẬP PHIM CŨ (COMPACT, 5 CỘT) --- */
+    .episode-scroll-container { 
+        padding: 6px 0px 0px; 
+        margin-right: 0; 
+        padding-right: 0; 
+        max-height: 40vh; 
+        overflow-y: auto; 
+    }
+
+    /* Grid 5 cột như yêu cầu */
+    .episode-grid { 
+        display: grid;
+        grid-template-columns: repeat(5, 1fr) !important; 
+        gap: 10px;
+    }
+
+    .ep-item { 
+        font-size: 12px; 
+        padding: 0px;      
+        width: auto;       
+        text-align: center;
+        margin-bottom: 0px; 
+        height: 44px; /* Trả lại chiều cao gốc */
+        aspect-ratio: auto; /* Bỏ hình vuông lớn */
+        font-weight: 400; /* Trả lại độ đậm gốc */
+        background: rgba(255, 255, 255, 0.06); /* Trả lại màu nền gốc */
+        border-radius: 2px;
+    }
+    
+    .ep-item:hover, .ep-item.selected {
+        background: #23252b;
+        color: rgb(28, 199, 73);
+    }
+
     .video-info { margin-top: 10px; }
     .main-title, .ep-title { font-size: 20px; }
     .title-arrow { width: 14px; height: 14px; }
-    .ranking-header-title { font-size: 20px; }
+    .ranking-header-title { font-size: 20px; margin-top: 0; }
+    .see-more-text { font-size: 14px; left: 20px; } 
 
     .section-divider { display: none; }
 
@@ -284,12 +520,14 @@ img { border: none; vertical-align: top; }
         justify-content: space-between;
         border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
+
+    .video-action-bar::after { display: none; }
+
     .action-btn { font-size: 14px; }
     .action-btn .icon-box { width: 22px; height: 22px; }
 
     .actor-section { margin-top: 10px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; }
     
-    /* Mobile: Bỏ padding container để full màn hình, không cần mũi tên */
     .actor-carousel-container, .recommend-carousel-wrapper { padding: 0; overflow: hidden; }
     
     .actor-item { width: 62px; }
@@ -299,11 +537,17 @@ img { border: none; vertical-align: top; }
     .actor-slider { gap: 15px; padding: 10px 0 0 0; } 
     .nav-arrow { display: none !important; }
     
-    .list-area { margin-top: 0px !important; margin-bottom: 20px; } 
+    .list-area { margin-top: 0px !important; margin-bottom: 5px; } 
 
+    /* RECOMMEND SECTION MOBILE - POSITION ADJUSTMENT */
+    .recommend-section { 
+        order: unset !important; 
+        margin-top: 20px; 
+        margin-bottom: 5px; /* Giảm khoảng cách dưới để gần bảng xếp hạng hơn */
+        padding: 0 15px; 
+    }
     .recommend-section .section-header { font-size: 20px; line-height: normal; } 
     
-    /* Logic card mobile */
     .rec-movie-card { min-width: calc((100% - 24px) / 3); max-width: calc((100% - 24px) / 3); }
     .rec-play-btn, .rec-collection-btn, .rec-poster-overlay { display: none; }
     .rec-movie-title { font-size: 13px; }
@@ -326,7 +570,7 @@ img { border: none; vertical-align: top; }
     .rank-poster-img { display: none !important; }
     .rank-name { padding-left: 12px; font-size: 12px; line-height: 20px; }
     .rank-num { line-height: 20px; font-size: 14px; }
-    .rank-num.top1 { font-size: 16px; }
+    .rank-num.top1 { font-size: 16px; } 
     .rank-item { padding: 8px; margin-bottom: 6px; }
     .episode-grid.thumbnail-view { padding-right: 5px; }
     .ep-thumb-item { gap: 10px; }
