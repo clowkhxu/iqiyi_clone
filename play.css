@@ -475,7 +475,7 @@ img { border: none; vertical-align: top; }
         margin-bottom: 12px;
     }
 
-    /* --- EPISODE GRID MOBILE (5 CỘT) --- */
+    /* --- EPISODE GRID MOBILE (CẬP NHẬT: VUÔNG) --- */
     .episode-scroll-container { 
         padding: 6px 0px 0px; 
         margin-right: 0; 
@@ -486,21 +486,29 @@ img { border: none; vertical-align: top; }
 
     .episode-grid { 
         display: grid;
-        grid-template-columns: repeat(5, 1fr) !important; 
-        gap: 10px;
+        /* Tự động điền số lượng cột với kích thước tối thiểu ~44px (giống yêu cầu 40px) */
+        grid-template-columns: repeat(auto-fill, minmax(44px, 1fr)) !important; 
+        gap: 8px; /* Khoảng cách nhỏ gọn */
     }
 
     .ep-item { 
-        font-size: 12px; 
-        padding: 0px;      
-        width: auto;       
+        font-size: 14px; /* Số lớn hơn chút */
+        padding: 0px;    /* Theo yêu cầu */
+        width: 100%;     /* Full ô lưới */
+        height: auto;
+        aspect-ratio: 1 / 1; /* Tạo hình vuông hoàn hảo */
+        
+        display: flex;
+        align-items: center;
+        justify-content: center;
         text-align: center;
         margin-bottom: 0px; 
-        height: 44px; /* Giữ nguyên chiều cao chuẩn */
-        aspect-ratio: auto;
-        font-weight: 400; 
+        
+        font-weight: 500; 
+        
+        /* CẬP NHẬT: MÀU NỀN CŨ VÀ BO GÓC 1PX */
         background: rgba(255, 255, 255, 0.06); 
-        border-radius: 2px;
+        border-radius: 1px; 
     }
     
     .ep-item:hover, .ep-item.selected {

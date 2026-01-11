@@ -1,5 +1,16 @@
 [
     {
+        "slug": "ngoc-minh-tra-cot",
+        "bg": "https://pic2.iqiyipic.com/hamster/20251230/ec/87/65f972ac97_1808_1017.webp",
+        "char": "https://pic7.iqiyipic.com/hamster/20251230/d3/9a/1e151cb346_xxx.webp",
+        "titleImg": "https://pic5.iqiyipic.com/hamster/20251230/91/76/b0c60251c5_xxx.webp",
+        "titleText": "Ngọc Minh Trà Cốt",
+        "score": "9.7",
+        "year": "2025",
+        "tags": "Cổ Trang",
+        "desc": "Từ đỉnh cao khoa bảng rơi xuống vực sâu tử tù, Lục Giang Lai bị tước đoạt tất cả, kể cả danh tính. Kẻ cứu mạng hắn lại chính là vị nữ thương nhân từng là đối thủ không đội trời chung – Vinh Thiện Bảo. Dưới vỏ bọc một tên mã phu thấp hèn, hắn trở thành con bài sắc bén nhất trong tay nàng, cùng bước vào cuộc chiến thương trường đẫm máu. Đây vừa là liên minh nguy hiểm, vừa là cuộc truy tìm sự thật và trong ngọn lửa hận thù cùng toan tính ấy, sự dịu dàng khó ngờ của nữ chủ nhân lạnh lùng dần hé lộ…"
+    },
+    {
         "slug": "tieu-dao",
         "bg": "https://pic1.iqiyipic.com/hamster/20251024/62/e6/1c7db29c4d_1808_1017.webp",
         "char": "https://pic8.iqiyipic.com/hamster/20251227/8e/45/d938d85afe_xxx.webp",
@@ -22,17 +33,6 @@
         "desc": "Song Quỹ được chuyển thể từ tiểu thuyết cùng tên. Khương Mộ và Cận Triêu từ hai đường thẳng song song đã tìm thấy nhau giữa dòng đời tấp nập."
     },
     {
-        "slug": "nguoi-lam-an-lon",
-        "bg": "https://pic0.iqiyipic.com/hamster/20251125/3d/65/30d4314364_1808_1017.webp",
-        "char": "https://pic3.iqiyipic.com/hamster/20251125/24/3c/4058a0a181_xxx.webp",
-        "titleImg": "https://pic4.iqiyipic.com/hamster/20251125/8e/10/4233407bd7_xxx.webp",
-        "titleText": "Người Làm Ăn Lớn",
-        "score": "9.5",
-        "year": "2025",
-        "tags": "Cổ Trang | Chính Kịch",
-        "desc": "Người Làm Ăn Lớn là bộ phim truyền kỳ cổ trang do Trương Đĩnh (Gió Thổi Bán Hạ) viết kịch bản kiêm đạo diễn, với sự tham gia của các diễn viên chính: Trần Hiểu (Trần Phong Thập Tam Tái, Năm Ấy Hoa Nở Trăng Vừa Tròn), Tôn Thiên (Đông Chí, Thanh Xuân Đón Gió), La Nhất Châu (Thanh Xuân Có Bạn 3) và Thành Thái Sân (Cuộc Đấu Tuyệt Mật, Nhân Thế Gian). Phim kể về Cổ Bình Nguyên, một nho sinh tài hoa nhưng bị vu oan và đày đi biên ải. Anh lấy cái chết giả làm kế sinh tồn, từng bước xoay chuyển cục diện trong tình thế ngàn cân treo sợi tóc. Tận dụng từng cơ hội, Cổ Bình Nguyên xây dựng thế lực bằng ngân phiếu, phát tài nhờ buôn trà, lập nghiệp bằng muối, cứu dân bằng lương thực. Anh từng bước xoay chuyển cục diện thương trường bằng chính cách chơi của mình, nghịch thế mà lội ngược dòng, trở thành một “đại thương nhân” đem lại phồn vinh cho cả một vùng đất."
-    },
-    {
         "slug": "thien-dia-ky-tam",
         "bg": "https://pic0.iqiyipic.com/hamster/20251125/3d/65/30d4314364_1808_1017.webp",
         "char": "https://pic6.iqiyipic.com/hamster/20251024/a2/a2/3378063b78_xxx.webp",
@@ -53,16 +53,5 @@
         "year": "2025",
         "tags": "Cổ Trang | Thuyết Minh",
         "desc": "Thủy Long Ngâm được chuyển thể từ tiểu thuyết Thiên Kiếp Mi của nhà văn Đằng Bình, do Trần Trụ Phi và Tiền Kính Ngọ (nổi bật với Thương Lan Quyết) làm đạo diễn. Bộ phim thuộc thể loại huyền huyễn, võ hiệp, quy tụ dàn diễn viên nổi tiếng gồm La Vân Hi (Nguyệt Thượng Trùng Hỏa, Nhan Tâm Ký, Nửa Là Đường Mật Nửa Là Đau Thương), Tiêu Thuận Nghiêu (Liên Hoa Lâu), Ngao Tử Dật (Khom Lưng), Phương Dật Luân (Nhất Niệm Quan Sơn), Bao Thượng Ân (Thiều Hoa Nhược Cẩm), Trần Dao (Pháp Sư Vô Tâm), và Lâm Duẫn (Nạn Nhân Không Hoàn Hảo, Mỹ Nhân Ngư). Bộ phim kể về Đường Lệ Từ (do La Vân Hi thủ vai) là một cao thủ thần bí đến từ “Dị Cảnh” trong hành trình phiêu bạt giang hồ và khắp Thần Châu, không ngừng trưởng thành giữa một thế giới đầy hỗn loạn, tranh đấu, và quyết tâm bảo vệ thiên hạ. "
-    },
-    {
-        "slug": "nhat-tieu-tuy-ca",
-        "bg": "https://pic5.iqiyipic.com/hamster/20251001/a8/d0/0ad9e915dc_1808_1017.webp",
-        "char": "https://pic8.iqiyipic.com/hamster/20251001/da/7c/6d3c6cc914_xxx.webp",
-        "titleImg": "https://pic3.iqiyipic.com/hamster/20251001/7f/2e/727ac2b8d6_xxx.webp",
-        "titleText": "Nhất Tiếu Tùy Ca",
-        "score": "9.3",
-        "year": "2025",
-        "tags": "Cổ Trang | Thuyết Minh",
-        "desc": "Nhất Tiếu Tùy Ca là bộ phim cổ trang tình cảm do ba đạo diễn Chu Duệ Bân (Hương Mật Tựa Khói Sương, Ninh An Như Mộng), Lam Chí Vĩ (Bạch Nguyệt Phạn Tinh) và Cổ Chí Uy (Ninh An Như Mộng) đồng chỉ đạo. Phim quy tụ dàn diễn viên nổi tiếng gồm: Lý Thấm (Trường Phong Phá Lãng, Thất Dạ Tuyết, Quân Trang Thân Yêu), Trần Triết Viễn (Bạn Trai Phản Diện Của Tôi, Đêm Tối Và Bình Minh, Cây Ô Liu Màu Trắng), Hạ Mộng (Thanh Xuân Trong Chiến Hỏa) và Trần Hạc Nhất (Cửu Tiêu Hàn Dạ Noãn).Phim kể về trận chiến tại Bình Lăng, khi nước Cẩm Tú sắp bại trận, nữ xạ thủ áo đỏ Phó Nhất Tiếu bất ngờ bắn trúng đại hoàng tử nước Túc Sa - Phượng Tùy Ca, xoay chuyển cục diện trận chiến. Thế nhưng, ngay sau trận Bình Lăng, Nhất Tiếu lại rơi xuống vực và mất toàn bộ ký ức. Cô được gia đình họ Lăng ở Chính Niệm Sơn Trang cứu sống. Tại đây, cô vô tình gặp lại kẻ địch của mình, Phượng Tùy Ca. Nhìn thấy một Phó Nhất Tiếu hoàn toàn khác, Phượng Tùy Ca linh cảm chuyện này có liên quan đến âm mưu ẩn sau trận chiến năm xưa. Hắn muốn lợi dụng cô để lần ra sự thật, còn Nhất Tiếu cũng buộc phải dựa vào hắn để sống sót giữa vòng vây truy sát. Từ hai địch thủ sống còn, họ trở thành đồng minh bắt buộc, cùng nhau tìm đường sống trong chốn kinh thành ngập tràn âm mưu. Giữa những khoảnh khắc sinh tử, tình yêu dần nảy nở nhưng tiền căn đã trồng xuống oán hận, phụ bạc, dối trá, tiếc nuối, không buông bỏ được. Ai cũng là người chơi cờ, và cũng là quân cờ trong ván cờ số mệnh. Phó Nhất Tiếu và Phượng Tùy Ca chỉ còn cách nắm chặt tay nhau giữa sóng gió, cùng nhau phá giải âm mưu đen tối, đập tan xiềng xích định mệnh - không phụ lòng thiên hạ, cũng không phụ người thương."
     }
 ]
