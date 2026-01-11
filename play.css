@@ -451,13 +451,19 @@ img { border: none; vertical-align: top; }
     .video-wrapper { width: 100%; height: auto; padding-top: 56.25%; }
     .artplayer-app { position: absolute; top: 0; left: 0; }
     
-    /* RANKING STYLE FIX - Đã chỉnh margin để nằm gần Đề xuất hơn */
+    /* RANKING STYLE FIX */
     .rank-area { 
         margin-top: 0px; 
         margin-bottom: 20px; 
     } 
     .episode-box { height: auto; min-height: auto; margin-bottom: 0px; } 
     
+    /* VIDEO INFO & LIST SPACING */
+    .video-info { 
+        margin-top: 10px; 
+        margin-bottom: 20px; /* Thêm khoảng cách dưới cho Info Box */
+    }
+
     .right-header-title#sideTitle { display: none; }
     
     /* STYLE CHO TEXT "Chọn tập..." */
@@ -469,7 +475,7 @@ img { border: none; vertical-align: top; }
         margin-bottom: 12px;
     }
 
-    /* --- TRẢ LẠI GRID TẬP PHIM CŨ (COMPACT, 5 CỘT) --- */
+    /* --- EPISODE GRID MOBILE (5 CỘT) --- */
     .episode-scroll-container { 
         padding: 6px 0px 0px; 
         margin-right: 0; 
@@ -478,7 +484,6 @@ img { border: none; vertical-align: top; }
         overflow-y: auto; 
     }
 
-    /* Grid 5 cột như yêu cầu */
     .episode-grid { 
         display: grid;
         grid-template-columns: repeat(5, 1fr) !important; 
@@ -491,10 +496,10 @@ img { border: none; vertical-align: top; }
         width: auto;       
         text-align: center;
         margin-bottom: 0px; 
-        height: 44px; /* Trả lại chiều cao gốc */
-        aspect-ratio: auto; /* Bỏ hình vuông lớn */
-        font-weight: 400; /* Trả lại độ đậm gốc */
-        background: rgba(255, 255, 255, 0.06); /* Trả lại màu nền gốc */
+        height: 44px; /* Giữ nguyên chiều cao chuẩn */
+        aspect-ratio: auto;
+        font-weight: 400; 
+        background: rgba(255, 255, 255, 0.06); 
         border-radius: 2px;
     }
     
@@ -503,7 +508,6 @@ img { border: none; vertical-align: top; }
         color: rgb(28, 199, 73);
     }
 
-    .video-info { margin-top: 10px; }
     .main-title, .ep-title { font-size: 20px; }
     .title-arrow { width: 14px; height: 14px; }
     .ranking-header-title { font-size: 20px; margin-top: 0; }
@@ -539,11 +543,11 @@ img { border: none; vertical-align: top; }
     
     .list-area { margin-top: 0px !important; margin-bottom: 5px; } 
 
-    /* RECOMMEND SECTION MOBILE - POSITION ADJUSTMENT */
+    /* RECOMMEND SECTION MOBILE */
     .recommend-section { 
         order: unset !important; 
         margin-top: 20px; 
-        margin-bottom: 5px; /* Giảm khoảng cách dưới để gần bảng xếp hạng hơn */
+        margin-bottom: 5px; /* Giảm khoảng cách dưới */
         padding: 0 15px; 
     }
     .recommend-section .section-header { font-size: 20px; line-height: normal; } 

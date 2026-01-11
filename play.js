@@ -519,13 +519,18 @@ function handleResponsiveLayout() {
         if (listBox && actionBar && listBox.parentNode) {
              listBox.parentNode.insertBefore(actionBar, listBox);
         }
+
+        // 2. Info Box (bao gồm cả Diễn viên) lên TRƯỚC List Box
+        if (listBox && infoBox && listBox.parentNode) {
+            listBox.parentNode.insertBefore(infoBox, listBox);
+        }
         
-        // 2. Recommend lên sau List (TRƯỚC Rank)
+        // 3. Recommend lên SAU List Box
         if (listBox && recSec && listBox.parentNode) {
              listBox.parentNode.insertBefore(recSec, listBox.nextSibling);
         }
 
-        // 3. Rank xuống sau Recommend (Ở CUỐI CÙNG)
+        // 4. Rank xuống SAU Recommend (CUỐI CÙNG)
         if (recSec && rankBox && recSec.parentNode) {
             recSec.parentNode.insertBefore(rankBox, recSec.nextSibling);
         }

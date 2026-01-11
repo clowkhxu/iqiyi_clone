@@ -1,0 +1,6 @@
+﻿regex:-----BEGIN PRIVATE KEY-----[\s\S]*?-----END PRIVATE KEY-----==>REDACTED_PRIVATE_KEY
+regex:"private_key"\s*:\s*".*?"==>"private_key":"REDACTED"
+regex:"client_email"\s*:\s*".*?"==>"client_email":"REDACTED"
+regex:"type"\s*:\s*"service_account"==>"type":"REDACTED"
+regex:private_key(.|\n)*?END PRIVATE KEY-----==>REDACTED_PRIVATE_KEY
+regex:client_email.*==>client_email":"REDACTED
