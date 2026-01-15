@@ -7,9 +7,6 @@ body {
     color: #fff;
     font-size: 14px;
     overflow-x: hidden;
-    /* Ghi đè height từ header.css nếu có */
-    height: auto; 
-    min-height: 100vh;
 }
 
 a {
@@ -64,8 +61,6 @@ button {
     overflow: hidden;
     display: flex;
     align-items: flex-start;
-    /* Đảm bảo banner nằm dưới header fixed */
-    z-index: 1; 
 }
 
 .banner-bg {
@@ -119,8 +114,7 @@ button {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    /* Tăng padding-top để tránh bị Header che mất nội dung khi scroll lên */
-    padding-top: 130px; 
+    padding-top: 130px;
     padding-bottom: 40px;
     height: 100%;
 }
@@ -329,7 +323,7 @@ button {
 }
 
 /* ============================
-    NAV BAR (TAB MENU) - ĐÃ FIX XUNG ĐỘT HEADER
+    NAV BAR (TAB MENU)
 ============================ */
 .nav-bar {
     padding: 0 60px;
@@ -343,7 +337,7 @@ button {
     background: transparent;
 }
 
-.nav-bar .nav-item {
+.nav-item {
     font-size: 14px;
     color: rgba(255, 255, 255, 0.7);
     margin-right: 40px;
@@ -356,17 +350,17 @@ button {
     transition: color 0.3s;
 }
 
-.nav-bar .nav-item:hover {
+.nav-item:hover {
     color: #fff;
 }
 
-.nav-bar .nav-item.active {
+.nav-item.active {
     color: #ffffff;
     font-weight: 700;
     opacity: 1;
 }
 
-.nav-bar .nav-item.active::after {
+.nav-item.active::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -992,10 +986,6 @@ button {
         padding-bottom: 0;
         position: relative;
         background-color: #111319;
-        
-        /* FIX: Dùng Margin-top thay vì Padding-top */
-        padding-top: 0; 
-        margin-top: 50px; /* Đẩy toàn bộ khối xuống dưới Header 50px */
     }
 
     .banner-bg {
@@ -1062,7 +1052,7 @@ button {
         display: none;
     }
 
-    .nav-bar .nav-item {
+    .nav-item {
         margin-right: 25px;
         font-size: 14px;
     }

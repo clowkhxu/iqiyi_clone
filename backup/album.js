@@ -109,7 +109,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 renderMovieData(data);
                 // Sau khi có dữ liệu phim, gọi tiếp TMDB để lấy diễn viên
                 const searchName = data.movie.origin_name || data.movie.name;
-                // Đã xóa hiệu ứng hiển thị loadingMsg text
+                // Hiển thị loading msg bên tab diễn viên
+                document.getElementById('loadingMsg').style.display = 'block';
                 fetchTmdbData(searchName, data.movie.type);
             } else {
                 document.getElementById('movieTitle').textContent = "Không tìm thấy phim";
@@ -257,12 +258,11 @@ async function fetchTmdbData(queryName, type) {
             const detailsUrl = `${TMDB_BASE_URL}/${searchType}/${tmdbId}/credits?api_key=${TMDB_API_KEY}&language=vi-VN`;
             const creditsRes = await fetch(detailsUrl);
             const creditsData = await creditsRes.json();
-            
-            // Xóa loadingMsg (nếu có nội dung) và hiển thị list
+
             document.getElementById('loadingMsg').style.display = 'none';
             renderCastList(creditsData.cast, creditsData.crew);
         } else {
-            document.getElementById('loadingMsg').innerHTML = ""; // Xóa text nếu không tìm thấy
+            document.getElementById('loadingMsg').innerHTML = "Không tìm thấy thông tin trên TMDB.";
         }
     } catch (error) {
         console.error("Lỗi TMDB:", error);
@@ -443,7 +443,7 @@ function formatEpisodeText(epStr) {
 
 async function fetchRecommendMovies() {
     const grid = document.getElementById('recommendGrid');
-    // KHÔI PHỤC SPINNER
+    // Hiển thị spinner loading trước khi fetch
     grid.innerHTML = '<div class="loading-container" style="grid-column: 1 / -1;"><div class="loading-spinner"></div></div>';
     
     const totalItemsNeeded = 32;
@@ -494,6 +494,6 @@ async function fetchRecommendMovies() {
 
     } catch (error) {
         console.error(error);
-        grid.innerHTML = ''; // Nếu lỗi thì không hiện gì cả, tránh hiện text lỗi
+        grid.innerHTML = '<div style="color:red; grid-column:1/-1; text-align:center;">Lỗi tải dữ liệu đề xuất.</div>';
     }
 }

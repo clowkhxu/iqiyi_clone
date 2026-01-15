@@ -8,8 +8,28 @@ select { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
 
 img { border: none; vertical-align: top; }
 
-/* --- 2. LAYOUT CHÍNH --- */
-.main-container { width: 100%; max-width: 1550px; margin: 0 auto; padding: 20px 0; display: flex; flex-direction: column; gap: 20px; }
+/* --- 2. LAYOUT CHÍNH & LOAD VISIBILITY --- */
+/* MẶC ĐỊNH ẨN (không dùng transition) */
+.main-container { 
+    width: 100%; 
+    max-width: 1550px; 
+    margin: 0 auto; 
+    padding: 20px 0; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 20px; 
+    
+    /* Ẩn ngay lập tức */
+    opacity: 0; 
+    pointer-events: none;
+}
+
+/* KHI LOAD XONG SẼ THÊM CLASS NÀY (hiện ngay lập tức) */
+.main-container.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
 .top-section, .bottom-section { display: flex; justify-content: center; align-items: flex-start; gap: 20px; }
 .col-left { width: 1154px; flex-shrink: 0; }
 .col-right { width: 350px; flex-shrink: 0; }
@@ -475,7 +495,7 @@ img { border: none; vertical-align: top; }
         margin-bottom: 12px;
     }
 
-    /* --- EPISODE GRID MOBILE (CẬP NHẬT: VUÔNG) --- */
+    /* --- EPISODE GRID MOBILE (CẬP NHẬT THEO HÌNH ẢNH MỚI: 6 CỘT + KHOẢNG CÁCH RỘNG) --- */
     .episode-scroll-container { 
         padding: 6px 0px 0px; 
         margin-right: 0; 
@@ -486,17 +506,17 @@ img { border: none; vertical-align: top; }
 
     .episode-grid { 
         display: grid;
-        /* Tự động điền số lượng cột với kích thước tối thiểu ~44px (giống yêu cầu 40px) */
-        grid-template-columns: repeat(auto-fill, minmax(44px, 1fr)) !important; 
-        gap: 8px; /* Khoảng cách nhỏ gọn */
+        /* Chuyển sang 6 cột để giống hình ảnh (hàng 1-6) */
+        grid-template-columns: repeat(6, 1fr) !important; 
+        gap: 10px; /* Tăng khoảng cách để các nút tách biệt rõ ràng */
     }
 
     .ep-item { 
-        font-size: 14px; /* Số lớn hơn chút */
-        padding: 0px;    /* Theo yêu cầu */
-        width: 100%;     /* Full ô lưới */
+        font-size: 13px; /* Chữ nhỏ vừa phải */
+        padding: 0px;    
+        width: 100%;     
         height: auto;
-        aspect-ratio: 1 / 1; /* Tạo hình vuông hoàn hảo */
+        aspect-ratio: 1 / 1; /* Hình vuông */
         
         display: flex;
         align-items: center;
@@ -506,9 +526,9 @@ img { border: none; vertical-align: top; }
         
         font-weight: 500; 
         
-        /* CẬP NHẬT: MÀU NỀN CŨ VÀ BO GÓC 1PX */
+        /* Màu nền và bo góc giống ảnh */
         background: rgba(255, 255, 255, 0.06); 
-        border-radius: 1px; 
+        border-radius: 4px; 
     }
     
     .ep-item:hover, .ep-item.selected {

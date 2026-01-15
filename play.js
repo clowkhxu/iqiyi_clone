@@ -4,7 +4,7 @@ let movieData = {};
 let isThumbnailMode = false;
 let currentServerData = [];
 
-// --- SVG ICONS (CẬP NHẬT MỚI) ---
+// --- SVG ICONS ---
 const listIconSvg = `
 <svg width="18px" height="17px" viewBox="0 0 18 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g id="控件" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="icon/listmode" transform="translate(-3.000000, -3.000000)" fill="#A9A9AC"><path d="M5.5,17 C5.77614237,17 6,17.2238576 6,17.5 L6,19.5 C6,19.7761424 5.77614237,20 5.5,20 L3.5,20 C3.22385763,20 3,19.7761424 3,19.5 L3,17.5 C3,17.2238576 3.22385763,17 3.5,17 L5.5,17 Z M20.5,17 C20.7761424,17 21,17.2238576 21,17.5 L21,19.5 C21,19.7761424 20.7761424,20 20.5,20 L9.5,20 C9.22385763,20 9,19.7761424 9,19.5 L9,17.5 C9,17.2238576 9.22385763,17 9.5,17 L20.5,17 Z M5.5,10 C5.77614237,10 6,10.2238576 6,10.5 L6,12.5 C6,12.7761424 5.77614237,13 5.5,13 L3.5,13 C3.22385763,13 3,12.7761424 3,12.5 L3,10.5 C3,10.2238576 3.22385763,10 3.5,10 L5.5,10 Z M20.5,10 C20.7761424,10 21,10.2238576 21,10.5 L21,12.5 C21,12.7761424 20.7761424,13 20.5,13 L9.5,13 C9.22385763,13 9,12.7761424 9,12.5 L9,10.5 C9,10.2238576 9.22385763,10 9.5,10 L20.5,10 Z M5.5,3 C5.77614237,3 6,3.22385763 6,3.5 L6,5.5 C6,5.77614237 5.77614237,6 5.5,6 L3.5,6 C3.22385763,6 3,5.77614237 3,5.5 L3,3.5 C3,3.22385763 3.22385763,3 3.5,3 L5.5,3 Z M20.5,3 C20.7761424,3 21,3.22385763 21,3.5 L21,5.5 C21,5.77614237 20.7761424,6 20.5,6 L9.5,6 C9.22385763,6 9,5.77614237 9,5.5 L9,3.5 C9,3.22385763 9.22385763,3 9.5,3 L20.5,3 Z" id="Combined-Shape"></path></g></g></svg>`;
 
@@ -27,9 +27,9 @@ document.getElementById('viewModeBtn').addEventListener('click', () => {
     isThumbnailMode = !isThumbnailMode;
     const btn = document.getElementById('viewModeBtn');
     if (isThumbnailMode) {
-        btn.innerHTML = gridIconSvg; // Bấm vào sẽ hiện icon thứ 2 (Grid)
+        btn.innerHTML = gridIconSvg; 
     } else {
-        btn.innerHTML = listIconSvg; // Bấm lại sẽ về icon ban đầu (List)
+        btn.innerHTML = listIconSvg; 
     }
     renderEpisodeGrid(currentServerData);
 });
@@ -42,15 +42,13 @@ function getSlug() {
     return ''; 
 }
 
-// --- NEW FUNCTION: XỬ LÝ VỊ TRÍ MŨI TÊN ---
+// --- XỬ LÝ VỊ TRÍ MŨI TÊN ---
 function updateTitleLayout() {
     const titleMain = document.getElementById('titleMain');
     const arrowContainer = document.querySelector('.arrow-container');
     const titleEp = document.getElementById('titleEp');
 
     if (titleMain && arrowContainer && titleEp) {
-        // Chỉ áp dụng tính toán vị trí tuyệt đối trên PC (> 1480px)
-        // Trên mobile, CSS Flexbox sẽ tự lo
         if (window.innerWidth > 1480) {
             arrowContainer.style.position = 'absolute';
             arrowContainer.style.top = '50%';
@@ -63,7 +61,6 @@ function updateTitleLayout() {
 
             titleEp.style.marginLeft = '40px'; 
         } else {
-            // Reset style cho mobile
             arrowContainer.style.position = '';
             arrowContainer.style.top = '';
             arrowContainer.style.transform = '';
@@ -75,21 +72,37 @@ function updateTitleLayout() {
 }
 
 async function fetchMovieData() {
-    const slug = getSlug();
-    if (!slug) {
-        document.getElementById('titleMain').innerText = "Chưa chọn phim (Thiếu slug)";
+    let urlSlug = getSlug();
+    if (!urlSlug) {
+        document.getElementById('titleMain').innerText = "";
         return;
     }
+
+    // --- LOGIC: TÁCH SLUG VÀ TẬP (Vd: ten-phim-tap-1) ---
+    let apiSlug = urlSlug;
+    let targetEpisode = null;
+
+    const match = urlSlug.match(/(.*)-tap-(\d+)$/);
+    if (match) {
+        apiSlug = match[1]; 
+        targetEpisode = match[2]; 
+    }
+
     try {
-        const response = await fetch(`https://phimapi.com/phim/${slug}`);
+        const response = await fetch(`https://phimapi.com/phim/${apiSlug}`);
         const json = await response.json();
         if (json.status) {
             movieData = json;
-            renderUI(json);
+            renderUI(json, targetEpisode);
         } else {
             document.getElementById('titleMain').innerText = "Không tìm thấy phim!";
+            // Nếu lỗi cũng hiện ra để user biết
+             document.querySelector('.main-container').classList.add('show');
         }
-    } catch (e) { console.error(e); }
+    } catch (e) { 
+        console.error(e);
+        document.querySelector('.main-container').classList.add('show');
+    }
 }
 
 async function fetchRankingData() {
@@ -126,15 +139,19 @@ function renderRanking(items) {
     });
 }
 
-function renderUI(data) {
+function renderUI(data, targetEpisode = null) {
     const movie = data.movie;
     const episodes = data.episodes;
 
     const titleMain = document.getElementById('titleMain');
-    titleMain.innerText = movie.name || "Chưa có tên";
+    titleMain.innerText = movie.name || "";
     titleMain.href = `album.html?${movie.slug}`;
 
-    document.getElementById('titleEp').innerText = "Tập 1";
+    let currentEpName = "Tập 1";
+    if (targetEpisode) {
+        currentEpName = `Tập ${targetEpisode}`;
+    }
+    document.getElementById('titleEp').innerText = currentEpName;
 
     const sideTitle = document.getElementById('sideTitle');
     sideTitle.innerText = movie.name;
@@ -145,7 +162,7 @@ function renderUI(data) {
     const queryName = movie.origin_name || movie.name;
     getTmdbRating(queryName);
 
-    document.getElementById('movieYear').innerText = movie.year || "----";
+    document.getElementById('movieYear').innerText = movie.year || "";
     document.getElementById('totalEp').innerText = movie.episode_total ? `${movie.episode_total} tập` : "";
     document.getElementById('movieContent').innerText = movie.content || "";
 
@@ -159,11 +176,11 @@ function renderUI(data) {
     if (movie.actor) renderCast(movie.actor);
 
     if (episodes && episodes.length > 0) {
-        renderServerSelect(episodes);
-        if (episodes[0].server_data && episodes[0].server_data.length > 0) {
-            initPlayer(episodes[0].server_data[0].link_m3u8, '');
-        }
+        renderServerSelect(episodes, targetEpisode);
     }
+    
+    // --- HIỂN THỊ GIAO DIỆN (LẬP TỨC) ---
+    document.querySelector('.main-container').classList.add('show');
 }
 
 function checkDescriptionOverflow() {
@@ -191,16 +208,13 @@ async function getTmdbRating(query) {
         const data = await res.json();
         if (data.results && data.results.length > 0) {
             const bestMatch = data.results[0];
-            // Nếu có kết quả nhưng chưa có vote (0), vẫn hiển thị 0.0
             document.getElementById('ratingScore').innerText = bestMatch.vote_average ? bestMatch.vote_average.toFixed(1) : '0.0';
             document.getElementById('ratingCount').innerText = `(${bestMatch.vote_count || 0} người đã đánh giá)`;
         } else {
-            // Không tìm thấy phim
             document.getElementById('ratingScore').innerText = '0.0';
             document.getElementById('ratingCount').innerText = '(0 người đã đánh giá)';
         }
     } catch (e) {
-        // Lỗi kết nối
         document.getElementById('ratingScore').innerText = '0.0';
         document.getElementById('ratingCount').innerText = '(0 người đã đánh giá)';
     }
@@ -244,7 +258,7 @@ async function searchPersonTMDB(name) {
     return null;
 }
 
-function renderServerSelect(episodes) {
+function renderServerSelect(episodes, targetEpisode = null) {
     const select = document.getElementById('serverSelect');
     select.innerHTML = '';
     episodes.forEach((server, index) => {
@@ -256,7 +270,27 @@ function renderServerSelect(episodes) {
     select.addEventListener('change', (e) => {
         renderEpisodeGrid(episodes[e.target.value].server_data);
     });
-    renderEpisodeGrid(episodes[0].server_data);
+
+    const serverData = episodes[0].server_data;
+    renderEpisodeGrid(serverData);
+
+    if (serverData && serverData.length > 0) {
+        let epToPlay = serverData[0]; 
+
+        if (targetEpisode) {
+            const foundEp = serverData.find(ep => {
+                const epNum = ep.name.replace('Tập ', '').replace('Full', '').trim();
+                return epNum === targetEpisode;
+            });
+            if (foundEp) {
+                epToPlay = foundEp;
+                document.getElementById('titleEp').innerText = foundEp.name;
+                renderEpisodeGrid(serverData);
+            }
+        }
+        
+        initPlayer(epToPlay.link_m3u8, '');
+    }
 }
 
 function renderEpisodeGrid(serverData) {
@@ -271,6 +305,21 @@ function renderEpisodeGrid(serverData) {
     const last = serverData[serverData.length - 1].name.replace('Tập ', '').replace('Full', '').trim();
     range.innerText = `Chọn tập ${first}-${last}`;
 
+    const currentTitle = document.getElementById('titleEp').innerText;
+
+    // --- HELPER FUNCTION: CẬP NHẬT URL KHI BẤM ---
+    const updateUrlSlug = (epName) => {
+        if (movieData && movieData.movie && movieData.movie.slug) {
+            const epNum = epName.replace('Tập ', '').replace('Full', '').trim();
+            // Tạo slug mới: slug-goc-tap-x
+            const newQuery = `?${movieData.movie.slug}-tap-${epNum}`;
+            // Dùng pushState để đổi URL không reload
+            if (window.location.search !== newQuery) {
+                window.history.pushState(null, '', newQuery);
+            }
+        }
+    };
+
     if (isThumbnailMode) {
         grid.classList.add('thumbnail-view');
         grid.style.gridTemplateColumns = 'none';
@@ -282,7 +331,6 @@ function renderEpisodeGrid(serverData) {
             const div = document.createElement('div');
             div.className = 'ep-thumb-item';
             
-            const currentTitle = document.getElementById('titleEp').innerText;
             if (ep.name === currentTitle) {
                 div.classList.add('selected');
             }
@@ -298,7 +346,9 @@ function renderEpisodeGrid(serverData) {
                 document.querySelectorAll('.ep-thumb-item').forEach(el => el.classList.remove('selected'));
                 div.classList.add('selected');
                 document.getElementById('titleEp').innerText = ep.name;
+                
                 switchVideo(ep.link_m3u8);
+                updateUrlSlug(ep.name); 
             };
             grid.appendChild(div);
         });
@@ -310,7 +360,7 @@ function renderEpisodeGrid(serverData) {
         serverData.forEach((ep, index) => {
             const div = document.createElement('div');
             div.className = 'ep-item';
-            const currentTitle = document.getElementById('titleEp').innerText;
+            
             if (ep.name === currentTitle) div.classList.add('selected');
 
             div.innerText = ep.name.replace('Tập ', '').replace('Full', '').trim();
@@ -318,7 +368,9 @@ function renderEpisodeGrid(serverData) {
                 document.querySelectorAll('.ep-item').forEach(el => el.classList.remove('selected'));
                 div.classList.add('selected');
                 document.getElementById('titleEp').innerText = ep.name;
+                
                 switchVideo(ep.link_m3u8);
+                updateUrlSlug(ep.name);
             };
             grid.appendChild(div);
         });
@@ -504,50 +556,35 @@ function setupCarousel(containerId, prevBtnId, nextBtnId, itemsPerScroll) {
 function handleResponsiveLayout() {
     const width = window.innerWidth;
     
-    // Các phần tử cần di chuyển
     const recSec = document.getElementById('recommendSection');
     const listBox = document.getElementById('box-list');
-    const infoBox = document.getElementById('box-info'); // Cha của Rec ở PC
+    const infoBox = document.getElementById('box-info'); 
     const actionBar = document.getElementById('videoActionBar');
-    const videoArea = document.getElementById('box-player'); // Cha của Action ở PC
+    const videoArea = document.getElementById('box-player'); 
     const rankBox = document.getElementById('box-rank'); 
-    const bottomSection = document.querySelector('.bottom-section'); // Cha của Rank ở PC
+    const bottomSection = document.querySelector('.bottom-section'); 
 
     if (width <= 1480) {
-        // --- MOBILE LOGIC ---
-        // 1. Action Bar lên trước List
         if (listBox && actionBar && listBox.parentNode) {
              listBox.parentNode.insertBefore(actionBar, listBox);
         }
-
-        // 2. Info Box (bao gồm cả Diễn viên) lên TRƯỚC List Box
         if (listBox && infoBox && listBox.parentNode) {
             listBox.parentNode.insertBefore(infoBox, listBox);
         }
-        
-        // 3. Recommend lên SAU List Box
         if (listBox && recSec && listBox.parentNode) {
              listBox.parentNode.insertBefore(recSec, listBox.nextSibling);
         }
-
-        // 4. Rank xuống SAU Recommend (CUỐI CÙNG)
         if (recSec && rankBox && recSec.parentNode) {
             recSec.parentNode.insertBefore(rankBox, recSec.nextSibling);
         }
 
     } else {
-        // --- PC LOGIC (RESTORE) ---
-        // 1. Trả Recommend về Box Info (cuối box)
         if (infoBox && recSec) {
              infoBox.appendChild(recSec);
         }
-
-        // 2. Trả Action Bar về Video Area (cuối box)
         if (videoArea && actionBar) {
             videoArea.appendChild(actionBar);
         }
-
-        // 3. Trả Ranking Box về Bottom Section
         if (bottomSection && rankBox) {
             bottomSection.appendChild(rankBox);
         }
