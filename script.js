@@ -1,11 +1,9 @@
 // --- CONFIG & UTILS ---
 const SLIDE_JSON_FILE = 'slide.json';
-const TOP_RANK_FILE = 'top-bang-xep-hang.json'; 
+const TOP_RANK_FILE = 'top-bang-xep-hang.json';
+const API_CONFIG_FILE = 'api-movie.json'; 
 
-// API Config
-const API_NEW_MOVIES = 'https://script.google.com/macros/s/AKfycbw_GAE1i8oNXsVC2SyZsW-iS4hYXd2d61j0SRwFaP2eVLKwXZ9CAFyY5W0xbY47-olH/exec';
-// Lưu ý: Đã bỏ đuôi /phim/{slug} để chuyển sang dùng ?slug={slug} an toàn hơn
-const API_DETAILS_BASE = 'https://script.google.com/macros/s/AKfycbz4nZrKHjlTxsGwNKy0K_jdxOSQ_u0urzfCH1y2yBag8RXMK8Y8QdDrpnKXFtwnMD0/exec';
+let API_URLS = {}; 
 
 const bgColors = [
     'rgb(21, 51, 51)',
@@ -26,9 +24,10 @@ function getStableColor(str, colors) {
     return colors[index];
 }
 
+// Hàm format text tập phim (Vd: Hoàn tất (12/12) -> Trọn bộ 12 tập)
 function formatEpisodeText(text) {
     if (!text) return "Đang cập nhật";
-    if (text.includes('Hoàn Tất')) {
+    if (text.includes('Hoàn Tất') || text.includes('Full')) {
         const match = text.match(/\d+/);
         const total = match ? match[0] : '';
         return total ? `Trọn bộ ${total} tập` : 'Trọn bộ';
@@ -38,6 +37,32 @@ function formatEpisodeText(text) {
     return text;
 }
 
+// Hàm xáo trộn mảng (Fisher-Yates Shuffle)
+function shuffleArray(array) {
+    let currentIndex = array.length, randomIndex;
+    while (currentIndex != 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+    }
+    return array;
+}
+
+// --- LOAD API CONFIG ---
+async function loadApiConfig() {
+    try {
+        const response = await fetch(API_CONFIG_FILE);
+        API_URLS = await response.json();
+    } catch (error) {
+        console.error("Lỗi tải api-movie.json:", error);
+        // Fallback mặc định
+        API_URLS = {
+            "PHIM_MOI_CAP_NHAT": "https://phimapi.com/danh-sach/phim-moi-cap-nhat",
+            "PHIM": "https://phimapi.com/phim"
+        };
+    }
+}
+
 // --- SLIDER LOGIC ---
 let slides = [];
 let currentIndex = 0;
@@ -45,29 +70,79 @@ const wrapper = document.getElementById('sliderWrapper');
 const paginationWrapper = document.getElementById('sliderPagination');
 let autoPlayInterval;
 
+// Hàm gọi API chi tiết cho từng Slide và cập nhật giao diện
+async function updateSlideInfoFromApi(slug, index) {
+    // Đảm bảo URL API phim đã có
+    if (!API_URLS.PHIM) await loadApiConfig();
+
+    try {
+        // Gọi API: https://phimapi.com/phim/{slug}
+        const response = await fetch(`${API_URLS.PHIM}/${slug}`);
+        const data = await response.json();
+
+        if (data.status && data.movie) {
+            const m = data.movie;
+            
+            // 1. Cập nhật Meta Row (Năm | Age | Tập)
+            const metaContainer = document.getElementById(`slide-meta-${index}`);
+            if (metaContainer) {
+                // Giữ lại điểm số (lấy từ slide.json hoặc random), cập nhật phần sau
+                const scoreHtml = metaContainer.innerHTML.split('<span class="divider">|</span>')[0]; 
+                
+                const episodeText = formatEpisodeText(m.episode_current);
+                const yearText = m.year || '----';
+                
+                // Cấu trúc: Score | Năm | T13 | Tập
+                metaContainer.innerHTML = `
+                    ${scoreHtml}
+                    <span class="divider">|</span>
+                    <span>${yearText}</span>
+                    <span class="divider">|</span>
+                    <span class="meta-age-tag">T13</span>
+                    <span class="divider">|</span>
+                    <span>${episodeText}</span>
+                `;
+            }
+
+            // 2. Cập nhật Categories (Thể loại)
+            const catContainer = document.getElementById(`slide-cats-${index}`);
+            if (catContainer && m.category && Array.isArray(m.category)) {
+                // Tạo HTML cho từng category
+                const catsHtml = m.category.map(cat => `<span class="slide-cat-badge">${cat.name}</span>`).join('');
+                catContainer.innerHTML = catsHtml;
+            }
+        }
+    } catch (error) {
+        console.error(`Lỗi cập nhật thông tin slide cho slug ${slug}:`, error);
+    }
+}
+
 async function initSlider() {
     try {
         const response = await fetch(SLIDE_JSON_FILE);
-        slides = await response.json();
+        let rawSlides = await response.json();
+
+        if (!rawSlides || rawSlides.length === 0) return;
+
+        slides = shuffleArray(rawSlides);
+
     } catch (error) {
         console.error("Lỗi tải slide.json:", error);
         return;
     }
-
-    if (!slides || slides.length === 0) return;
 
     wrapper.innerHTML = '';
     createPaginationDots();
     
     slides.forEach((slide, index) => {
         const isActive = index === 0 ? 'active' : '';
-        const tagsArray = slide.tags ? slide.tags.split('|') : [];
-        let badgesHTML = `<div class="badges-container">${tagsArray.map(tag => `<span class="badge">${tag.trim()}</span>`).join('')}</div>`;
         
+        // Icon ngôi sao xanh
         const starIcon = `<svg class="score-icon" width="14px" height="14px" viewBox="0 0 28 27" xmlns="http://www.w3.org/2000/svg"><g fill="#1CC749"><path d="M16.7983826,2.56356746 L19.7968803,11.2875241 L29.1657516,11.3941138 C29.9719564,11.4033379 30.3057022,12.4128653 29.6590696,12.8853446 L22.1424877,18.3829131 L24.9344802,27.1724634 C25.17436,27.9288402 24.3014061,28.55198 23.643301,28.0938493 L16.0005215,22.7674392 L8.35669898,28.0928244 C7.69963687,28.5509551 6.82563997,27.9267904 7.06551979,27.1714385 L9.85751226,18.3818882 L2.34093036,12.8843197 C1.69429781,12.4118404 2.02804364,11.402313 2.83424842,11.3930889 L12.2031197,11.2864992 L15.2016174,2.56254256 C15.4602704,1.81231509 16.5407725,1.81231509 16.7983826,2.56356746 Z"/></g></svg>`;
 
+        // Tạo cấu trúc HTML ban đầu (sẽ được API điền thêm thông tin)
         const slideHTML = `
-            <div class="slide-item" data-index="${index}">
+            <div class="slide-item" data-index="${index}" onclick="window.location.href='play.html?${slide.slug}'">
                 <div class="slide-bg ${isActive}" style="background-image: url('${slide.bg}')"></div>
                 <div class="slide-character-container ${isActive}">
                     <div class="slide-character" style="background-image: url('${slide.char}')"></div>
@@ -75,27 +150,32 @@ async function initSlider() {
                 <div class="slide-info ${isActive}">
                     <div class="info-content-wrapper">
                         ${slide.titleImg ? `<div class="title-img" style="background-image: url('${slide.titleImg}')"></div>` : `<h1>${slide.titleText}</h1>`}
-                        ${badgesHTML}
-                        <div class="meta-tags">
+                        
+                        <div class="meta-tags" id="slide-meta-${index}">
                             ${starIcon}
-                            <span class="score">${slide.score}</span>
+                            <span class="score">${slide.score || '9.0'}</span>
                             <span class="divider">|</span>
-                            <span>${slide.year}</span>
-                            <span class="divider">|</span>
-                            <span>${slide.tags}</span>
+                            <span>Đang tải...</span>
                         </div>
+
+                        <div class="slide-categories-row" id="slide-cats-${index}"></div>
+
                         <div class="description">${slide.desc}</div>
                     </div>
                 </div>
             </div>`;
         wrapper.innerHTML += slideHTML;
+
+        // Gọi API để lấy thông tin chi tiết (Năm, tập, thể loại) cho slide này
+        updateSlideInfoFromApi(slide.slug, index);
     });
 
     const playBtn = document.querySelector('.btn-play-wrapper');
     if(playBtn) {
-        playBtn.onclick = () => {
+        playBtn.onclick = (e) => {
+             e.stopPropagation(); 
              const currentSlug = slides[currentIndex].slug;
-             window.location.href = `play.html?url=${currentSlug}`;
+             window.location.href = `play.html?${currentSlug}`;
         };
     }
 
@@ -108,7 +188,6 @@ function createPaginationDots() {
     slides.forEach((_, index) => {
         const dot = document.createElement('div');
         dot.classList.add('pagination-dot');
-        dot.onclick = () => { currentIndex = index; showSlide(currentIndex); resetInterval(); };
         paginationWrapper.appendChild(dot);
     });
 }
@@ -148,8 +227,11 @@ function resetInterval() {
 const sliderContainer = document.querySelector('.slider-container');
 let touchStartX = 0;
 let touchEndX = 0;
-sliderContainer.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; clearInterval(autoPlayInterval); }, { passive: true });
-sliderContainer.addEventListener('touchend', e => { touchEndX = e.changedTouches[0].screenX; handleSwipe(); resetInterval(); }, { passive: true });
+if(sliderContainer) {
+    sliderContainer.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; clearInterval(autoPlayInterval); }, { passive: true });
+    sliderContainer.addEventListener('touchend', e => { touchEndX = e.changedTouches[0].screenX; handleSwipe(); resetInterval(); }, { passive: true });
+}
+
 function handleSwipe() {
     if (touchEndX < touchStartX - 50) nextSlide();
     if (touchEndX > touchStartX + 50) prevSlide();
@@ -162,43 +244,58 @@ function setupCarousel(containerId, prevBtnId, nextBtnId) {
     const nextBtn = document.getElementById(nextBtnId);
     if(!container || !prevBtn || !nextBtn) return;
 
-    const checkScroll = () => {
-        if (container.scrollLeft <= 1) {
-            prevBtn.classList.add('hidden');
+    prevBtn.classList.remove('hidden');
+    nextBtn.classList.remove('hidden');
+
+    const getScrollAmount = () => {
+        const firstCard = container.querySelector('.movie-card') || container.querySelector('.movie-card--trending');
+        if (!firstCard) return container.clientWidth;
+        
+        const cardWidth = firstCard.getBoundingClientRect().width;
+        const style = window.getComputedStyle(container);
+        const gap = parseFloat(style.gap || style.columnGap) || 16;
+
+        return (cardWidth + gap) * 8;
+    };
+
+    const updateArrows = () => {
+        if (container.scrollLeft <= 5) {
+            prevBtn.style.display = 'none'; 
         } else {
-            prevBtn.classList.remove('hidden');
+            prevBtn.style.display = 'flex'; 
         }
-        if(container.scrollLeft + container.clientWidth >= container.scrollWidth - 5) {
-             nextBtn.classList.add('hidden');
+
+        if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 5) {
+             nextBtn.style.display = 'none';
         } else {
-             nextBtn.classList.remove('hidden');
+             nextBtn.style.display = 'flex';
         }
     };
 
-    const getScrollAmount = () => { return container.clientWidth; };
+    nextBtn.onclick = () => { 
+        container.scrollBy({ left: getScrollAmount(), behavior: 'smooth' }); 
+    };
+    
+    prevBtn.onclick = () => { 
+        container.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' }); 
+    };
 
-    nextBtn.onclick = () => { container.scrollBy({ left: getScrollAmount(), behavior: 'smooth' }); };
-    prevBtn.onclick = () => { container.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' }); };
-    container.addEventListener('scroll', checkScroll);
-    setTimeout(checkScroll, 100);
+    container.addEventListener('scroll', updateArrows);
+    updateArrows();
+    setTimeout(updateArrows, 100);
+    window.addEventListener('resize', updateArrows);
 }
 
 // --- CACHE & HOVER LOGIC ---
 const movieCache = {};
 let hoverTimeout;
 
-// Hàm gọi API chi tiết (DÙNG QUERY PARAM - QUAN TRỌNG)
 async function fetchMovieDetail(slug) {
     if (movieCache[slug]) return movieCache[slug];
 
-    // Thay vì /exec/phim/slug -> Dùng /exec?slug=slug
-    // Thêm &t=... để tránh browser cache kết quả lỗi CORS cũ
-    const url = `${API_DETAILS_BASE}?slug=${slug}&t=${Date.now()}`;
+    const url = `${API_URLS.PHIM}/${slug}`;
     
-    // redirect: 'follow' là BẮT BUỘC với Google Apps Script
-    const res = await fetch(url, { method: 'GET', redirect: 'follow' });
-    
-    // Nếu Google Script trả về lỗi (404/500), res.ok sẽ là false
+    const res = await fetch(url);
     if (!res.ok) {
         console.error(`API trả về lỗi ${res.status} cho slug: ${slug}`);
         return null; 
@@ -212,7 +309,7 @@ async function fetchMovieDetail(slug) {
             return movieData;
         }
     } catch (e) {
-        console.error("Lỗi parse JSON (có thể do API trả về HTML lỗi):", e);
+        console.error("Lỗi parse JSON:", e);
     }
     return null;
 }
@@ -227,15 +324,12 @@ function attachHoverEvent(card, slug) {
             const screenWidth = window.innerWidth;
             const hoverWidth = 300; 
 
-            // 1. Tính toán vị trí
             hoverCard.classList.remove('align-left', 'align-right');
             if (cardRect.left < 100) hoverCard.classList.add('align-left');
             else if (cardRect.right + (hoverWidth/2) > screenWidth) hoverCard.classList.add('align-right');
 
-            // 2. Hiện ngay
             hoverCard.classList.add('active');
 
-            // 3. Nếu đã tải xong
             if (hoverCard.dataset.loaded === "true") return;
 
             try {
@@ -322,16 +416,19 @@ function fillHoverData(hoverCard, movie) {
     hoverCard.innerHTML = html;
 }
 
-// --- FETCH NEW MOVIES ---
+// --- FETCH NEW MOVIES (LIMIT=24) ---
 async function fetchNewMovies() {
     const grid = document.getElementById('newMoviesGrid');
     if(!grid) return;
     grid.innerHTML = '<div class="loading-container"><div class="loading-spinner"></div></div>';
 
+    if (!API_URLS.PHIM_MOI_CAP_NHAT) await loadApiConfig();
+
     try {
-        const response = await fetch(`${API_NEW_MOVIES}?phim-moi-cap-nhat?page=1`, { redirect: 'follow' });
+        const response = await fetch(`${API_URLS.PHIM_MOI_CAP_NHAT}?page=1&limit=24`);
         const data = await response.json();
-        const allMovies = data.items || [];
+        
+        const allMovies = data.items ? data.items.slice(0, 24) : [];
 
         if (allMovies.length > 0) {
             grid.innerHTML = ''; 
@@ -348,7 +445,7 @@ async function fetchNewMovies() {
                         <div class="loading-text" style="padding:20px; font-size:12px;">Đang tải...</div>
                     </div>
                 `;
-                card.onclick = () => window.location.href = `album.html?slug=${movie.slug}`;
+                card.onclick = () => window.location.href = `album.html?${movie.slug}`;
                 
                 attachHoverEvent(card, movie.slug);
                 grid.appendChild(card);
@@ -357,19 +454,21 @@ async function fetchNewMovies() {
         }
     } catch (error) {
         console.error('Lỗi khi tải phim mới:', error);
+        grid.innerHTML = '<div class="loading-text">Lỗi kết nối tới máy chủ.</div>';
     }
 }
 
-// --- FETCH ROMANCE MOVIES ---
+// --- FETCH ROMANCE MOVIES (LIMIT=24) ---
 async function fetchRomanceMovies() {
     const grid = document.getElementById('romanceGrid');
     if(!grid) return;
     grid.innerHTML = '<div class="loading-container"><div class="loading-spinner"></div></div>';
 
     try {
-        const response = await fetch('https://phimapi.com/v1/api/the-loai/tinh-cam?page=1&limit=10');
+        const response = await fetch('https://phimapi.com/v1/api/the-loai/tinh-cam?page=1&limit=24');
         const json = await response.json();
-        const items = json.data?.items || [];
+        
+        const items = json.data?.items ? json.data.items.slice(0, 24) : [];
         const imageDomain = json.data?.APP_DOMAIN_CDN_IMAGE || 'https://phimimg.com';
 
         if (items.length > 0) {
@@ -388,7 +487,7 @@ async function fetchRomanceMovies() {
                         <div class="loading-text" style="padding:20px; font-size:12px;">Đang tải...</div>
                     </div>
                 `;
-                card.onclick = () => window.location.href = `album.html?slug=${movie.slug}`;
+                card.onclick = () => window.location.href = `album.html?${movie.slug}`;
 
                 attachHoverEvent(card, movie.slug);
                 grid.appendChild(card);
@@ -403,20 +502,25 @@ async function fetchRomanceMovies() {
     }
 }
 
-// --- FETCH TOP TRENDING ---
+// --- FETCH TOP TRENDING (LIMIT=24) ---
 async function fetchTopTrending() {
     const grid = document.getElementById('topTrendingGrid');
     if(!grid) return;
     grid.innerHTML = '<div class="loading-container"><div class="loading-spinner"></div></div>';
+    
+    if (!API_URLS.PHIM) await loadApiConfig();
 
     try {
         const response = await fetch(TOP_RANK_FILE); 
-        const items = await response.json();
+        let items = await response.json();
+        
+        if (items.length > 24) {
+            items = items.slice(0, 24);
+        }
 
         if (items.length > 0) {
             grid.innerHTML = '';
 
-            // Render khung trước
             items.forEach((movie, index) => {
                 const rank = index + 1;
                 const stableColor = getStableColor(movie.slug, bgColors);
@@ -440,14 +544,13 @@ async function fetchTopTrending() {
                         <div class="loading-text" style="padding:20px; font-size:12px;">Đang tải...</div>
                     </div>
                 `;
-                card.onclick = () => window.location.href = `album.html?slug=${movie.slug}`;
+                card.onclick = () => window.location.href = `album.html?${movie.slug}`;
                 attachHoverEvent(card, movie.slug);
                 grid.appendChild(card);
             });
 
             setupCarousel('topTrendingGrid', 'topPrevBtn', 'topNextBtn');
 
-            // Load tuần tự (Sequential) để tránh quá tải
             for (const movie of items) {
                 try {
                     const movieDetail = await fetchMovieDetail(movie.slug);
@@ -458,7 +561,7 @@ async function fetchTopTrending() {
                         }
                     }
                 } catch (err) {
-                    // Lỗi ở đây không quan trọng, cứ tiếp tục chạy phim tiếp theo
+                    
                 }
             }
         }
@@ -469,7 +572,9 @@ async function fetchTopTrending() {
 }
 
 // --- INIT ---
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadApiConfig();
+
     initSlider();
     fetchNewMovies();
     fetchRomanceMovies(); 
